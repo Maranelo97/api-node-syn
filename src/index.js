@@ -14,6 +14,7 @@ const dbConfig = {
     database: process.env.DB_NAME || "mockdata"
 }
 
+app.use(cors())
 app.use(connect(mysql, dbConfig, "single"))
 app.use(express.json());
 app.use("/", route)
