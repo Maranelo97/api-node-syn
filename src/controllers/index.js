@@ -23,6 +23,23 @@ exports.getAudience = (req, res) => {
 
         })
   };
+
+  exports.getOne = (req, res) => {
+    req.getConnection((err, conn) => {
+      if (err) return res.send(err);
+  
+      conn.query(
+        `SELECT * FROM audiencia WHERE id = ?`,
+        [req.params.id],
+        (err, result) => {
+          if (err) return res.send(err);
+  
+          res.json(result);
+        }
+      );
+    });
+  };
+
   
 exports.editAudience = (req, res) => {
     req.getConnection((err, connect) => {
