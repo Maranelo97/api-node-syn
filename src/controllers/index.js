@@ -45,7 +45,14 @@ exports.editAudience = (req, res) => {
     req.getConnection((err, connect) => {
         if (err) return res.send(err);
 
-        connect.query("UPDATE audiencia SET ? WHERE id = ?", [req.body, req.params.id], (err, result) => {
+        const dataToBeChanged = {
+          name: req.body.name,
+          lastname: req.body.lastname,
+          email: req.body.email,
+          phone: req.body.phone
+        }
+
+        connect.query("UPDATE audiencia SET ? WHERE id = ?", [dataToBeChanged, req.params.id], (err, result) => {
             if (err) return res.send(err)
 
             res.send("Actualizado")
