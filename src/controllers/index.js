@@ -47,6 +47,7 @@ exports.editAudience = (req, res) => {
 
         const dataToBeChanged = {
           name: req.body.name,
+          status: req.body.status,
           lastname: req.body.lastname,
           email: req.body.email,
           phone: req.body.phone
