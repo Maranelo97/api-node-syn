@@ -51,7 +51,7 @@ app.post("/import-csv", upload.single("import-csv"), (req, res) => {
     .on("end", () => {
       csvDataColl.shift();
       const query =
-        "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added, emailsSent) VALUES ?";
+        "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added, emailsSent) VALUES ? ";
 
       req.getConnection((err, connection) => {
         if (err) {
