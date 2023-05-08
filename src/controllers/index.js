@@ -60,6 +60,7 @@ exports.editAudience = (req, res) => {
       lastname: req.body.lastname,
       email: req.body.email,
       phone: req.body.phone,
+      importation: req.body.importation
     };
 
     connect.query(
