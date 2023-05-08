@@ -10,9 +10,9 @@ exports.addAudiencia = (req, res) => {
       email: req.body.email,
       phone: req.body.phone,
       area: req.body.area,
-      importacion: "New Hires Mayo",
-      fecha_creacion: new Date(),
-      emails_enviados: 0,
+      importation: "New Hires Mayo",
+      added: new Date(),
+      emailsSent: 0,
     };
 
     connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
