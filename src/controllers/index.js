@@ -3,8 +3,16 @@
  exports.addAudiencia = (req, res) =>{
     req.getConnection((err, connect) => {
         if(err) return res.send(err);
+        const data = {
+          name: req.body.name,
+          lastname: req.body.lastname,
+          status: req.body.status,
+          email: req.body.email,
+          phone: req.body.phone,
+          area: req.body.area
+        }
 
-        connect.query("INSERT INTO audiencia SET ?", [req.body], (err, result) => {
+        connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
             if(err) return res.send(err);
 
             res.send("Creación exitosa");
