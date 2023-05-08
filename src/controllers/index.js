@@ -10,31 +10,16 @@ exports.addAudiencia = (req, res) => {
       email: req.body.email,
       phone: req.body.phone,
       area: req.body.area,
-      importation: req.body.importation || "New Hires Mayo",
+      importation: 'New Hires Mayo',
       added: new Date(),
-      emailsSent: req.body.emailsSent || 0,
+      emailsSent: 0
     };
 
-    // Verificar si el registro ya existe
-    connect.query(
-      "SELECT * FROM audiencia WHERE email = ?",
-      [data.email],
-      (err, result) => {
-        if (err) return res.send(err);
+    connect.query('INSERT INTO audiencia SET ?', [data], (err, result) => {
+      if (err) return res.send(err);
 
-        // Si el registro ya existe, enviar una respuesta al cliente
-        if (result.length > 0) {
-          return res.status(409).send("El registro ya existe");
-        }
-
-        // Si el registro no existe, realizar la inserción
-        connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
-          if (err) return res.send(err);
-
-          res.send("Creación exitosa");
-        });
-      }
-    );
+      res.send('Creación exitosa');
+    });
   });
 };
 exports.getAudience = (req, res) => {
