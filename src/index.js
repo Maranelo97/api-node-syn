@@ -37,7 +37,6 @@ app.use(connect(mysql, dbConfig, "single"));
 app.use(cors());
 app.use(express.json());
 app.use("/", route);
-
 //upload csv
 app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   const csvDataColl = [];
