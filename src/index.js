@@ -19,10 +19,10 @@ const dbConfig = {
   database: process.env.DB_NAME || "mockdata",
 };
 
-// Multer configuration
+// Multer configuration CSV
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/");
+    cb(null, "./uploads/csv");
   },
   filename: (req, file, cb) => {
     cb(
@@ -31,12 +31,41 @@ const storage = multer.diskStorage({
     );
   },
 });
+//Multer configuration IMG-DNI
+const imageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/img');
+  },
+  filename: (req, file, cb) =>{
+      cb(
+        null,
+        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+      )
+  }
+})
+
+const uploadImage = multer({ storage: imageStorage }).single("image")
 const upload = multer({ storage: storage });
 
 app.use(connect(mysql, dbConfig, "single"));
 app.use(cors());
 app.use(express.json());
 app.use("/", route);
+
+
+//upload IMG
+
+app.post('/upload-image', uploadImage, (req, res) => {
+
+  if(!req.file){
+    res.status(400).send("No se ha proporcionado ninguna imagen")
+  }
+
+  res.status(200).send("Imagen Cargara correctamente")
+})
+
+
+
 //upload csv
 app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   const csvDataColl = [];
