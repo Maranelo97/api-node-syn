@@ -22,7 +22,7 @@ const dbConfig = {
 // Multer configuration CSV
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/csv");
+    cb(null, "./src/uploads/csv");
   },
   filename: (req, file, cb) => {
     cb(
@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
 //Multer configuration IMG-DNI
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './uploads/img');
+    cb(null, './src/uploads/img');
   },
   filename: (req, file, cb) =>{
       cb(
@@ -61,7 +61,7 @@ app.post('/upload-image', uploadImage, (req, res) => {
     res.status(400).send("No se ha proporcionado ninguna imagen")
   }
 
-  res.status(200).send("Imagen Cargara correctamente")
+  res.status(200).send("Imagen Cargada correctamente")
 })
 
 
