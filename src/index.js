@@ -62,7 +62,7 @@ app.post('/upload-image', uploadImage, (req, res) => {
     res.status(400).send("No se ha proporcionado ninguna imagen")
   }
 
-  const imageURL = "http://localhost:4002/uploads/img/" + req.file.filename;
+  const imageURL = req.protocol + '://' + req.get('host') + '/uploads/img/' + req.file.filename; + req.file.filename;
 
   res.status(200).json({ imageURL: imageURL });
 })
