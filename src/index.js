@@ -34,39 +34,56 @@ const storage = multer.diskStorage({
 //Multer configuration IMG-DNI
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname , 'uploads', 'img'));
+    cb(null, path.join(__dirname, "uploads", "img"));
   },
-  filename: (req, file, cb) =>{
-      cb(
-        null,
-        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-      )
-  }
-})
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
-const uploadImage = multer({ storage: imageStorage }).single("image")
+const uploadImage = multer({ storage: imageStorage }).single("image");
 const upload = multer({ storage: storage });
 
 app.use(connect(mysql, dbConfig, "single"));
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/", route);
-
 
 //upload IMG
 
 app.post('/upload-image', uploadImage, (req, res) => {
-
-  if(!req.file){
-    res.status(400).send("No se ha proporcionado ninguna imagen")
+  if (!req.file) {
+    res.status(400).send("No se ha proporcionado ninguna imagen");
   }
 
-  const imageURL = req.protocol + '://' + req.get('host') + '/uploads/img/' + req.file.filename; + req.file.filename;
+  const imageURL = req.protocol + '://' + req.get('host') + '/uploads/img/' + req.file.filename;
 
-  res.status(200).json({ imageURL: imageURL });
-})
+  // Insertar la URL de la imagen en la tabla 'audiencia'
+  req.getConnection((err, connect) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error del servidor");
+      return;
+    }
 
+    const insertQuery = "INSERT INTO audiencia (imageURL) VALUES (?)";
+    const values = [imageURL];
+
+    connect.query(insertQuery, [values], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error del servidor");
+        return;
+      }
+
+      res.status(200).json({ imageURL: imageURL });
+    });
+  });
+});
 
 
 //upload csv
