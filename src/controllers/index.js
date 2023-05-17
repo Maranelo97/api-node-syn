@@ -19,7 +19,8 @@ exports.addAudiencia = (req, res) => {
       area: req.body.area,
       importation: 'New Hires Mayo',
       added: new Date(),
-      emailsSent: 0
+      emailsSent: 0,
+      imageURL: "",
     };
 
     connect.query('INSERT INTO audiencia SET ?', [data], (err, result) => {
