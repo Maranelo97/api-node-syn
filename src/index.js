@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
 //Multer configuration IMG-DNI
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './src/uploads/img');
+    cb(null, path.join(__dirname , 'uploads', 'img'));
   },
   filename: (req, file, cb) =>{
       cb(
@@ -50,6 +50,7 @@ const upload = multer({ storage: storage });
 app.use(connect(mysql, dbConfig, "single"));
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/", route);
 
 
