@@ -62,7 +62,7 @@ app.post('/upload-image', uploadImage, (req, res) => {
     res.status(400).send("No se ha proporcionado ninguna imagen")
   }
 
-  const imageURL = "https://api-node-syn-production.up.railway.app/uploads/img/" + req.file.filename;
+  const imageURL = "http://localhost:4002/uploads/img/" + req.file.filename;
 
   res.status(200).json({ imageURL: imageURL });
 })
