@@ -57,32 +57,16 @@ app.use("/", route);
 //upload IMG
 
 app.post('/upload-image', uploadImage, (req, res) => {
-  if (!req.file) {
-    res.status(400).send("No se ha proporcionado ninguna imagen");
+
+  if(!req.file){
+    res.status(400).send("No se ha proporcionado ninguna imagen")
   }
 
-  const imageURL = req.protocol + '://' + req.get('host') + '/uploads/img/' + req.file.filename;
+  const imageURL = req.protocol + '://' + req.get('host') + '/uploads/img/' + req.file.filename; + req.file.filename;
 
-  const insertQuery = "INSERT INTO audiencia SET ?";
-  const values = [imageURL];
+  res.status(200).json({ imageURL: imageURL });
+})
 
-  req.getConnection((err, connection) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error de conexión a la base de datos");
-      return;
-    }
-
-    connection.query(insertQuery, values, (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error al insertar la imagen en la base de datos");
-      }
-
-      res.status(200).json({ imageURL: imageURL });
-    });
-  });
-});
 
 
 
