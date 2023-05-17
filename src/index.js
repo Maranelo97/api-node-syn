@@ -63,7 +63,7 @@ app.post('/upload-image', uploadImage, (req, res) => {
 
   const imageURL = req.protocol + '://' + req.get('host') + '/uploads/img/' + req.file.filename;
 
-  const insertQuery = "INSERT INTO audiencia (imageURL) VALUES (?)";
+  const insertQuery = "INSERT INTO audiencia SET ?";
   const values = [imageURL];
 
   req.getConnection((err, connection) => {
