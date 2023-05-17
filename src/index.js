@@ -78,7 +78,7 @@ app.post('/save-image-url', (req, res) => {
       return;
     }
 
-    const insertQuery = "INSERT INTO audiencia (imageURL) VALUES (?)";
+    const insertQuery = "INSERT INTO audiencia SET imageURL = ?";
     const values = [imageURL];
 
     connect.query(insertQuery, [values], (err, result) => {
