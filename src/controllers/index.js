@@ -18,6 +18,7 @@ exports.addAudiencia = (req, res) => {
       cuil: req.body.cuil,
       area: req.body.area,
       importation: 'New Hires Mayo',
+      imageURL:"",
       added: new Date(),
       emailsSent: 0
     };
