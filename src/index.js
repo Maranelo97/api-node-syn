@@ -77,7 +77,6 @@ app.post('/upload-image', uploadImage, (req, res) => {
       if (err) {
         console.error(err);
         res.status(500).send("Error al insertar la imagen en la base de datos");
-        return;
       }
 
       res.status(200).json({ imageURL: imageURL });
