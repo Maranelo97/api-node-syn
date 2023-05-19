@@ -12,7 +12,7 @@ exports.addAudiencia = (req, res) => {
       dob: req.body.dob,
       phone: req.body.phone,
       address: req.body.address,
-      street: req.body.street,
+      location: req.body.location,
       zipCode: req.body.zipCode,
       province: req.body.province,
       cuil: req.body.cuil,
