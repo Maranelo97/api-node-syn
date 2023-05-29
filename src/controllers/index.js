@@ -17,27 +17,33 @@ exports.addAudiencia = (req, res) => {
       province: req.body.province,
       cuil: req.body.cuil,
       area: req.body.area,
-      importation: 'New Hires Mayo',
+      importation: "New Hires Mayo",
       added: new Date(),
       emailsSent: 0,
       imageURL: "",
+      accionID: 1,
     };
 
-    connect.query('INSERT INTO audiencia SET ?', [data], (err, result) => {
+    connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
       if (err) return res.send(err);
 
-      res.send('Creación exitosa');
+      res.send("Creación exitosa");
     });
   });
 };
 exports.getAudience = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
-    connect.query("SELECT * FROM audiencia", (err, result) => {
-      if (err) return res.send(err);
+    connect.query(
+      `SELECT a.*, ac.accion AS descripcion_accion
+    FROM audiencia a
+    LEFT JOIN actions ac ON a.accionId = ac.id`,
+      (err, result) => {
+        if (err) return res.send(err);
 
-      res.json(result);
-    });
+        res.json(result);
+      }
+    );
   });
 };
 
@@ -68,6 +74,7 @@ exports.editAudience = (req, res) => {
       email: req.body.email,
       phone: req.body.phone,
       importation: req.body.importation,
+      accionID: 2,
     };
 
     connect.query(
