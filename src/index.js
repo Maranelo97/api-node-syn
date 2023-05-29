@@ -3,6 +3,7 @@ const express = require("express");
 const mysql = require("mysql2");
 const connect = require("express-myconnection");
 const route = require("./routes/index");
+const routeActions = require('./routes/actionRoutes')
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("fast-csv");
@@ -52,6 +53,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/", route);
+app.use('/', routeActions)
 
 
 //upload IMG
