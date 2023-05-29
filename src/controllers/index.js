@@ -27,7 +27,18 @@ exports.addAudiencia = (req, res) => {
     connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
       if (err) return res.send(err);
 
-      res.send("Creación exitosa");
+      const imageURL = req.body.imageURL;
+      data.imageURL = imageURL;
+
+      connect.query(
+        "UPDATE audiencia SET imageURL = ? WHERE id = ?",
+        [imageURL, result.insertId],
+        (err, updateResult) => {
+          if (err) return res.send(err);
+
+          res.status(200).json({ message: "Creación exitosa", imageURL });
+        }
+      );
     });
   });
 };
