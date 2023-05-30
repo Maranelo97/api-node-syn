@@ -11,15 +11,16 @@ exports.addAudiencia = (req, res) => {
       emailSyngenta: req.body.emailSyngenta,
       dob: req.body.dob,
       phone: req.body.phone,
-      adress: req.body.adress,
-
+      address: req.body.adress,
+      location: req.body.location,
       zipCode: req.body.zipCode,
       province: req.body.province,
       cuil: req.body.cuil,
       area: req.body.area,
       importation: "New Hires Mayo",
       added: new Date(),
-      emailsSent: 0
+      emailsSent: 0,
+      imageURL: ""
     };
 
     // Iniciar transacción
