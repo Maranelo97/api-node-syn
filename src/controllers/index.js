@@ -11,7 +11,7 @@ exports.addAudiencia = (req, res) => {
       emailSyngenta: req.body.emailSyngenta,
       dob: req.body.dob,
       phone: req.body.phone,
-      address: req.body.adress,
+      address: req.body.address,
       location: req.body.location,
       zipCode: req.body.zipCode,
       province: req.body.province,
