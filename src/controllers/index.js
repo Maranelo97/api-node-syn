@@ -122,7 +122,7 @@ exports.editAudience = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
 
-    const dataToBeChanged = {
+    const dataToBeChangedd = {
       name: req.body.name,
       area: req.body.area,
       status: req.body.status,
@@ -168,7 +168,7 @@ exports.editAudience = (req, res) => {
                   // Actualizar el registro en la tabla de audiencia
                   connect.query(
                     "UPDATE audiencia SET ? WHERE id = ?",
-                    [dataToBeChanged, req.params.id],
+                    [dataToBeChangedd, req.params.id],
                     (err, updateResult) => {
                       if (err) {
                         connect.rollback(() => {
