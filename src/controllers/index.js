@@ -11,37 +11,80 @@ exports.addAudiencia = (req, res) => {
       emailSyngenta: req.body.emailSyngenta,
       dob: req.body.dob,
       phone: req.body.phone,
-      address: req.body.address,
-      location: req.body.location,
+      adress: req.body.adress,
+
       zipCode: req.body.zipCode,
       province: req.body.province,
       cuil: req.body.cuil,
       area: req.body.area,
       importation: "New Hires Mayo",
       added: new Date(),
-      emailsSent: 0,
-      imageURL: "",
-      accionID: 1,
+      emailsSent: 0
     };
 
-    connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
       if (err) return res.send(err);
 
-      const imageURL = req.body.imageURL;
-      data.imageURL = imageURL;
+      // Insertar en la tabla de audiencia
+      connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
+        if (err) {
+          connect.rollback(() => {
+            res.send(err);
+          });
+        } else {
+          const registroId = result.insertId;
+          const accionId = 1; // Valor de la acción inicial (ejemplo: 1 para "Creó")
 
-      connect.query(
-        "UPDATE audiencia SET imageURL = ? WHERE id = ?",
-        [imageURL, result.insertId],
-        (err, updateResult) => {
-          if (err) return res.send(err);
+          // Insertar en la tabla de registros_acciones
+          const nuevaAccion = {
+            accionId,
+            registroId,
+            fecha: new Date(),
+          };
 
-          res.status(200).json({ message: "Creación exitosa", imageURL });
+          connect.query(
+            "INSERT INTO registros_acciones SET ?",
+            nuevaAccion,
+            (err, result) => {
+              if (err) {
+                connect.rollback(() => {
+                  res.send(err);
+                });
+              } else {
+                // Commit de la transacción
+                connect.commit((err) => {
+                  if (err) {
+                    connect.rollback(() => {
+                      res.send(err);
+                    });
+                  } else {
+                    const imageURL = req.body.imageURL;
+                    data.imageURL = imageURL;
+
+                    connect.query(
+                      "UPDATE audiencia SET imageURL = ? WHERE id = ?",
+                      [imageURL, registroId],
+                      (err, updateResult) => {
+                        if (err) return res.send(err);
+
+                        res.status(200).json({
+                          message: "Creación exitosa",
+                          imageURL,
+                        });
+                      }
+                    );
+                  }
+                });
+              }
+            }
+          );
         }
-      );
+      });
     });
   });
 };
+
 exports.getAudience = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
