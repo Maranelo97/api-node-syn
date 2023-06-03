@@ -50,6 +50,11 @@ const upload = multer({ storage: storage });
 
 app.use(connect(mysql, dbConfig, "single"));
 app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  next();
+});
+
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/", route);
