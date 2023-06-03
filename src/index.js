@@ -3,7 +3,7 @@ const express = require("express");
 const mysql = require("mysql2");
 const connect = require("express-myconnection");
 const route = require("./routes/index");
-const routeActions = require('./routes/actionRoutes')
+const routeActions = require("./routes/actionRoutes");
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("fast-csv");
@@ -35,44 +35,51 @@ const storage = multer.diskStorage({
 //Multer configuration IMG-DNI
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname , 'uploads', 'img'));
+    cb(null, path.join(__dirname, "uploads", "img"));
   },
-  filename: (req, file, cb) =>{
-      cb(
-        null,
-        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-      )
-  }
-})
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
-const uploadImage = multer({ storage: imageStorage }).single("image")
+const uploadImage = multer({ storage: imageStorage }).single("image");
 const upload = multer({ storage: storage });
 
-app.use(cors({
-  origin: "*"
-}))
+app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use("/", route);
-app.use('/', routeActions)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use((req, res, next) => {
+  res.append("Access-Control-Allow-Origin", ["*"]);
+  res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
+app.use("/", route);
+app.use("/", routeActions);
 
 //upload IMG
 
-app.post('/upload-image', uploadImage, (req, res) => {
-
-  if(!req.file){
-    res.status(400).send("No se ha proporcionado ninguna imagen")
+app.post("/upload-image", uploadImage, (req, res) => {
+  if (!req.file) {
+    res.status(400).send("No se ha proporcionado ninguna imagen");
   }
 
-  const imageURL = req.protocol + '://' + req.get('host') + '/uploads/img/' + req.file.filename; + req.file.filename;
+  const imageURL =
+    req.protocol +
+    "://" +
+    req.get("host") +
+    "/uploads/img/" +
+    req.file.filename;
+  +req.file.filename;
 
   res.status(200).json({ imageURL: imageURL });
-})
-
-
-
+});
 
 //upload csv
 app.post("/import-csv", upload.single("import-csv"), (req, res) => {
