@@ -48,11 +48,11 @@ const imageStorage = multer.diskStorage({
 const uploadImage = multer({ storage: imageStorage }).single("image")
 const upload = multer({ storage: storage });
 
+app.use(cors({
+  origin: "*"
+}))
 app.use(connect(mysql, dbConfig, "single"));
-const whiteList = [ "http://localhost:3000", "https://syngt-dgp-9fcc2.web.app/" ]
-
 app.use(express.json());
-app.use(cors({ origin:[whiteList] }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/", route);
 app.use('/', routeActions)
