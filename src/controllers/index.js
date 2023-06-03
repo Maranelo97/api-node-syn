@@ -4,6 +4,7 @@ exports.addAudiencia = (req, res) => {
     if (err) return res.send(err);
 
     const data = {
+      dni: req.body.dni,
       name: req.body.name,
       lastname: req.body.lastname,
       status: req.body.status,
@@ -12,11 +13,13 @@ exports.addAudiencia = (req, res) => {
       dob: req.body.dob,
       phone: req.body.phone,
       address: req.body.address,
+      address2: req.body.address2,
       location: req.body.location,
       zipCode: req.body.zipCode,
       province: req.body.province,
       cuil: req.body.cuil,
       area: req.body.area,
+      ingress: req.body.ingress,
       importation: "New Hires Mayo",
       added: new Date(),
       emailsSent: 0,
