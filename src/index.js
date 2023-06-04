@@ -52,14 +52,6 @@ app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-app.use((req, res, next) => {
-  res.append("Access-Control-Allow-Origin", ["*"]);
-  res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.append("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
-
 app.use("/", route);
 app.use("/", routeActions);
 
