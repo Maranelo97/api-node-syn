@@ -11,7 +11,7 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-app.use(cors());
+
 
 
 
@@ -51,7 +51,7 @@ const imageStorage = multer.diskStorage({
 
 const uploadImage = multer({ storage: imageStorage }).single("image");
 const upload = multer({ storage: storage });
-
+app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
