@@ -132,9 +132,7 @@ exports.editAudience = (req, res) => {
       lastname: req.body.lastname,
       email: req.body.email,
       phone: req.body.phone,
-      importation: req.body.importation,
-      added: req.body.added,
-      ingress: req.body.ingress
+      importation: req.body.importation
     };
 
     // Iniciar transacción
