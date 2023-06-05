@@ -47,13 +47,9 @@ const imageStorage = multer.diskStorage({
 
 const uploadImage = multer({ storage: imageStorage }).single("image");
 const upload = multer({ storage: storage });
-const corsOptions = {
-  origin: 'http://localhost:3000', // Origen permitido para las solicitudes CORS
-  optionsSuccessStatus: 200 // Configuración adicional para el código de estado de éxito
-};
 
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
