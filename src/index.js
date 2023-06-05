@@ -11,6 +11,10 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
+
+
 const PORT = process.env.PORT || 4002;
 const dbConfig = {
   host: process.env.DB_HOST || "localhost",
@@ -48,7 +52,6 @@ const imageStorage = multer.diskStorage({
 const uploadImage = multer({ storage: imageStorage }).single("image");
 const upload = multer({ storage: storage });
 
-app.use(cors({ origin: "*", credentials: true }));
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
