@@ -19,9 +19,9 @@ exports.addAudiencia = (req, res) => {
       province: req.body.province,
       cuil: req.body.cuil,
       area: req.body.area,
-      ingress: req.body.ingress,
+      ingress: new Date(req.body.ingress),
       importation: "New Hires Mayo",
-      added: req.body.added,
+      added: new Date(req.body.added),
       emailsSent: 0,
       imageURL: ""
     };
