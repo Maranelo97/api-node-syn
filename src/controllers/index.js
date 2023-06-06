@@ -133,8 +133,8 @@ exports.editAudience = (req, res) => {
       email: req.body.email,
       phone: req.body.phone,
       importation: req.body.importation,
-      added: req.body.added,
-      ingress: req.body.ingress
+      added: new Date(req.body.added),
+      ingress: new Date(req.body.ingress)
     };
 
     // Iniciar transacción
