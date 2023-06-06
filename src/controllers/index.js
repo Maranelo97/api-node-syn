@@ -21,7 +21,7 @@ exports.addAudiencia = (req, res) => {
       area: req.body.area,
       ingress: req.body.ingress,
       importation: "New Hires Mayo",
-      added: new Date(),
+      added: req.body.added,
       emailsSent: 0,
       imageURL: ""
     };
@@ -132,7 +132,9 @@ exports.editAudience = (req, res) => {
       lastname: req.body.lastname,
       email: req.body.email,
       phone: req.body.phone,
-      importation: req.body.importation
+      importation: req.body.importation,
+      added: req.body.added,
+      ingress: req.body.ingress
     };
 
     // Iniciar transacción
