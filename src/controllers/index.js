@@ -105,13 +105,13 @@ exports.getAudience = (req, res) => {
   });
 };
 
-exports.getOne = (req, res) => {
+exports.getByDni = (req, res) => {
   req.getConnection((err, conn) => {
     if (err) return res.send(err);
 
     conn.query(
-      `SELECT * FROM audiencia WHERE id = ?`,
-      [req.params.id],
+      `SELECT * FROM audiencia WHERE dni = ?`,
+      [req.params.dni],
       (err, result) => {
         if (err) return res.send(err);
 
