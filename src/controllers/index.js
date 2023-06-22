@@ -10,7 +10,7 @@ exports.addAudiencia = (req, res) => {
       status: req.body.status,
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
-      dob: req.body.dob,
+      dob: new Date (req.body.dob),
       phone: req.body.phone,
       address: req.body.address,
       address2: req.body.address2,
