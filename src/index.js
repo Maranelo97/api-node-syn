@@ -49,7 +49,7 @@ const imageStorage = multer.diskStorage({
   },
 });
 
-const uploadImage = multer({ storage: imageStorage }).single("image");
+const uploadImages = multer({ storage: imageStorage }).array("images", 2);
 const upload = multer({ storage: storage });
 app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
@@ -60,20 +60,22 @@ app.use("/", routeActions);
 
 //upload IMG
 
-app.post("/upload-image", uploadImage, (req, res) => {
-  if (!req.file) {
-    res.status(400).send("No se ha proporcionado ninguna imagen");
-  }
+app.post("/upload-images", (req, res) => {
+  uploadImages(req, res, (err) => {
+    if (err) {
+      res.status(400).send("Ocurrió un error al cargar las imágenes");
+    }
 
-  const imageURL =
-    req.protocol +
-    "://" +
-    req.get("host") +
-    "/uploads/img/" +
-    req.file.filename;
-  +req.file.filename;
+    if (!req.files || req.files.length !== 2) {
+      res.status(400).send("Se deben proporcionar exactamente 2 imágenes");
+    }
 
-  res.status(200).json({ imageURL: imageURL });
+    const imageURLs = req.files.map((file) => {
+      return req.protocol + "://" + req.get("host") + "/uploads/img/" + file.filename;
+    });
+
+    res.status(200).json({ imageURLs: imageURLs });
+  });
 });
 
 //upload csv
