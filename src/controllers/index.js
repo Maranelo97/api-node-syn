@@ -23,7 +23,7 @@ exports.addAudiencia = (req, res) => {
       importation: "New Hires Mayo",
       added: new Date(req.body.added),
       emailsSent: 0,
-      imageURL: ""
+      imageURLs: ""
     };
 
     // Iniciar transacción
