@@ -63,18 +63,18 @@ exports.addAudiencia = (req, res) => {
                       res.send(err);
                     });
                   } else {
-                    const imageURL = req.body.imageURL;
-                    data.imageURL = imageURL;
+                    const imageURLs = req.body.imageURLs;
+                    data.imageURLs = imageURLs;
 
                     connect.query(
-                      "UPDATE audiencia SET imageURL = ? WHERE id = ?",
-                      [imageURL, registroId],
+                      "UPDATE audiencia SET imageURLs = ? WHERE id = ?",
+                      [data.imageURLs, registroId],
                       (err, updateResult) => {
                         if (err) return res.send(err);
 
                         res.status(200).json({
                           message: "Creación exitosa",
-                          imageURL,
+                          imageURLs,
                         });
                       }
                     );
