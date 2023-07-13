@@ -78,6 +78,19 @@ app.post("/upload-images", (req, res) => {
   });
 });
 
+
+app.get("/download/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, "uploads", "img", filename);
+  
+  res.download(filePath, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Error al descargar el archivo");
+    }
+  });
+});
+
 //upload csv
 app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   const csvDataColl = [];
