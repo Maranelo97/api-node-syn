@@ -134,7 +134,8 @@ exports.editAudience = (req, res) => {
       phone: req.body.phone,
       importation: req.body.importation,
       added: new Date(req.body.added),
-      ingress: new Date(req.body.ingress)
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob)
     };
 
     // Iniciar transacción
