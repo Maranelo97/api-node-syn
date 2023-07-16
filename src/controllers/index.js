@@ -71,10 +71,10 @@ exports.addAudiencia = (req, res) => {
                       [data.imageURLs, registroId],
                       (err, updateResult) => {
                         if (err) return res.send(err);
-
+                    
                         res.status(200).json({
                           message: "Creación exitosa",
-                          imageURLs,
+                          imageURLs: data.imageURLs,
                         });
                       }
                     );
