@@ -67,8 +67,8 @@ exports.addAudiencia = (req, res) => {
                     data.imageURLs = imageURLs;
 
                     connect.query(
-                      "UPDATE audiencia SET imageURLs = ? WHERE id = ?",
-                      [data.imageURLs, registroId],
+                      "UPDATE audiencia SET imageURLs = JSON_ARRAY(?) WHERE id = ?",
+                      [[data.imageURLs], registroId],
                       (err, updateResult) => {
                         if (err) return res.send(err);
                     
