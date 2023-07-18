@@ -71,7 +71,7 @@ exports.addAudiencia = (req, res) => {
                       [JSON.stringify(data.imageURLs), registroId],
                       (err, updateResult) => {
                         if (err) return res.send(err);
-
+                    
                         res.status(200).json({
                           message: "Creación exitosa",
                           imageURLs: data.imageURLs,
