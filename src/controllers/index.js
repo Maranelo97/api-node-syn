@@ -74,7 +74,7 @@ exports.addAudiencia = (req, res) => {
                     
                         res.status(200).json({
                           message: "Creación exitosa",
-                          imageURLs: data.imageURLs,
+                          imageURLs: data.imageURLs.join(),
                         });
                       }
                     );
