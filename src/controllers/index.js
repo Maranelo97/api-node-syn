@@ -67,17 +67,34 @@ exports.addAudiencia = (req, res) => {
                     data.imageURLs = imageURLs;
 
                     connect.query(
-                      "UPDATE audiencia SET imageURLs = ? WHERE id = ?",
-                      [JSON.stringify(data.imageURLs), registroId],
-                      (err, updateResult) => {
-                        if (err) return res.send(err);
-                    
-                        res.status(200).json({
-                          message: "Creación exitosa",
-                          imageURLs: data.imageURLs,
-                        });
+                      "INSERT INTO audiencia SET `dni` = ?, `name` = ?, `lastname` = ?, `status` = ?, `email` = ?, `emailSyngenta` = ?, `dob` = ?, `phone` = ?, `address` = ?, `address2` = ?, `location` = ?, `zipCode` = ?, `province` = ?, `cuil` = ?, `area` = ?, `ingress` = ?, `importation` = ?, `added` = ?, `emailsSent` = ?, `imageURLs` = ?",
+                      [
+                        data.dni,
+                        data.name,
+                        data.lastname,
+                        data.status,
+                        data.email,
+                        data.emailSyngenta,
+                        data.dob,
+                        data.phone,
+                        data.address,
+                        data.address2,
+                        data.location,
+                        data.zipCode,
+                        data.province,
+                        data.cuil,
+                        data.area,
+                        data.ingress,
+                        "New Hires Mayo",
+                        data.added,
+                        data.emailsSent,
+                        JSON.stringify(data.imageURLs)
+                      ],
+                      (err, result) => {
+                        // ...
                       }
                     );
+                    
                     
                   }
                 });
