@@ -10,7 +10,7 @@ exports.addAudiencia = (req, res) => {
       status: req.body.status,
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
-      dob: new Date (req.body.dob),
+      dob: new Date(req.body.dob),
       phone: req.body.phone,
       address: req.body.address,
       address2: req.body.address2,
@@ -23,7 +23,7 @@ exports.addAudiencia = (req, res) => {
       importation: "New Hires Mayo",
       added: new Date(req.body.added),
       emailsSent: 0,
-      imageURLs: req.body.imageURLs
+      imageURLs: req.body.imageURLs,
     };
 
     // Iniciar transacción
@@ -66,18 +66,18 @@ exports.addAudiencia = (req, res) => {
                     const imageURLs = req.body.imageURLs;
                     data.imageURLs = imageURLs;
 
-                   connect.query(
-  "UPDATE audiencia SET imageURLs = ? WHERE id = ?",
-  [JSON.stringify(data.imageURLs), registroId],
-  (err, updateResult) => {
-    if (err) return res.send(err);
+                    connect.query(
+                      "UPDATE audiencia SET imageURLs = ? WHERE id = ?",
+                      [JSON.stringify(data.imageURLs), registroId],
+                      (err, updateResult) => {
+                        if (err) return res.send(err);
 
-    res.status(200).json({
-      message: "Creación exitosa",
-      imageURLs: data.imageURLs,
-    });
-  }
-);
+                        res.status(200).json({
+                          message: "Creación exitosa",
+                          imageURLs: data.imageURLs,
+                        });
+                      }
+                    );
                   }
                 });
               }
@@ -126,6 +126,7 @@ exports.editAudience = (req, res) => {
     if (err) return res.send(err);
 
     const dataToBeChangedd = {
+      dni: req.body.dni,
       name: req.body.name,
       area: req.body.area,
       status: req.body.status,
@@ -135,7 +136,7 @@ exports.editAudience = (req, res) => {
       importation: req.body.importation,
       added: new Date(req.body.added),
       ingress: new Date(req.body.ingress),
-      dob: new Date(req.body.dob)
+      dob: new Date(req.body.dob),
     };
 
     // Iniciar transacción
