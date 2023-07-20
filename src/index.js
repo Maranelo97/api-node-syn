@@ -78,10 +78,10 @@ app.post("/upload-images", (req, res) => {
 
     res.status(200).json({
       imageURL1: imageURLs[0] || null,
-      imageURL2: imageURLs[1] || null,
+      imagelURL2: imagelURLs[1] || null,
     });
   });
-});
+}); 
 
 app.get("/download/:filename", (req, res) => {
   const filename = req.params.filename;
