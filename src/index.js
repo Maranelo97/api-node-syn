@@ -64,20 +64,24 @@ app.post("/upload-images", (req, res) => {
   uploadImages(req, res, (err) => {
     if (err) {
       res.status(400).send("Ocurrió un error al cargar las imágenes");
+      return;
     }
 
     if (!req.files || req.files.length !== 2) {
       res.status(400).send("Se deben proporcionar exactamente 2 imágenes");
+      return;
     }
 
-    const imageURLs = req.files.map((file) => {
+    const imageURLs = req.files.map((file, index) => {
       return req.protocol + "://" + req.get("host") + "/uploads/img/" + file.filename;
     });
 
-    res.status(200).json({ imageURLs: imageURLs });
+    res.status(200).json({
+      imageURL1: imageURLs[0] || null,
+      imageURL2: imageURLs[1] || null,
+    });
   });
 });
-
 
 app.get("/download/:filename", (req, res) => {
   const filename = req.params.filename;
