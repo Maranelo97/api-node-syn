@@ -23,7 +23,8 @@ exports.addAudiencia = (req, res) => {
       importation: "New Hires Mayo",
       added: new Date(req.body.added),
       emailsSent: 0,
-      imageURLs: req.body.imageURLs,
+      imageURL1: req.body.imageURLs[0] || null,
+      imageURL2: req.body.imageURLs[1] || null,
     };
 
     // Iniciar transacción
@@ -63,22 +64,10 @@ exports.addAudiencia = (req, res) => {
                       res.send(err);
                     });
                   } else {
-                    const imageURLs = req.body.imageURLs;
-                    data.imageURLs = imageURLs;
-
-                    connect.query(
-                      "UPDATE audiencia SET imageURLs = ? WHERE id = ?",
-                      [data.imageURLs, registroId],
-                      (err, updateResult) => {
-                        if (err) return res.send(err);
-                    
-                        res.status(200).json({
-                          message: "Creación exitosa",
-                          imageURLs: data.imageURLs.join(),
-                        });
-                      }
-                    );
-                    
+                    res.status(200).json({
+                      message: "Creación exitosa",
+                      imageURLs: [data.imageURL1, data.imageURL2].filter(Boolean),
+                    });
                   }
                 });
               }
