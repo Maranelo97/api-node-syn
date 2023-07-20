@@ -1,4 +1,4 @@
-//Audience
+// Audience
 exports.addAudiencia = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
@@ -23,8 +23,8 @@ exports.addAudiencia = (req, res) => {
       importation: "New Hires Mayo",
       added: new Date(req.body.added),
       emailsSent: 0,
-      imageURL1: req.body.imageURLs[0] || null,
-      imageURL2: req.body.imageURLs[1] || null,
+      imageURL1: req.body.imageURL1 || null,
+      imageURL2: req.body.imageURL2 || null,
     };
 
     // Iniciar transacción
@@ -66,7 +66,8 @@ exports.addAudiencia = (req, res) => {
                   } else {
                     res.status(200).json({
                       message: "Creación exitosa",
-                      imageURLs: [data.imageURL1, data.imageURL2].filter(Boolean),
+                      imageURL1: data.imageURL1,
+                      imageURL2: data.imageURL2,
                     });
                   }
                 });
@@ -78,7 +79,6 @@ exports.addAudiencia = (req, res) => {
     });
   });
 };
-
 exports.getAudience = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
