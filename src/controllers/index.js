@@ -25,8 +25,8 @@ exports.editAudience = (req, res) => {
 
     // Check if imageURL2 needs to be updated
     if (req.files && req.files.length > 1) {
-      const imageURL2 = req.protocol + "://" + req.get("host") + "/uploads/img/" + req.files[1].filename;
-      dataToBeChanged.imageURL2 = imageURL2;
+      const imagelURL2 = req.protocol + "://" + req.get("host") + "/uploads/img/" + req.files[1].filename;
+      dataToBeChanged.imageURL2 = imagelURL2;
     }
 
     // Iniciar transacción
