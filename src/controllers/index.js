@@ -12,7 +12,7 @@ exports.addAudiencia = (req, res) => {
       emailSyngenta: req.body.emailSyngenta,
       dob: new Date(req.body.dob),
       phone: req.body.phone,
-      phone2: req.body.phone2,
+      phone2: req.body.phone2 !== undefined ? req.body.phone2 : null,
       address: req.body.address,
       address2: req.body.address2,
       location: req.body.location,
