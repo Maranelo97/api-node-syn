@@ -126,7 +126,7 @@ exports.editAudience = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2,
+      phone2: req.body.phone2, 
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -136,8 +136,8 @@ exports.editAudience = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      imageURL1: req.body.imageURL1 || null,
-      imageURL2: req.body.imageURL2 || null, // Corregimos el nombre de la clave
+      imageURL1: req.body.imageURL1,
+      imagelURL2: req.body.imagelURL2,
     };
 
     // Iniciar transacción
@@ -196,6 +196,7 @@ exports.editAudience = (req, res) => {
                       }
                     }
                   );
+                  
                 }
               }
             );
