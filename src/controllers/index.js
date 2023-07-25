@@ -197,32 +197,6 @@ exports.editAudience = (req, res) => {
                     }
                   );
                   
-          connect.query(
-            "INSERT INTO registros_acciones SET ?",
-            nuevaAccion,
-            (err, result) => {
-              if (err) {
-                connect.rollback(() => {
-                  res.send(err);
-                });
-              } else {
-                // Commit de la transacción
-                connect.commit((err) => {
-                  if (err) {
-                    connect.rollback(() => {
-                      res.send(err);
-                    });
-                  } else {
-                    res.status(200).json({
-                      message: "Creación exitosa",
-                      imageURL1: data.imageURL1,
-                      imagelURL2: data.imagelURL2,
-                    });
-                  }
-                });
-              }
-            }
-          );
                 }
               }
             );
