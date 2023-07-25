@@ -125,6 +125,7 @@ exports.editAudience = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
+      phone2: req.body.phone2, 
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
