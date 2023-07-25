@@ -25,15 +25,12 @@ const dbConfig = {
 };
 
 // Multer configuration CSV
-const storage = multer.diskStorage({
+const csvStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./src/uploads/csv");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 //Multer configuration IMG-DNI
@@ -50,7 +47,7 @@ const imageStorage = multer.diskStorage({
 });
 
 const uploadImages = multer({ storage: imageStorage }).array("images", 2);
-const upload = multer({ storage: storage });
+const uploadCSV = multer({ storage: csvStorage }).single("import-csv");
 app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
@@ -94,8 +91,7 @@ app.get("/download/:filename", (req, res) => {
     }
   });
 });
-
-//upload csv
+//upload CSV
 app.post("/import-csv", (req, res) => {
   uploadCSV(req, res, (err) => {
     if (err) {
@@ -112,44 +108,51 @@ app.post("/import-csv", (req, res) => {
     const stream = fs.createReadStream(req.file.path);
 
     const fileStream = csv
-      .parse()
+      .parse({ headers: true }) // Indica que la primera fila es el encabezado con los nombres de las columnas
       .on("data", (data) => {
-        csvDataColl.push(data);
+        // Si alguna columna no está presente en el archivo CSV, se le asigna valor null.
+        const rowData = {
+          status: data.status || null,
+          name: data.name || null,
+          lastname: data.lastname || null,
+          email: data.email || null,
+          phone: data.phone || null,
+          area: data.area || null,
+          importation: data.importation || null,
+          added: data.added || null,
+          emailsSent: data.emailsSent || null,
+        };
+        csvDataColl.push(Object.values(rowData));
       })
       .on("end", () => {
-        csvDataColl.shift();
+        // Realiza la inserción en la base de datos
         const query =
           "INSERT INTO audiencia (status, name, lastname, email, phone, area, importation, added, emailsSent) VALUES ? ";
 
-        // Aquí puedes seguir con la lógica para insertar los datos en la tabla de la base de datos
-        // req.getConnection((err, connection) => {
-        //   if (err) {
-        //     console.error(err);
-        //     res.status(500).send("Internal Server Error");
-        //     return;
-        //   }
+        req.getConnection((err, connection) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send("Internal Server Error");
+            return;
+          }
 
-        //   connection.query(query, [csvDataColl], (err, rows, fields) => {
-        //     if (err) {
-        //       console.error(err);
-        //       res.status(500).send("Internal Server Error");
-        //     } else {
-        //       console.log("Rows inserted:", rows.affectedRows);
-        //       res.send("Data Subida a la DB");
-        //     }
+          connection.query(query, [csvDataColl], (err, result) => {
+            if (err) {
+              console.error(err);
+              res.status(500).send("Internal Server Error");
+            } else {
+              console.log("Rows inserted:", result.affectedRows);
+              res.send("Data Subida a la DB");
+            }
 
-        //     fs.unlinkSync(req.file.path);
-        //   });
-        // });
-
-        // Simplemente para la prueba, enviar una respuesta con los datos del CSV procesado
-        res.status(200).json({ csvData: csvDataColl });
+            fs.unlinkSync(req.file.path);
+          });
+        });
       });
 
     stream.pipe(fileStream);
   });
 });
-
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
 });
