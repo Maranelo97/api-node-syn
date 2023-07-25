@@ -96,42 +96,58 @@ app.get("/download/:filename", (req, res) => {
 });
 
 //upload csv
-app.post("/import-csv", upload.single("import-csv"), (req, res) => {
-  const csvDataColl = [];
-  const stream = fs.createReadStream(req.file.path);
+app.post("/import-csv", (req, res) => {
+  uploadCSV(req, res, (err) => {
+    if (err) {
+      res.status(400).send("Ocurrió un error al cargar el archivo CSV");
+      return;
+    }
 
-  const fileStream = csv
-    .parse()
-    .on("data", (data) => {
-      csvDataColl.push(data);
-    })
-    .on("end", () => {
-      csvDataColl.shift();
-      const query =
-        "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added, emailsSent) VALUES ? ";
+    if (!req.file) {
+      res.status(400).send("Se debe proporcionar un archivo CSV");
+      return;
+    }
 
-      req.getConnection((err, connection) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Internal Server Error");
-          return;
-        }
+    const csvDataColl = [];
+    const stream = fs.createReadStream(req.file.path);
 
-        connection.query(query, [csvDataColl], (err, rows, fields) => {
-          if (err) {
-            console.error(err);
-            res.status(500).send("Internal Server Error");
-          } else {
-            console.log("Rows inserted:", rows.affectedRows);
-            res.send("Data Subida a la DB");
-          }
+    const fileStream = csv
+      .parse()
+      .on("data", (data) => {
+        csvDataColl.push(data);
+      })
+      .on("end", () => {
+        csvDataColl.shift();
+        const query =
+          "INSERT INTO audiencia (status, name, lastname, email, phone, area, importation, added, emailsSent) VALUES ? ";
 
-          fs.unlinkSync(req.file.path);
-        });
+        // Aquí puedes seguir con la lógica para insertar los datos en la tabla de la base de datos
+        // req.getConnection((err, connection) => {
+        //   if (err) {
+        //     console.error(err);
+        //     res.status(500).send("Internal Server Error");
+        //     return;
+        //   }
+
+        //   connection.query(query, [csvDataColl], (err, rows, fields) => {
+        //     if (err) {
+        //       console.error(err);
+        //       res.status(500).send("Internal Server Error");
+        //     } else {
+        //       console.log("Rows inserted:", rows.affectedRows);
+        //       res.send("Data Subida a la DB");
+        //     }
+
+        //     fs.unlinkSync(req.file.path);
+        //   });
+        // });
+
+        // Simplemente para la prueba, enviar una respuesta con los datos del CSV procesado
+        res.status(200).json({ csvData: csvDataColl });
       });
-    });
 
-  stream.pipe(fileStream);
+    stream.pipe(fileStream);
+  });
 });
 
 app.listen(PORT, () => {
