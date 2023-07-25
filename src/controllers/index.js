@@ -116,7 +116,7 @@ exports.editAudience = (req, res) => {
     if (err) return res.send(err);
 
     const dataToBeChangedd = {
-  dni: req.body.dni,
+      dni: req.body.dni,
       cuil: req.body.cuil,
       name: req.body.name,
       area: req.body.area,
@@ -135,7 +135,7 @@ exports.editAudience = (req, res) => {
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
       imageURL1: req.body.imageURL1,
-      imagelURL2: req.body.imagelURL2
+      imagelURL2: req.body.imagelURL2,
     };
 
     // Iniciar transacción
