@@ -92,6 +92,8 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 //upload CSV
+const columnsToInsert = ["status", "name", "lastname", "email", "phone", "area", "importation", "added", "emailsSent"];
+
 app.post("/import-csv", (req, res) => {
   uploadCSV(req, res, (err) => {
     if (err) {
@@ -111,23 +113,15 @@ app.post("/import-csv", (req, res) => {
       .parse({ headers: true }) // Indica que la primera fila es el encabezado con los nombres de las columnas
       .on("data", (data) => {
         // Si alguna columna no está presente en el archivo CSV, se le asigna valor null.
-        const rowData = {
-          status: data.status || null,
-          name: data.name || null,
-          lastname: data.lastname || null,
-          email: data.email || null,
-          phone: data.phone || null,
-          area: data.area || null,
-          importation: data.importation || null,
-          added: data.added || null,
-          emailsSent: data.emailsSent || null,
-        };
+        const rowData = {};
+        columnsToInsert.forEach((column) => {
+          rowData[column] = data[column] || null;
+        });
         csvDataColl.push(Object.values(rowData));
       })
       .on("end", () => {
         // Realiza la inserción en la base de datos
-        const query =
-          "INSERT INTO audiencia (status, name, lastname, email, phone, area, importation, added, emailsSent) VALUES ? ";
+        const query = `INSERT INTO audiencia (${columnsToInsert.join(', ')}) VALUES ?`;
 
         req.getConnection((err, connection) => {
           if (err) {
@@ -153,6 +147,7 @@ app.post("/import-csv", (req, res) => {
     stream.pipe(fileStream);
   });
 });
+
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
 });
