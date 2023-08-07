@@ -166,7 +166,7 @@ app.post("/verify-code/:email/code", function(req, res) {
   const { email } = req.params
 
   transporter.sendMail({
-    from: "syngentaDP@outlook.com",
+    from: "Syngenta syngentaDP@outlook.com",
     to: email,
     subject: "Codigo de seguridad: ",
     text: "Este es el codigo de seguridad para tu onboarding de Digital Pension: "
