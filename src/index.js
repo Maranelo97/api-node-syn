@@ -160,18 +160,17 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-
 function generarCodigoAlfanumerico(longitud) {
   const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let codigo = '';
-
   for (let i = 0; i < longitud; i++) {
-    const indice = Math.floor(Math.random() * caracteres.length);
-    codigo += caracteres.charAt(indice);
+    const randomIndex = Math.floor(Math.random() * caracteres.length);
+    codigo += caracteres.charAt(randomIndex);
   }
-
   return codigo;
 }
+
+
 
 //Mailer
 app.post("/verify-code/:email/code", function(req, res) {
@@ -184,9 +183,9 @@ app.post("/verify-code/:email/code", function(req, res) {
     from: "syngentaDP@outlook.com",
     to: email,
     subject: "Codigo de seguridad: ",
-    text: `Este es el codigo de seguridad para tu Onboarding de Digital Pension: ${codigoGenerado}`
+    text: `Este es el codigo de seguridad para tu Onboarding de Digital Pension: ${ codigoGenerado }`
   })
-  res.status(200).json({ ok: true, message: "Codigo enviado con éxito" })
+  res.status(200).json({ ok: true, message: `Codigo enviado con éxito, tu codigo es: ${codigoGenerado}` })
 })
 
 app.listen(PORT, () => {
