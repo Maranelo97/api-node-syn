@@ -162,9 +162,12 @@ const transporter = nodemailer.createTransport({
 
 //Mailer
 app.post("/verify-code/:email/code", function(req, res) {
+
+  const { email } = req.params
+
   transporter.sendMail({
     from: "syngentaDP@outlook.com",
-    to: "marianoveronsantos@gmail.com",
+    to: email,
     subject: "Codigo de seguridad: ",
     body: "Este es el codigo de seguridad para tu onboardin de DGP: "
   })
