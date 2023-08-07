@@ -171,6 +171,7 @@ app.post("/verify-code/:email/code", function(req, res) {
     subject: "Codigo de seguridad: ",
     body: "Este es el codigo de seguridad para tu onboardin de DGP: "
   })
+  res.status(200).json({ ok: true, message: "Codigo enviado con éxito" })
 })
 
 app.listen(PORT, () => {
