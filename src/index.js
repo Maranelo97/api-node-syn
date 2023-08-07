@@ -9,6 +9,7 @@ const multer = require("multer");
 const csv = require("fast-csv");
 const fs = require("fs");
 const path = require("path");
+const nodemailer = require("nodemailer");
 
 const app = express();
 
@@ -149,6 +150,25 @@ app.post("/import-csv", (req, res) => {
 });
 
 
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.office365.com",
+  port: 587,
+  auth: {
+    user: "syngentaDP@outlook.com",
+    pass: "testeando123"
+  }
+})
+
+//Mailer
+app.post("/verify-code/:email/code", function(req, res) {
+  transporter.sendMail({
+    from: "syngentaDP@outlook.com",
+    to: "marianoveronsantos@gamil.com",
+    subject: "Codigo de seguridad: ",
+    body: "Este es el codigo de seguridad para tu onboardin de DGP: "
+  })
+})
 
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
