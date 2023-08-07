@@ -188,6 +188,31 @@ app.post("/verify-code/:email/code", function(req, res) {
   res.status(200).json({ ok: true, message: `Codigo enviado con éxito, tu codigo es: ${codigoGenerado}` })
 })
 
+app.post('/verify-code/:email/verify', (req, res) => {
+  const { email } = req.params;
+  const { code } = req.body; // El código ingresado por el usuario
+
+  // Aquí es donde debes implementar la lógica para comparar el código ingresado
+  // con el código almacenado en tu base de datos para el correo electrónico especificado.
+
+  // Por ejemplo, si estás utilizando una base de datos, puedes realizar una consulta
+  // para obtener el código almacenado asociado al correo electrónico.
+
+  // Supongamos que obtienes el código almacenado en una variable llamada codigoAlmacenado.
+
+  const codigoAlmacenado = 'código_de_ejemplo'; // Esto es solo un ejemplo, reemplázalo con la lógica real de tu base de datos.
+
+  // Ahora compara el código ingresado con el código almacenado
+  if (code === codigoAlmacenado) {
+    // Si los códigos coinciden, respondemos con un estado de éxito (200) y un mensaje.
+    res.status(200).json({ ok: true, message: 'Código verificado correctamente' });
+  } else {
+    // Si los códigos no coinciden, respondemos con un estado de error (400) y un mensaje.
+    res.status(400).json({ ok: false, message: 'Código incorrecto' });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
 });
