@@ -169,7 +169,7 @@ app.post("/verify-code/:email/code", function(req, res) {
     from: "syngentaDP@outlook.com",
     to: email,
     subject: "Codigo de seguridad: ",
-    body: "Este es el codigo de seguridad para tu onboardin de DGP: "
+    text: "Este es el codigo de seguridad para tu onboarding de Digital Pension: "
   })
   res.status(200).json({ ok: true, message: "Codigo enviado con éxito" })
 })
