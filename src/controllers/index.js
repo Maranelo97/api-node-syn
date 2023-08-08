@@ -138,6 +138,8 @@ exports.editAudience = (req, res) => {
       dob: new Date(req.body.dob),
       imageURL1: req.body.imageURL1,
       imagelURL2: req.body.imagelURL2,
+      aports: req.body.aports,
+      profile: req.body.profile
     };
 
     // Iniciar transacción
