@@ -8,7 +8,7 @@ route.get('/audience/:dni', getByDni)
 route.post("/add", addAudiencia)
 route.put('/update/:id', editAudience)
 route.put('/acceptSub/:id', aceptarSub)
-route.put('reject-sub/:id', rechazarSub)
+route.put('/reject-sub/:id', rechazarSub)
 route.delete('/delete/:id', deleteAudience)
 
 module.exports = route;
