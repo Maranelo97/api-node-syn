@@ -308,10 +308,6 @@ exports.rechazarSub = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
 
-    const dataToBeChangedd = {
-      // ... Tu objeto dataToBeChangedd
-    };
-
     // Obtener la justificación del cuerpo de la solicitud
     const justificacion = req.body.justificacion;
 
@@ -330,7 +326,7 @@ exports.rechazarSub = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 4; 
+            const accionId = 4;
 
             // Insertar en la tabla de registros_acciones con la justificación
             const nuevaAccion = {
@@ -351,8 +347,8 @@ exports.rechazarSub = (req, res) => {
                 } else {
                   // Actualizar el registro en la tabla de audiencia
                   connect.query(
-                    "UPDATE audiencia SET ? WHERE id = ?",
-                    [dataToBeChangedd, req.params.id],
+                    "UPDATE audiencia SET status = ?, justificacion = ? WHERE id = ?",
+                    ["rechazado", justificacion, req.params.id],
                     (err, updateResult) => {
                       if (err) {
                         connect.rollback(() => {
@@ -381,6 +377,7 @@ exports.rechazarSub = (req, res) => {
     });
   });
 };
+
 
 
 
