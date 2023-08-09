@@ -233,6 +233,7 @@ exports.aceptarSub = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
     };
 
     // Iniciar transacción
