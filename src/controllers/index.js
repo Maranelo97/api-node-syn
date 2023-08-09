@@ -347,8 +347,8 @@ exports.rechazarSub = (req, res) => {
                 } else {
                   // Actualizar el registro en la tabla de audiencia
                   connect.query(
-                    "UPDATE audiencia SET status = ?, justificacion = ? WHERE id = ?",
-                    ["rechazado", justificacion, req.params.id],
+                    "UPDATE registros_acciones SET justificacion = ? WHERE registroId = ?",
+                    [justificacion, req.params.id],
                     (err, updateResult) => {
                       if (err) {
                         connect.rollback(() => {
@@ -377,6 +377,7 @@ exports.rechazarSub = (req, res) => {
     });
   });
 };
+
 
 
 
