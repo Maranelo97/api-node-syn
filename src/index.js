@@ -87,7 +87,7 @@ app.get("/download/:filename", (req, res) => {
 });
 //upload CSV
 
-const chargeCSV = multer({ storage: csvStorage }).single("import-csv");
+
 
 const csvStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -97,6 +97,8 @@ const csvStorage = multer.diskStorage({
     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
+
+const uploadCSV = multer({ storage: csvStorage }).single("import-csv");
 
 //Función de parseo de datos
 function uploadCsv(uriFile){
@@ -129,11 +131,23 @@ function uploadCsv(uriFile){
 }
 
 //Petición Post
-app.post('/import-csv', upload.single("import-csv"), (req, res)=>{
-    chargeCsv( __dirname + '/uploads/' + req.file.filename)
+app.post('/import-csv', upload.single("import-csv"), (req, res) => {
+  uploadCSV(req, res, (err) => {
+      if (err) {
+          res.status(400).send("Ocurrió un error al cargar el archivo CSV");
+          return;
+      }
+      
+      if (!req.file) {
+          res.status(400).send("Se debe proporcionar un archivo CSV");
+          return;
+      }
+      
+      uploadCsv(__dirname + '/uploads/' + req.file.filename);
 
-    res.send("Data Subida a la DB")
-})
+      res.send("Data Subida a la DB");
+  });
+});
 
 
 
