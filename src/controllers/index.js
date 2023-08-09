@@ -304,12 +304,35 @@ exports.aceptarSub = (req, res) => {
   });
 };
 
+
 exports.rechazarSub = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
 
-    // Obtener la justificación del cuerpo de la solicitud
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+    };
+
     const justificacion = req.body.justificacion;
+
 
     // Iniciar transacción
     connect.beginTransaction((err) => {
@@ -326,9 +349,9 @@ exports.rechazarSub = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 4;
+            const accionId = 4; 
 
-            // Insertar en la tabla de registros_acciones con la justificación
+            // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
               accionId,
               registroId,
@@ -347,8 +370,8 @@ exports.rechazarSub = (req, res) => {
                 } else {
                   // Actualizar el registro en la tabla de audiencia
                   connect.query(
-                    "UPDATE registros_acciones SET justificacion = ? WHERE registroId = ?",
-                    [justificacion, req.params.id],
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
                     (err, updateResult) => {
                       if (err) {
                         connect.rollback(() => {
@@ -368,6 +391,7 @@ exports.rechazarSub = (req, res) => {
                       }
                     }
                   );
+                  
                 }
               }
             );
@@ -377,6 +401,7 @@ exports.rechazarSub = (req, res) => {
     });
   });
 };
+
 
 
 
