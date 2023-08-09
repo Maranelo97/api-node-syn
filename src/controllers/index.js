@@ -309,26 +309,11 @@ exports.rechazarSub = (req, res) => {
     if (err) return res.send(err);
 
     const dataToBeChangedd = {
-      dni: req.body.dni,
-      cuil: req.body.cuil,
-      name: req.body.name,
-      area: req.body.area,
-      status: req.body.status,
-      lastname: req.body.lastname,
-      email: req.body.email,
-      emailSyngenta: req.body.emailSyngenta,
-      phone: req.body.phone,
-      phone2: req.body.phone2, 
-      importation: req.body.importation,
-      added: new Date(req.body.added),
-      address: req.body.address,
-      address2: req.body.address2,
-      location: req.body.location,
-      province: req.body.province,
-      zipCode: req.body.zipCode,
-      ingress: new Date(req.body.ingress),
-      dob: new Date(req.body.dob),
+      // ... Tu objeto dataToBeChangedd
     };
+
+    // Obtener la justificación del cuerpo de la solicitud
+    const justificacion = req.body.justificacion;
 
     // Iniciar transacción
     connect.beginTransaction((err) => {
@@ -347,10 +332,11 @@ exports.rechazarSub = (req, res) => {
             const registroId = req.params.id;
             const accionId = 4; 
 
-            // Insertar en la tabla de registros_acciones
+            // Insertar en la tabla de registros_acciones con la justificación
             const nuevaAccion = {
               accionId,
               registroId,
+              justificacion, // Agregar la justificación aquí
               fecha: new Date(),
             };
 
@@ -386,7 +372,6 @@ exports.rechazarSub = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -396,6 +381,7 @@ exports.rechazarSub = (req, res) => {
     });
   });
 };
+
 
 
 //aqui
