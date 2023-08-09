@@ -41,7 +41,7 @@ const imageStorage = multer.diskStorage({
 });
 
 const uploadImages = multer({ storage: imageStorage }).array("images", 2);
-const uploadCSV = multer({ storage: csvStorage }).single("import-csv");
+
 app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
@@ -87,7 +87,7 @@ app.get("/download/:filename", (req, res) => {
 });
 //upload CSV
 
-
+const chargeCSV = multer({ storage: csvStorage }).single("import-csv");
 
 const csvStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -130,7 +130,7 @@ function uploadCsv(uriFile){
 
 //Petición Post
 app.post('/import-csv', upload.single("import-csv"), (req, res)=>{
-    uploadCsv( __dirname + '/uploads/' + req.file.filename)
+    chargeCsv( __dirname + '/uploads/' + req.file.filename)
 
     res.send("Data Subida a la DB")
 })
