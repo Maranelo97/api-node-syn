@@ -139,7 +139,8 @@ exports.editAudience = (req, res) => {
       imageURL1: req.body.imageURL1,
       imagelURL2: req.body.imagelURL2,
       aports: req.body.aports,
-      profile: req.body.profile
+      profile: req.body.profile,
+      onBoarding: req.body.onBoarding
     };
 
     // Iniciar transacción
