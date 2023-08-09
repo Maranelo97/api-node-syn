@@ -26,14 +26,7 @@ const dbConfig = {
 };
 
 // Multer configuration CSV
-const csvStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./src/uploads/csv");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-  },
-});
+
 //Multer configuration IMG-DNI
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -93,61 +86,54 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 //upload CSV
-const columnsToInsert = ["status", "name", "lastname", "email", "phone", "area", "importation", "added", "emailsSent"];
 
-app.post("/import-csv", (req, res) => {
-  uploadCSV(req, res, (err) => {
-    if (err) {
-      res.status(400).send("Ocurrió un error al cargar el archivo CSV");
-      return;
-    }
 
-    if (!req.file) {
-      res.status(400).send("Se debe proporcionar un archivo CSV");
-      return;
-    }
 
-    const csvDataColl = [];
-    const stream = fs.createReadStream(req.file.path);
-
-    const fileStream = csv
-      .parse({ headers: true }) // Indica que la primera fila es el encabezado con los nombres de las columnas
-      .on("data", (data) => {
-        // Si alguna columna no está presente en el archivo CSV, se le asigna valor null.
-        const rowData = {};
-        columnsToInsert.forEach((column) => {
-          rowData[column] = data[column] || null;
-        });
-        csvDataColl.push(Object.values(rowData));
-      })
-      .on("end", () => {
-        // Realiza la inserción en la base de datos
-        const query = `INSERT INTO audiencia (${columnsToInsert.join(', ')}) VALUES ?`;
-
-        req.getConnection((err, connection) => {
-          if (err) {
-            console.error(err);
-            res.status(500).send("Internal Server Error");
-            return;
-          }
-
-          connection.query(query, [csvDataColl], (err, result) => {
-            if (err) {
-              console.error(err);
-              res.status(500).send("Internal Server Error");
-            } else {
-              console.log("Rows inserted:", result.affectedRows);
-              res.send("Data Subida a la DB");
-            }
-
-            fs.unlinkSync(req.file.path);
-          });
-        });
-      });
-
-    stream.pipe(fileStream);
-  });
+const csvStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./src/uploads/csv");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+  },
 });
+
+//Función de parseo de datos
+function uploadCsv(uriFile){
+    let stream = fs.createReadStream(uriFile);
+    let csvDataColl = [];
+    let fileStream = csv
+        .parse()
+        .on("data", function (data) {
+            csvDataColl.push(data);
+        })
+        .on("end", function () {
+            csvDataColl.shift();
+            
+            pool.getConnection((error,connection) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    let query = 'INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added,emailsSent) VALUES ?';
+                    connection.query(query, [csvDataColl], (error, res) => {
+                        console.log(error || res);
+                    });
+                }
+            });
+
+            fs.unlinkSync(uriFile)
+            
+        });
+  
+    stream.pipe(fileStream);
+}
+
+//Petición Post
+app.post('/import-csv', upload.single("import-csv"), (req, res)=>{
+    uploadCsv( __dirname + '/uploads/' + req.file.filename)
+
+    res.send("Data Subida a la DB")
+})
 
 
 
