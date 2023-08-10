@@ -134,7 +134,7 @@ function uploadCsv(uriFile){
 }
 
 //Petición Post
-app.post('/import-csv', uploadCSV.single("import-csv"), (req, res) => {
+app.post('/import-csv', (req, res) => {
   if (!req.file) {
     res.status(400).send("Se debe proporcionar un archivo CSV");
     return;
