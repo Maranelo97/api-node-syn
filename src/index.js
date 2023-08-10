@@ -131,22 +131,10 @@ function uploadCsv(uriFile){
 }
 
 //Petición Post
-app.post('/import-csv', uploadCSV, (req, res) => {
-  uploadCSV(req, res, (err) => {
-      if (err) {
-          res.status(400).send("Ocurrió un error al cargar el archivo CSV");
-          return;
-      }
-      
-      if (!req.file) {
-          res.status(400).send("Se debe proporcionar un archivo CSV");
-          return;
-      }
-      
-      uploadCsv('./uploads/' + req.file.filename);
-
-      res.send("Data Subida a la DB");
-  });
+app.post('/import-csv', upload.single("import-csv"), (req, res) => {
+  const uriFile = path.join(__dirname, 'uploads', req.file.filename);
+  uploadCsv(uriFile);
+  res.send("Data Subida a la DB");
 });
 
 
