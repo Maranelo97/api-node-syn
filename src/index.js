@@ -95,7 +95,7 @@ const storage = multer.diskStorage({
 });
 
 
-const upload = multer({ storage: storage }).single("import-csv");
+const upload = multer({ storage: storage });
 
 
 function uploadCsv(uriFile) {
