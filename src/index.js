@@ -135,8 +135,13 @@ function uploadCsv(uriFile){
 
 //Petición Post
 app.post('/import-csv', uploadCSV.single("import-csv"), (req, res) => {
-  const uriFile = path.join(__dirname, 'uploads', req.file.filename);
-  uploadCsv(uriFile, req);
+  if (!req.file) {
+    res.status(400).send("Se debe proporcionar un archivo CSV");
+    return;
+  }
+
+  const uriFile = path.join(__dirname, 'uploads', 'csv', req.file.filename);
+  uploadCsv(uriFile);
   res.send("Data Subida a la DB");
 });
 
