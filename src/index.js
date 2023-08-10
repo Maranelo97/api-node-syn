@@ -100,6 +100,10 @@ const upload = multer({ storage: storage });
 
 //Función de parseo de datos
 function uploadCsv(uriFile) {
+  if (!fs.existsSync(uriFile)) {
+    console.log("File does not exist:", uriFile);
+    return;
+  }
 
   let stream = fs.createReadStream(uriFile);
   let csvDataColl = [];
