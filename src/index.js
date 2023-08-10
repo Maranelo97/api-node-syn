@@ -102,6 +102,9 @@ const uploadCSV = multer({ storage: csvStorage }).single("import-csv");
 
 //Función de parseo de datos
 function uploadCsv(uriFile){
+  const csvUrl = req.protocol + "://" + req.get("host") + "/uploads/csv/" + path.basename(uriFile);
+
+
     let stream = fs.createReadStream(uriFile);
     let csvDataColl = [];
     let fileStream = csv
@@ -131,12 +134,11 @@ function uploadCsv(uriFile){
 }
 
 //Petición Post
-app.post('/import-csv', uploadCSV, (req, res) => {
+app.post('/import-csv', uploadCSV("import-csv"), (req, res) => {
   const uriFile = path.join(__dirname, 'uploads', req.file.filename);
-  uploadCsv(uriFile);
+  uploadCsv(uriFile, req);
   res.send("Data Subida a la DB");
 });
-
 
 
 const transporter = nodemailer.createTransport({
