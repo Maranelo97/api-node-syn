@@ -85,19 +85,18 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 //upload CSV
-//MULTER
 const storage = multer.diskStorage({
-  destination: (req, file, cb) =>{
-      cb(null, "./uploads/csv")  // Cambiado el destino para guardar en la carpeta /csv
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/csv");  // Cambiado el destino para guardar en la carpeta /csv
   },
   filename: (req, file, cb) => {
-      cb(null, file.fieldname + "-" + Date.now()+  path.extname(file.originalname))
-  }
-})
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+  },
+});
 
-const upload = multer({
-  storage: storage
-})
+
+const upload = multer({ storage: storage });
+
 
 //Función de parseo de datos
 function uploadCsv(uriFile) {
@@ -137,10 +136,11 @@ app.post('/import-csv', upload.single("import-csv"), (req, res) => {
     return;
   }
 
-  const uriFile = path.join(__dirname, 'uploads', 'csv', req.file.filename);  // Ajustado para reflejar la nueva ubicación
+  const uriFile = path.join(__dirname, 'uploads', 'csv', req.file.filename);
   uploadCsv(uriFile);
   res.send("Data Subida a la DB");
 });
+
 
 
 
