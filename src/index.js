@@ -131,7 +131,7 @@ function uploadCsv(uriFile){
 }
 
 //Petición Post
-app.post('/import-csv', upload.single("import-csv"), (req, res) => {
+app.post('/import-csv', uploadCSV, (req, res) => {
   uploadCSV(req, res, (err) => {
       if (err) {
           res.status(400).send("Ocurrió un error al cargar el archivo CSV");
