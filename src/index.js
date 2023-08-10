@@ -138,6 +138,7 @@ app.post('/import-csv', upload.single("import-csv"), (req, res) => {
 
   const uriFile = path.join(__dirname, 'uploads', 'csv', req.file.filename);
   uploadCsv(uriFile);
+  console.log(uriFile)
   res.send("Data Subida a la DB");
 });
 
