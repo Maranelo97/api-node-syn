@@ -87,7 +87,7 @@ app.get("/download/:filename", (req, res) => {
 //upload CSV
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/csv");  // Cambiado el destino para guardar en la carpeta /csv
+    cb(null, path.join(__dirname, "uploads", "csv"));  // Cambiado el destino para guardar en la carpeta /csv
   },
   filename: (req, file, cb) => {
     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
