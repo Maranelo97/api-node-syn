@@ -13,9 +13,6 @@ const nodemailer = require("nodemailer");
 
 const app = express();
 
-
-
-
 const PORT = process.env.PORT || 4002;
 const dbConfig = {
   host: process.env.DB_HOST || "localhost",
@@ -64,7 +61,9 @@ app.post("/upload-images", (req, res) => {
     }
 
     const imageURLs = req.files.map((file, index) => {
-      return req.protocol + "://" + req.get("host") + "/uploads/img/" + file.filename;
+      return (
+        req.protocol + "://" + req.get("host") + "/uploads/img/" + file.filename
+      );
     });
 
     res.status(200).json({
@@ -72,12 +71,12 @@ app.post("/upload-images", (req, res) => {
       imagelURL2: imageURLs[1] || null,
     });
   });
-}); 
+});
 
 app.get("/download/:filename", (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, "uploads", "img", filename);
-  
+
   res.download(filePath, (err) => {
     if (err) {
       console.log(err);
@@ -87,77 +86,84 @@ app.get("/download/:filename", (req, res) => {
 });
 //upload CSV
 
-
-
 const csvStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./src/uploads/csv/");
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
 const uploadCSV = multer({ storage: csvStorage }).single("import-csv");
 
 //Función de parseo de datos
-function uploadCsv(uriFile){
-  const csvUrl = req.protocol + "://" + req.get("host") + "/uploads/csv/" + path.basename(uriFile);
+function uploadCsv(uriFile) {
+  const csvUrl =
+    req.protocol +
+    "://" +
+    req.get("host") +
+    "/uploads/csv/" +
+    path.basename(uriFile);
 
+  let stream = fs.createReadStream(uriFile);
+  let csvDataColl = [];
+  let fileStream = csv
+    .parse()
+    .on("data", function (data) {
+      csvDataColl.push(data);
+    })
+    .on("end", function () {
+      csvDataColl.shift();
 
-    let stream = fs.createReadStream(uriFile);
-    let csvDataColl = [];
-    let fileStream = csv
-        .parse()
-        .on("data", function (data) {
-            csvDataColl.push(data);
-        })
-        .on("end", function () {
-            csvDataColl.shift();
-            
-            pool.getConnection((error,connection) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    let query = 'INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added,emailsSent) VALUES ?';
-                    connection.query(query, [csvDataColl], (error, res) => {
-                        console.log(error || res);
-                    });
-                }
-            });
+      pool.getConnection((error, connection) => {
+        if (error) {
+          console.error(error);
+        } else {
+          let query =
+            "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added,emailsSent) VALUES ?";
+          connection.query(query, [csvDataColl], (error, res) => {
+            console.log(error || res);
+          });
+        }
+      });
 
-            fs.unlinkSync(uriFile)
-            
-        });
-  
-    stream.pipe(fileStream);
+      fs.unlinkSync(uriFile);
+    });
+
+  stream.pipe(fileStream);
 }
 
 //Petición Post
-app.post('/import-csv', (req, res) => {
-  if (!req.file) {
-    res.status(400).send("Se debe proporcionar un archivo CSV");
-    return;
-  }
+app.post("/import-csv", (req, res) => {
+  uploadCSV(req, res, (err) => {
+    if (!req.file) {
+      res.status(400).send("Se debe proporcionar un archivo CSV");
+      return;
+    }
 
-  const uriFile = path.join(__dirname, 'uploads', 'csv', req.file.filename);
-  uploadCsv(uriFile);
-  res.send("Data Subida a la DB");
+    const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
+    uploadCsv(uriFile);
+    res.send("Data Subida a la DB");
+  });
 });
-
 
 const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
   port: 587,
   auth: {
     user: "syngentaDP@outlook.com",
-    pass: "testeando123"
-  }
-})
+    pass: "testeando123",
+  },
+});
 
 function generarCodigoAlfanumerico(longitud) {
-  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let codigo = '';
+  const caracteres =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let codigo = "";
   for (let i = 0; i < longitud; i++) {
     const randomIndex = Math.floor(Math.random() * caracteres.length);
     codigo += caracteres.charAt(randomIndex);
@@ -165,25 +171,26 @@ function generarCodigoAlfanumerico(longitud) {
   return codigo;
 }
 
-
-
 //Mailer
-app.post("/verify-code/:email/code", function(req, res) {
-
+app.post("/verify-code/:email/code", function (req, res) {
   const { email } = req.params;
-  const codigoGenerado = generarCodigoAlfanumerico(5)
-
+  const codigoGenerado = generarCodigoAlfanumerico(5);
 
   transporter.sendMail({
     from: "syngentaDP@outlook.com",
     to: email,
     subject: "Codigo de seguridad: ",
-    text: `Este es el codigo de seguridad para tu Onboarding de Digital Pension: ${ codigoGenerado }`
-  })
-  res.status(200).json({ ok: true, message: `Codigo enviado con éxito, tu codigo es: ${codigoGenerado}` })
-})
+    text: `Este es el codigo de seguridad para tu Onboarding de Digital Pension: ${codigoGenerado}`,
+  });
+  res
+    .status(200)
+    .json({
+      ok: true,
+      message: `Codigo enviado con éxito, tu codigo es: ${codigoGenerado}`,
+    });
+});
 
-app.post('/verify-code/:email/verify', (req, res) => {
+app.post("/verify-code/:email/verify", (req, res) => {
   const { email } = req.params;
   const { code } = req.body; // El código ingresado por el usuario
 
@@ -195,18 +202,19 @@ app.post('/verify-code/:email/verify', (req, res) => {
 
   // Supongamos que obtienes el código almacenado en una variable llamada codigoAlmacenado.
 
-  const codigoAlmacenado = 'código_de_ejemplo'; // Esto es solo un ejemplo, reemplázalo con la lógica real de tu base de datos.
+  const codigoAlmacenado = "código_de_ejemplo"; // Esto es solo un ejemplo, reemplázalo con la lógica real de tu base de datos.
 
   // Ahora compara el código ingresado con el código almacenado
   if (code === codigoAlmacenado) {
     // Si los códigos coinciden, respondemos con un estado de éxito (200) y un mensaje.
-    res.status(200).json({ ok: true, message: 'Código verificado correctamente' });
+    res
+      .status(200)
+      .json({ ok: true, message: "Código verificado correctamente" });
   } else {
     // Si los códigos no coinciden, respondemos con un estado de error (400) y un mensaje.
-    res.status(400).json({ ok: false, message: 'Código incorrecto' });
+    res.status(400).json({ ok: false, message: "Código incorrecto" });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
