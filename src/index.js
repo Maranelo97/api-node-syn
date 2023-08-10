@@ -85,20 +85,19 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 //upload CSV
-
-const csvStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./src/uploads/csv/");
+//MULTER
+const storage = multer.diskStorage({
+  destination: (req, file, cb) =>{
+      cb(null, "./uploads/")
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
+      cb(null, file.fieldname + "-" + Date.now()+  path.extname(file.originalname))
+  }
+})
 
-const upload = multer({ storage: csvStorage });
+const upload = multer({
+  storage: storage
+})
 
 //Función de parseo de datos
 function uploadCsv(uriFile) {
@@ -138,16 +137,12 @@ function uploadCsv(uriFile) {
 }
 
 //Petición Post
-app.post("/import-csv", upload.single("import-csv"), (req, res) => {
-  if (!req.file) {
-    res.status(400).send("Se debe proporcionar un archivo CSV");
-    return;
-  }
+app.post('/import-csv', upload.single("import-csv"), (req, res)=>{
+  uploadCsv( __dirname + '/uploads/' + req.file.filename)
 
-  const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
-  uploadCsv(uriFile);
-  res.send("Data Subida a la DB");
-});
+  res.send("Data Subida a la DB")
+})
+
 
 const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
