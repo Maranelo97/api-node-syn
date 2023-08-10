@@ -143,7 +143,7 @@ app.post('/import-csv', uploadCSV, (req, res) => {
           return;
       }
       
-      uploadCSV(__dirname + '/src/uploads/csv/' + req.file.filename);
+      uploadCsv('./uploads/' + req.file.filename);
 
       res.send("Data Subida a la DB");
   });
