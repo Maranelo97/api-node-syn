@@ -98,7 +98,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-//Función de parseo de datos
 function uploadCsv(uriFile) {
   if (!fs.existsSync(uriFile)) {
     console.log("File does not exist:", uriFile);
@@ -117,14 +116,20 @@ function uploadCsv(uriFile) {
 
       pool.getConnection((error, connection) => {
         if (error) {
-          console.error(error);
-        } else {
-          let query =
-            "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added,emailsSent) VALUES ?";
-          connection.query(query, [csvDataColl], (error, res) => {
-            console.log(error || res);
-          });
+          console.error("Error en la conexión a la base de datos:", error);
+          return;
         }
+
+        let query =
+          "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added,emailsSent) VALUES ?";
+        connection.query(query, [csvDataColl], (error, res) => {
+          if (error) {
+            console.error("Error en la consulta SQL:", error);
+          } else {
+            console.log("Filas insertadas:", res.affectedRows);
+          }
+          connection.release();
+        });
       });
 
       fs.unlinkSync(uriFile);
@@ -132,6 +137,7 @@ function uploadCsv(uriFile) {
 
   stream.pipe(fileStream);
 }
+
 
 //Petición Post
 app.post('/import-csv', upload.single("import-csv"), (req, res) => {
