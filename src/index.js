@@ -140,11 +140,21 @@ app.post('/import-csv', upload.single("import-csv"), (req, res) => {
     return;
   }
 
-  const uriFile = path.join(__dirname, 'uploads', 'csv', req.file.filename);
+  const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
   uploadCsv(uriFile);
-  console.log(uriFile)
+
+  // Imprime información sobre la respuesta
+  console.log("Response Status:", res.statusCode);
+  console.log("Response Headers:", res.getHeaders());
+
+  // Escucha el evento "finish" para imprimir el cuerpo de la respuesta
+  res.on('finish', () => {
+    console.log("Response Body:", res.get("Data Subida a la DB"));
+  });
+
   res.send("Data Subida a la DB");
 });
+
 
 
 
