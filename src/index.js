@@ -98,7 +98,7 @@ const csvStorage = multer.diskStorage({
   },
 });
 
-const uploadCSV = multer({ storage: csvStorage }).single("import-csv");
+const upload = multer({ storage: csvStorage });
 
 //Función de parseo de datos
 function uploadCsv(uriFile) {
@@ -138,17 +138,15 @@ function uploadCsv(uriFile) {
 }
 
 //Petición Post
-app.post("/import-csv", (req, res) => {
-  uploadCSV(req, res, (err) => {
-    if (!req.file) {
-      res.status(400).send("Se debe proporcionar un archivo CSV");
-      return;
-    }
+app.post("/import-csv", upload.single("import-csv"), (req, res) => {
+  if (!req.file) {
+    res.status(400).send("Se debe proporcionar un archivo CSV");
+    return;
+  }
 
-    const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
-    uploadCsv(uriFile);
-    res.send("Data Subida a la DB");
-  });
+  const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
+  uploadCsv(uriFile);
+  res.send("Data Subida a la DB");
 });
 
 const transporter = nodemailer.createTransport({
