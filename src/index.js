@@ -213,29 +213,31 @@ app.post("/verify-code/:email/code", async function (req, res) {
   }
 });
 
-app.post("/verify-code/:email/verify", (req, res) => {
+app.post("/verify-code/:email/verify", async (req, res) => {
   const { email } = req.params;
   const { code } = req.body; // El código ingresado por el usuario
 
-  // Aquí es donde debes implementar la lógica para comparar el código ingresado
-  // con el código almacenado en tu base de datos para el correo electrónico especificado.
+  try {
+    const connection = await mysql.createConnection(dbConfig);
 
-  // Por ejemplo, si estás utilizando una base de datos, puedes realizar una consulta
-  // para obtener el código almacenado asociado al correo electrónico.
+    const query = "SELECT codigo FROM codigos WHERE email = ?";
+    const [rows] = await connection.execute(query, [email]);
 
-  // Supongamos que obtienes el código almacenado en una variable llamada codigoAlmacenado.
+    if (rows.length === 0) {
+      res.status(400).json({ ok: false, message: "No se encontró un código para este correo electrónico" });
+      return;
+    }
 
-  const codigoAlmacenado = "código_de_ejemplo"; // Esto es solo un ejemplo, reemplázalo con la lógica real de tu base de datos.
+    const codigoAlmacenado = rows[0].codigo;
 
-  // Ahora compara el código ingresado con el código almacenado
-  if (code === codigoAlmacenado) {
-    // Si los códigos coinciden, respondemos con un estado de éxito (200) y un mensaje.
-    res
-      .status(200)
-      .json({ ok: true, message: "Código verificado correctamente" });
-  } else {
-    // Si los códigos no coinciden, respondemos con un estado de error (400) y un mensaje.
-    res.status(400).json({ ok: false, message: "Código incorrecto" });
+    if (code === codigoAlmacenado) {
+      res.status(200).json({ ok: true, message: "Código verificado correctamente" });
+    } else {
+      res.status(400).json({ ok: false, message: "Código incorrecto" });
+    }
+  } catch (error) {
+    console.error("Error al verificar código:", error);
+    res.status(500).json({ ok: false, message: "Error al verificar el código" });
   }
 });
 
