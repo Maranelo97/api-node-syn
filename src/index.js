@@ -220,16 +220,23 @@ app.get("/verify-code/:email/:code", async (req, res) => {
     const connection = await mysql.createConnection(dbConfig);
 
     const query = "SELECT codigo FROM codigos WHERE email = ?";
-    const result = await connection.execute(query, [email]);
+    const [rows] = await connection.execute(query, [email]);
 
-    if (result.length === 0) {
+    if (rows.length === 0) {
       res.status(400).json({ ok: false, message: "No se encontró un código para este correo electrónico" });
       return;
     }
 
-    const codigoAlmacenado = result;
+    let codigoEncontrado = false;
 
-    if (code === codigoAlmacenado) {
+    for (const row of rows) {
+      if (row.codigo === code) {
+        codigoEncontrado = true;
+        break;
+      }
+    }
+
+    if (codigoEncontrado) {
       res.status(200).json({ ok: true, message: "Código verificado correctamente" });
     } else {
       res.status(400).json({ ok: false, message: "Código incorrecto" });
