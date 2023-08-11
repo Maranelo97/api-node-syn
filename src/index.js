@@ -186,22 +186,37 @@ function generarCodigoAlfanumerico(longitud) {
 }
 
 //Mailer
-app.post("/verify-code/:email/code", function (req, res) {
+app.post("/verify-code/:email/code", async function (req, res) {
   const { email } = req.params;
   const codigoGenerado = generarCodigoAlfanumerico(5);
 
   transporter.sendMail({
     from: "syngentaDP@outlook.com",
     to: email,
-    subject: "Codigo de seguridad: ",
-    text: `Este es el codigo de seguridad para tu Onboarding de Digital Pension: ${codigoGenerado}`,
+    subject: "Codigo de seguridad",
+    text: `Este es el código de seguridad para tu Onboarding de Digital Pension: ${codigoGenerado}`,
   });
-  res
-    .status(200)
-    .json({
-      ok: true,
-      message: `Codigo enviado con éxito, tu codigo es: ${codigoGenerado}`,
+
+  try {
+    const connection = await mysql.createConnection({
+      host: process.env.DB_HOST || "localhost",
+      port: process.env.DB_PORT || "3306",
+      user: process.env.DB_USER || "root",
+      password: process.env.DB_PASSWORD || "",
+      database: process.env.DB_NAME || "mockdata",
     });
+
+    const query = "INSERT INTO codigos (email, codigo) VALUES (?, ?)";
+    await connection.execute(query, [email, codigoGenerado]);
+
+    res.status(200).json({
+      ok: true,
+      message: `Código enviado con éxito, tu código es: ${codigoGenerado}`,
+    });
+  } catch (error) {
+    console.error("Error al insertar código en la base de datos:", error);
+    res.status(500).json({ ok: false, message: "Error al enviar el código" });
+  }
 });
 
 app.post("/verify-code/:email/verify", (req, res) => {
