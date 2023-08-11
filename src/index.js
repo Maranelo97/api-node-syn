@@ -198,13 +198,7 @@ app.post("/verify-code/:email/code", async function (req, res) {
   });
 
   try {
-    const connection = await mysql.createConnection({
-      host: process.env.DB_HOST || "localhost",
-      port: process.env.DB_PORT || "3306",
-      user: process.env.DB_USER || "root",
-      password: process.env.DB_PASSWORD || "",
-      database: process.env.DB_NAME || "mockdata",
-    });
+    const connection = await mysql.createConnection(dbConfig);
 
     const query = "INSERT INTO codigos (email, codigo) VALUES (?, ?)";
     await connection.execute(query, [email, codigoGenerado]);
