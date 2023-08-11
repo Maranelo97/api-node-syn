@@ -222,6 +222,15 @@ app.get("/verify-code/:email/:code", async (req, res) => {
     const query = "SELECT codigo FROM codigos WHERE email = ?";
     const result = await connection.execute(query, [email]);
 
+    console.log("Email:", email);
+    console.log("Query:", query);
+    console.log("Values:", [email]);
+    
+    const [rows] = await connection.execute(query, [email]);
+    
+    console.log("Query Result:", rows);
+
+
     if (result.length === 0) {
       res.status(400).json({ ok: false, message: "No se encontró un código para este correo electrónico" });
       return;
