@@ -227,7 +227,7 @@ app.get("/verify-code/:email/:code", async (req, res) => {
       return;
     }
 
-    const codigoAlmacenado = result;
+    const codigoAlmacenado = result[2].codigo;
 
     if (code === codigoAlmacenado) {
       res.status(200).json({ ok: true, message: "Código verificado correctamente" });
