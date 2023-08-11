@@ -213,9 +213,8 @@ app.post("/verify-code/:email/code", async function (req, res) {
   }
 });
 
-app.post("/verify-code/:email/verify", async (req, res) => {
-  const { email } = req.params;
-  const { code } = req.body; // El código ingresado por el usuario
+app.post("/verify-code/:email/verify/:code", async (req, res) => {
+  const { email, code } = req.params; // Obtenemos el email y el código directamente de los parámetros
 
   try {
     const connection = await mysql.createConnection(dbConfig);
@@ -240,6 +239,7 @@ app.post("/verify-code/:email/verify", async (req, res) => {
     res.status(500).json({ ok: false, message: "Error al verificar el código" });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
