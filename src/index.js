@@ -213,8 +213,8 @@ app.post("/verify-code/:email/code", async function (req, res) {
   }
 });
 
-app.post("/verify-code/:email/verify/:code", async (req, res) => {
-  const { email, code } = req.params; // Obtenemos el email y el código directamente de los parámetros
+app.get("/verify-code/:email/:code", async (req, res) => {
+  const { email, code } = req.params; // Obtenemos el email y el código de los parámetros
 
   try {
     const connection = await mysql.createConnection(dbConfig);
