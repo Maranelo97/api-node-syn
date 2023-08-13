@@ -216,7 +216,7 @@ app.post("/verify-code/:email/code", async function (req, res) {
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads", "pdf"));
+    cb(null, path.join(__dirname, "uploads", "pdfs"));
   },
   filename: (req, file, cb) => {
     cb(
