@@ -233,6 +233,7 @@ const uploadPDFs = multer({ storage: pdfStorage }).single("pdf");
 app.post("/upload-pdf", (req, res) => {
   uploadPDFs(req, res, (err) => {
     if (err) {
+      console.error("Error al cargar el archivo PDF:", err);
       res.status(400).send("Ocurrió un error al cargar el archivo PDF");
       return;
     }
