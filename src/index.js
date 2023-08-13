@@ -213,42 +213,43 @@ app.post("/verify-code/:email/code", async function (req, res) {
   }
 });
 
-app.get("/verify-code/:email/:code", async (req, res) => {
-  const { email, code } = req.params; // Obtenemos el email y el código de los parámetros
 
-  try {
-    const connection = await mysql.createConnection(dbConfig);
+const pdfStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "uploads", "pdf"));
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
-    const query = "SELECT codigo FROM codigos WHERE email = ?";
-    const result = await connection.execute(query, [email]);
-
-    console.log("Email:", email);
-    console.log("Query:", query);
-    console.log("Values:", [email]);
-    
-    const [rows] = await connection.execute(query, [email]);
-    
-    console.log("Query Result:", rows);
+const uploadPDFs = multer({ storage: pdfStorage }).single("pdf");
 
 
-    if (result.length === 0) {
-      res.status(400).json({ ok: false, message: "No se encontró un código para este correo electrónico" });
+
+app.post("/upload-pdf", (req, res) => {
+  uploadPDFs(req, res, (err) => {
+    if (err) {
+      res.status(400).send("Ocurrió un error al cargar el archivo PDF");
       return;
     }
 
-    const codigoAlmacenado = result;
-    console.log(result)
-
-    if (code === codigoAlmacenado) {
-      res.status(200).json({ ok: true, message: "Código verificado correctamente" });
-    } else {
-      res.status(400).json({ ok: false, message: "Código incorrecto" });
+    if (!req.file) {
+      res.status(400).send("Se debe proporcionar un archivo PDF");
+      return;
     }
-  } catch (error) {
-    console.error("Error al verificar código:", error);
-    res.status(500).json({ ok: false, message: "Error al verificar el código" });
-  }
+
+    const pdfURL = req.protocol + "://" + req.get("host") + "/uploads/pdf/" + req.file.filename;
+
+    res.status(200).json({
+      pdfURL: pdfURL,
+    });
+  });
 });
+
 
 
 
