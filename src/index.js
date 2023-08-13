@@ -243,7 +243,7 @@ app.post("/upload-pdf", (req, res) => {
       return;
     }
 
-    const pdfURL = req.protocol + "://" + req.get("host") + "/uploads/pdf/" + req.file.filename;
+    const pdfURL = req.protocol + "://" + req.get("host") + "/uploads/pdfs/" + req.file.filename;
 
     res.status(200).json({
       pdfURL: pdfURL,
