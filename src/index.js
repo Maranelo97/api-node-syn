@@ -210,14 +210,12 @@ app.post("/verify-code/:email/code", async function (req, res) {
 });
 
 
-app.post("/verify-code/:email/code", async function (req, res) {
-  const { email } = req.params;
-  const { codigoIngresado } = req.body; // Suponiendo que el código ingresado se envía en el cuerpo de la solicitud
+app.get("/verify-code/:email/:codigo", async function (req, res) {
+  const { email, codigo } = req.params;
 
   try {
     const connection = await mysql.createConnection(dbConfig);
 
-    // Obtener el código generado previamente
     const selectQuery = "SELECT codigo FROM codigos WHERE email = ?";
     const [rows] = await connection.execute(selectQuery, [email]);
 
@@ -227,25 +225,18 @@ app.post("/verify-code/:email/code", async function (req, res) {
 
     const codigoGenerado = rows[0].codigo;
 
-    if (codigoIngresado !== codigoGenerado) {
+    if (codigo !== codigoGenerado) {
       return res.status(400).json({ ok: false, message: "Código incorrecto" });
     }
 
-    // Si el código coincide, puedes realizar las acciones necesarias aquí
-
-    // Por ejemplo, marcar el código como utilizado en la base de datos
-    const updateQuery = "UPDATE codigos SET utilizado = true WHERE email = ?";
-    await connection.execute(updateQuery, [email]);
-
-    // También puedes redirigir al usuario a la siguiente página o enviar una respuesta de éxito
     res.status(200).json({
       ok: true,
-      message: "Código validado correctamente",
+      message: "Código válido",
     });
 
   } catch (error) {
-    console.error("Error en la validación del código:", error);
-    res.status(500).json({ ok: false, message: "Error en la validación del código" });
+    console.error("Error en la verificación del código:", error);
+    res.status(500).json({ ok: false, message: "Error en la verificación del código" });
   }
 });
 
