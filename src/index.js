@@ -210,7 +210,7 @@ app.post("/verify-code/:email/code", async function (req, res) {
 });
 
 
-app.get("/verify-code/:email/:code", (req, res) => {
+app.get("/verify-code/:email/:codigo", (req, res) => {
   const { email, code } = req.params;
 
   req.getConnection((err, connect) => {
