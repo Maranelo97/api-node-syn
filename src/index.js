@@ -161,14 +161,7 @@ app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   res.send("Data Subida a la DB");
 });
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.office365.com",
-  port: 587,
-  auth: {
-    user: "syngentaDP@outlook.com",
-    pass: "testeando123",
-  },
-});
+
 
 function generarCodigoAlfanumerico(longitud) {
   const caracteres =
@@ -182,32 +175,49 @@ function generarCodigoAlfanumerico(longitud) {
 }
 
 //Mailer
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.office365.com",
+  port: 587,
+  auth: {
+    user: "syngentaDP@outlook.com",
+    pass: "testeando123",
+  },
+});
 app.post("/verify-code/:email/code", async function (req, res) {
   const { email } = req.params;
   const codigoGenerado = generarCodigoAlfanumerico(5);
 
-  transporter.sendMail({
-    from: "syngentaDP@outlook.com",
+  const mailOptions = {
+    from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
     subject: "Codigo de seguridad",
     text: `Este es el código de seguridad para tu Onboarding de Digital Pension: ${codigoGenerado}`,
+  };
+
+  transporter.sendMail(mailOptions, async (error, info) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send("Hubo un error al enviar el correo.");
+    } else {
+      try {
+        const connection = await mysql.createConnection(dbConfig);
+
+        const query = "INSERT INTO codigos (email, codigo) VALUES (?, ?)";
+        await connection.execute(query, [email, codigoGenerado]);
+
+        console.log("Correo enviado: " + info.response);
+        res.status(200).json({
+          ok: true,
+          message: `Código enviado con éxito, tu código es: ${codigoGenerado}`,
+        });
+      } catch (error) {
+        console.error("Error al insertar código en la base de datos:", error);
+        res.status(500).json({ ok: false, message: "Error al enviar el código" });
+      }
+    }
   });
-
-  try {
-    const connection = await mysql.createConnection(dbConfig);
-
-    const query = "INSERT INTO codigos (email, codigo) VALUES (?, ?)";
-    await connection.execute(query, [email, codigoGenerado]);
-
-    res.status(200).json({
-      ok: true,
-      message: `Código enviado con éxito, tu código es: ${codigoGenerado}`,
-    });
-  } catch (error) {
-    console.error("Error al insertar código en la base de datos:", error);
-    res.status(500).json({ ok: false, message: "Error al enviar el código" });
-  }
-});
+})
 
 app.get("/verify-code/:codigo", (req, res) => {
   const { codigo } = req.params;
