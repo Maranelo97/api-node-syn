@@ -26,6 +26,7 @@ exports.addAudiencia = (req, res) => {
       emailsSent: 0,
       imageURL1: req.body.imageURL1 || null,
       imagelURL2: req.body.imagelURL2 || null,
+      pdfURL: req.body.pdfURL
     };
 
     // Iniciar transacción
@@ -140,7 +141,8 @@ exports.editAudience = (req, res) => {
       imagelURL2: req.body.imagelURL2,
       aports: req.body.aports,
       profile: req.body.profile,
-      onBoarding: req.body.onBoarding
+      onBoarding: req.body.onBoarding,
+      pdfURL: req.body.pdfURL
     };
 
     // Iniciar transacción
