@@ -87,16 +87,17 @@ app.get("/download/:filename", (req, res) => {
 //upload CSV
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads", "csv"));  // Cambiado el destino para guardar en la carpeta /csv
+    cb(null, path.join(__dirname, "uploads", "csv")); // Cambiado el destino para guardar en la carpeta /csv
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
-
 const upload = multer({ storage: storage });
-
 
 function uploadCsv(uriFile) {
   if (!fs.existsSync(uriFile)) {
@@ -138,9 +139,8 @@ function uploadCsv(uriFile) {
   stream.pipe(fileStream);
 }
 
-
 //Petición Post
-app.post('/import-csv', upload.single("import-csv"), (req, res) => {
+app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   if (!req.file) {
     res.status(400).send("Se debe proporcionar un archivo CSV");
     return;
@@ -154,16 +154,12 @@ app.post('/import-csv', upload.single("import-csv"), (req, res) => {
   console.log("Response Headers:", res.getHeaders());
 
   // Escucha el evento "finish" para imprimir el cuerpo de la respuesta
-  res.on('finish', () => {
+  res.on("finish", () => {
     console.log("Response Body:", res.get("Data Subida a la DB"));
   });
 
   res.send("Data Subida a la DB");
 });
-
-
-
-
 
 const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
@@ -214,6 +210,50 @@ app.post("/verify-code/:email/code", async function (req, res) {
 });
 
 
+app.post("/verify-code/:email/code", async function (req, res) {
+  const { email } = req.params;
+  const { codigoIngresado } = req.body; // Suponiendo que el código ingresado se envía en el cuerpo de la solicitud
+
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+
+    // Obtener el código generado previamente
+    const selectQuery = "SELECT codigo FROM codigos WHERE email = ?";
+    const [rows] = await connection.execute(selectQuery, [email]);
+
+    if (rows.length === 0) {
+      return res.status(400).json({ ok: false, message: "Código no encontrado para el email proporcionado" });
+    }
+
+    const codigoGenerado = rows[0].codigo;
+
+    if (codigoIngresado !== codigoGenerado) {
+      return res.status(400).json({ ok: false, message: "Código incorrecto" });
+    }
+
+    // Si el código coincide, puedes realizar las acciones necesarias aquí
+
+    // Por ejemplo, marcar el código como utilizado en la base de datos
+    const updateQuery = "UPDATE codigos SET utilizado = true WHERE email = ?";
+    await connection.execute(updateQuery, [email]);
+
+    // También puedes redirigir al usuario a la siguiente página o enviar una respuesta de éxito
+    res.status(200).json({
+      ok: true,
+      message: "Código validado correctamente",
+    });
+
+  } catch (error) {
+    console.error("Error en la validación del código:", error);
+    res.status(500).json({ ok: false, message: "Error en la validación del código" });
+  }
+});
+
+
+
+
+
+
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "uploads", "pdfs"));
@@ -228,8 +268,6 @@ const pdfStorage = multer.diskStorage({
 
 const uploadPDFs = multer({ storage: pdfStorage }).single("pdf");
 
-
-
 app.post("/upload-pdf", (req, res) => {
   uploadPDFs(req, res, (err) => {
     if (err) {
@@ -243,18 +281,14 @@ app.post("/upload-pdf", (req, res) => {
       return;
     }
 
-    const pdfURL = "https://" + req.get("host") + "/uploads/pdfs/" + req.file.filename;
-
+    const pdfURL =
+      "https://" + req.get("host") + "/uploads/pdfs/" + req.file.filename;
 
     res.status(200).json({
       pdfURL: pdfURL,
     });
   });
 });
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
