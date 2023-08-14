@@ -209,9 +209,8 @@ app.post("/verify-code/:email/code", async function (req, res) {
   }
 });
 
-
 app.get("/verify-code/:codigo", (req, res) => {
-  const { email, code } = req.params;
+  const { codigo } = req.params;
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -220,14 +219,14 @@ app.get("/verify-code/:codigo", (req, res) => {
     }
 
     const query = "SELECT * FROM codigos WHERE codigo = ?";
-    connect.query(query, [email, code], (err, result) => {
+    connect.query(query, [codigo], (err, result) => {
       if (err) {
         console.error("Error en la consulta a la base de datos:", err);
         return res.status(500).json({ ok: false, message: "Error en la consulta a la base de datos" });
       }
 
       if (result.length === 0) {
-        return res.status(400).json({ ok: false, message: "Código no válido para el email proporcionado" });
+        return res.status(400).json({ ok: false, message: "Código no válido" });
       }
 
       res.status(200).json({
@@ -237,7 +236,6 @@ app.get("/verify-code/:codigo", (req, res) => {
     });
   });
 });
-
 
 
 
