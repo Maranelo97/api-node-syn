@@ -216,7 +216,7 @@ app.get("/verify-code/:email/:codigo", async function (req, res) {
   try {
     const connection = await mysql.createConnection(dbConfig);
 
-    const selectQuery = "SELECT codigo FROM codigos WHERE email = ?";
+    const selectQuery = "SELECT codigo AS codigoGenerado FROM codigos WHERE email = ?";
     const result = await connection.execute(selectQuery, [email]);
     const rows = result;
     if (rows.length === 0) {
