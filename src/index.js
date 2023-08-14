@@ -209,30 +209,34 @@ app.post("/verify-code/:email/code", async function (req, res) {
   }
 });
 
-app.get("/verify-code/:email/:code", async (req, res) => {
+
+app.get("/verify-code/:email/:code", (req, res) => {
   const { email, code } = req.params;
 
-  try {
-    const connection = await mysql.createConnection(dbConfig);
-
-    const selectQuery = "SELECT codigo FROM codigos WHERE email = ? AND codigo = ?";
-    const [rows] = await connection.execute(selectQuery, [email, code]);
-
-    if (rows.length === 0) {
-      return res.status(400).json({ ok: false, message: "Código no válido para el email proporcionado" });
+  req.getConnection((err, connect) => {
+    if (err) {
+      console.error("Error en la conexión a la base de datos:", err);
+      return res.status(500).json({ ok: false, message: "Error en la conexión a la base de datos" });
     }
 
-    res.status(200).json({
-      ok: true,
-      message: "Código válido",
+    const query = "SELECT * FROM codigos WHERE email = ? AND codigo = ?";
+    connect.query(query, [email, code], (err, result) => {
+      if (err) {
+        console.error("Error en la consulta a la base de datos:", err);
+        return res.status(500).json({ ok: false, message: "Error en la consulta a la base de datos" });
+      }
+
+      if (result.length === 0) {
+        return res.status(400).json({ ok: false, message: "Código no válido para el email proporcionado" });
+      }
+
+      res.status(200).json({
+        ok: true,
+        message: "Código válido",
+      });
     });
-  } catch (error) {
-    console.error("Error en la verificación del código:", error);
-    res.status(500).json({ ok: false, message: "Error en la verificación del código" });
-  }
+  });
 });
-
-
 
 
 

@@ -501,8 +501,6 @@ exports.rollBackSub = (req, res) => {
 
 
 
-
-
 //aqui
 
 exports.deleteAudience = (req, res) => {
