@@ -210,7 +210,7 @@ app.post("/verify-code/:email/code", async function (req, res) {
 });
 
 
-app.get("/verify-code/:email/:codigo", (req, res) => {
+app.get("/verify-code/:codigo", (req, res) => {
   const { email, code } = req.params;
 
   req.getConnection((err, connect) => {
@@ -219,7 +219,7 @@ app.get("/verify-code/:email/:codigo", (req, res) => {
       return res.status(500).json({ ok: false, message: "Error en la conexión a la base de datos" });
     }
 
-    const query = "SELECT * FROM codigos WHERE email = ? AND codigo = ?";
+    const query = "SELECT * FROM codigos WHERE codigo = ?";
     connect.query(query, [email, code], (err, result) => {
       if (err) {
         console.error("Error en la consulta a la base de datos:", err);
