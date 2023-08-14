@@ -223,9 +223,9 @@ app.get("/verify-code/:email/:codigo", async function (req, res) {
       return res.status(400).json({ ok: false, message: "Código no encontrado para el email proporcionado" });
     }
 
-    const codigoGenerado = rows;
+    const codigo = rows[0].codigo;
 
-    if (codigo !== codigoGenerado) {
+    if (codigo !== codigo) {
       return res.status(400).json({ ok: false, message: "Código incorrecto" });
     }
 
