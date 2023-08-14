@@ -209,31 +209,23 @@ app.post("/verify-code/:email/code", async function (req, res) {
   }
 });
 
-
-app.get("/verify-code/:email/:codigo", async function (req, res) {
-  const { email, codigo } = req.params;
+app.get("/verify-code/:email/:code", async (req, res) => {
+  const { email, code } = req.params;
 
   try {
     const connection = await mysql.createConnection(dbConfig);
 
-    const selectQuery = "SELECT codigo FROM codigos WHERE email = ?";
-    const result = await connection.execute(selectQuery, [email]);
-    const rows = result;
+    const selectQuery = "SELECT codigo FROM codigos WHERE email = ? AND codigo = ?";
+    const [rows] = await connection.execute(selectQuery, [email, code]);
+
     if (rows.length === 0) {
-      return res.status(400).json({ ok: false, message: "Código no encontrado para el email proporcionado" });
-    }
-
-    const codigo = rows[0].codigo;
-
-    if (codigo !== codigo) {
-      return res.status(400).json({ ok: false, message: "Código incorrecto" });
+      return res.status(400).json({ ok: false, message: "Código no válido para el email proporcionado" });
     }
 
     res.status(200).json({
       ok: true,
       message: "Código válido",
     });
-
   } catch (error) {
     console.error("Error en la verificación del código:", error);
     res.status(500).json({ ok: false, message: "Error en la verificación del código" });
