@@ -217,8 +217,8 @@ app.get("/verify-code/:email/:codigo", async function (req, res) {
     const connection = await mysql.createConnection(dbConfig);
 
     const selectQuery = "SELECT codigo FROM codigos WHERE email = ?";
-    const [rows] = await connection.execute(selectQuery, [email]);
-
+    const result = await connection.execute(selectQuery, [email]);
+    const rows = result.rows;
     if (rows.length === 0) {
       return res.status(400).json({ ok: false, message: "Código no encontrado para el email proporcionado" });
     }
