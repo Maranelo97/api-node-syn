@@ -117,7 +117,7 @@ function uploadCsv(uriFile) {
     .on("end", function () {
       csvDataColl.shift();
 
-      pool.getConnection((error, connection) => {
+      req.getConnection((error, connection) => {
         if (error) {
           console.error("Error en la conexión a la base de datos:", error);
           return;
@@ -128,7 +128,7 @@ function uploadCsv(uriFile) {
         connection.query(query, [csvDataColl], (error, res) => {
           if (error) {
             console.error("Error en la consulta SQL:", error);
-            console.error("SQL Query:", query); // Agregar esta línea para imprimir la consulta
+            console.error("SQL Query:", query);
           } else {
             console.log("Filas insertadas:", res.affectedRows);
           }
