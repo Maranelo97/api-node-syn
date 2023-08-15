@@ -122,7 +122,7 @@ function uploadCsv(uriFile, req) {
           console.error("Error en la conexión a la base de datos:", error);
           return;
         }
-
+    
         let query =
           "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added,emailsSent) VALUES ?";
         connection.query(query, [csvDataColl], (error, res) => {
@@ -132,7 +132,7 @@ function uploadCsv(uriFile, req) {
           } else {
             console.log("Filas insertadas:", res.affectedRows);
           }
-          connection.releaseConnection();
+          connection.release(); // Liberar la conexión
         });
       });
 
