@@ -124,16 +124,16 @@ function uploadCsv(uriFile, req) {
         }
     
         let query =
-          "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,added,emailsSent) VALUES ?";
-        connection.query(query, [csvDataColl], (error, res) => {
-          if (error) {
-            console.error("Error en la consulta SQL:", error);
-            console.error("SQL Query:", query);
-          } else {
-            console.log("Filas insertadas:", res.affectedRows);
-          }
-          connection.release(); // Liberar la conexión
-        });
+        "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,emailsSent) VALUES ?";
+      connection.query(query, [csvDataColl], (error, res) => {
+        if (error) {
+          console.error("Error en la consulta SQL:", error);
+          console.error("SQL Query:", query);
+        } else {
+          console.log("Filas insertadas:", res.affectedRows);
+        }
+        connection.release(); // Liberar la conexión
+      });
       });
 
       fs.unlinkSync(uriFile);
