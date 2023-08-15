@@ -98,6 +98,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+// ... (código anterior)
+
 
 function uploadCsv(uriFile) {
   if (!fs.existsSync(uriFile)) {
@@ -126,6 +128,7 @@ function uploadCsv(uriFile) {
         connection.query(query, [csvDataColl], (error, res) => {
           if (error) {
             console.error("Error en la consulta SQL:", error);
+            console.error("SQL Query:", query); // Agregar esta línea para imprimir la consulta
           } else {
             console.log("Filas insertadas:", res.affectedRows);
           }
@@ -160,8 +163,6 @@ app.post("/import-csv", upload.single("import-csv"), (req, res) => {
 
   res.send("Data Subida a la DB");
 });
-
-
 
 function generarCodigoAlfanumerico(longitud) {
   const caracteres =
@@ -213,11 +214,13 @@ app.post("/verify-code/:email/code", async function (req, res) {
         });
       } catch (error) {
         console.error("Error al insertar código en la base de datos:", error);
-        res.status(500).json({ ok: false, message: "Error al enviar el código" });
+        res
+          .status(500)
+          .json({ ok: false, message: "Error al enviar el código" });
       }
     }
   });
-})
+});
 
 app.get("/verify-code/:codigo", (req, res) => {
   const { codigo } = req.params;
@@ -225,14 +228,24 @@ app.get("/verify-code/:codigo", (req, res) => {
   req.getConnection((err, connect) => {
     if (err) {
       console.error("Error en la conexión a la base de datos:", err);
-      return res.status(500).json({ ok: false, message: "Error en la conexión a la base de datos" });
+      return res
+        .status(500)
+        .json({
+          ok: false,
+          message: "Error en la conexión a la base de datos",
+        });
     }
 
     const query = "SELECT * FROM codigos WHERE codigo = ?";
     connect.query(query, [codigo], (err, result) => {
       if (err) {
         console.error("Error en la consulta a la base de datos:", err);
-        return res.status(500).json({ ok: false, message: "Error en la consulta a la base de datos" });
+        return res
+          .status(500)
+          .json({
+            ok: false,
+            message: "Error en la consulta a la base de datos",
+          });
       }
 
       if (result.length === 0) {
@@ -246,8 +259,6 @@ app.get("/verify-code/:codigo", (req, res) => {
     });
   });
 });
-
-
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
