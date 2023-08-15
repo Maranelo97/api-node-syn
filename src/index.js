@@ -152,6 +152,8 @@ app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
   uploadCsv(uriFile);
 
+  // No respondas aquí, espera hasta que los datos se inserten correctamente
+
   // Imprime información sobre la respuesta
   console.log("Response Status:", res.statusCode);
   console.log("Response Headers:", res.getHeaders());
@@ -160,10 +162,7 @@ app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   res.on("finish", () => {
     console.log("Response Body:", res.get("Data Subida a la DB"));
   });
-
-  res.send("Data Subida a la DB");
 });
-
 function generarCodigoAlfanumerico(longitud) {
   const caracteres =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
