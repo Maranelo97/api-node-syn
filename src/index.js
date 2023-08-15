@@ -132,7 +132,7 @@ function uploadCsv(uriFile, req) {
           } else {
             console.log("Filas insertadas:", res.affectedRows);
           }
-          connection.release();
+          connection.releaseConnection();
         });
       });
 
