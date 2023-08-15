@@ -100,7 +100,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 // ... (código anterior)
 
-
 function uploadCsv(uriFile, req) {
   if (!fs.existsSync(uriFile)) {
     console.log("File does not exist:", uriFile);
@@ -122,18 +121,18 @@ function uploadCsv(uriFile, req) {
           console.error("Error en la conexión a la base de datos:", error);
           return;
         }
-    
+
         let query =
-        "INSERT INTO audiencia (status,name,lastname,email,phone,area,importation,emailsSent) VALUES ?";
-      connection.query(query, [csvDataColl], (error, res) => {
-        if (error) {
-          console.error("Error en la consulta SQL:", error);
-          console.error("SQL Query:", query);
-        } else {
-          console.log("Filas insertadas:", res.affectedRows);
-        }
-        connection.release(); // Liberar la conexión
-      });
+          "INSERT INTO audiencia (id, name, lastname, status, email, phone, area, importation, added, emailsSent, emailSyngenta, dob, address, zipCode, province, cuil, location, accionId, dni, address2, ingress, imagelURL2, profile, aports, imageURL1, phone2, aprobbed, onBoarding, pdfURL) VALUES ?";
+        connection.query(query, [csvDataColl], (error, res) => {
+          if (error) {
+            console.error("Error en la consulta SQL:", error);
+            console.error("SQL Query:", query);
+          } else {
+            console.log("Filas insertadas:", res.affectedRows);
+          }
+          connection.release(); // Liberar la conexión
+        });
       });
 
       fs.unlinkSync(uriFile);
@@ -228,24 +227,20 @@ app.get("/verify-code/:codigo", (req, res) => {
   req.getConnection((err, connect) => {
     if (err) {
       console.error("Error en la conexión a la base de datos:", err);
-      return res
-        .status(500)
-        .json({
-          ok: false,
-          message: "Error en la conexión a la base de datos",
-        });
+      return res.status(500).json({
+        ok: false,
+        message: "Error en la conexión a la base de datos",
+      });
     }
 
     const query = "SELECT * FROM codigos WHERE codigo = ?";
     connect.query(query, [codigo], (err, result) => {
       if (err) {
         console.error("Error en la consulta a la base de datos:", err);
-        return res
-          .status(500)
-          .json({
-            ok: false,
-            message: "Error en la consulta a la base de datos",
-          });
+        return res.status(500).json({
+          ok: false,
+          message: "Error en la consulta a la base de datos",
+        });
       }
 
       if (result.length === 0) {
