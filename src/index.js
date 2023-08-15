@@ -123,7 +123,7 @@ function uploadCsv(uriFile, req) {
         }
 
         let query =
-          "INSERT INTO audiencia (id, name, lastname, status, email, phone, area, importation, added, emailsSent, emailSyngenta, dob, address, zipCode, province, cuil, location, accionId, dni, address2, ingress, imagelURL2, profile, aports, imageURL1, phone2, aprobbed, onBoarding, pdfURL) VALUES ?";
+          "INSERT INTO audiencia (name, lastname, status, email, phone, area, importation, added, emailsSent, emailSyngenta, dob, address, zipCode, province, cuil, location, accionId, dni, address2, ingress, imagelURL2, profile, aports, imageURL1, phone2, aprobbed, onBoarding, pdfURL) VALUES ?";
         connection.query(query, [csvDataColl], (error, res) => {
           if (error) {
             console.error("Error en la consulta SQL:", error);
