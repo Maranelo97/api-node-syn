@@ -101,7 +101,7 @@ const upload = multer({ storage: storage });
 // ... (código anterior)
 
 
-function uploadCsv(uriFile) {
+function uploadCsv(uriFile, req) {
   if (!fs.existsSync(uriFile)) {
     console.log("File does not exist:", uriFile);
     return;
@@ -150,7 +150,7 @@ app.post("/import-csv", upload.single("import-csv"), (req, res) => {
   }
 
   const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
-  uploadCsv(uriFile);
+  uploadCsv(uriFile, req);
 
   // Imprime información sobre la respuesta
   console.log("Response Status:", res.statusCode);
