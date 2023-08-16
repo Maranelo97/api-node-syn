@@ -286,8 +286,7 @@ app.post("/send-link/:email/link", async function (req, res) {
     } else {
       try {
         const connection = await mysql.createConnection(dbConfig);
-
-        const query = "INSERT INTO codigos (email, token, codigo) VALUES (?, ?, DEFAULT)";
+        const query = "INSERT INTO codigos (email, token, codigo) VALUES (?, ?, ?)";
         await connection.execute(query, [email, linkToken]);
 
         console.log("Correo enviado: " + info.response);
