@@ -120,7 +120,7 @@ exports.getCode = (req, res) => {
 
     conn.query(
       `SELECT * FROM codigos WHERE codigo = ?`,
-      [req.params.dni],
+      [req.params.codigo],
       (err, result) => {
         if (err) return res.send(err);
 
