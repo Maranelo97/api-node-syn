@@ -116,19 +116,24 @@ exports.getByDni = (req, res) => {
 
 exports.getCode = (req, res) => {
   req.getConnection((err, conn) => {
-    if (err) return res.send(err);
+    if (err) return res.status(500).json({ ok: false, message: "Error en la conexión a la base de datos" });
 
     conn.query(
       `SELECT * FROM codigos WHERE codigo = ?`,
       [req.params.codigo],
       (err, result) => {
-        if (err) return res.send(err);
+        if (err) return res.status(500).json({ ok: false, message: "Error en la consulta a la base de datos" });
+
+        if (result.length === 0) {
+          return res.status(404).json({ ok: false, message: "Código no encontrado" });
+        }
 
         res.json(result);
       }
     );
   });
 };
+
 
 exports.editAudience = (req, res) => {
   req.getConnection((err, connect) => {
