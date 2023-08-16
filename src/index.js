@@ -306,31 +306,42 @@ app.post("/send-link/:email/link", async function (req, res) {
 });
 
 
-app.get("/verify-link/:token", async function (req, res) {
+app.get("/verify-link/:token", (req, res) => {
   const { token } = req.params;
 
-  try {
-    const connection = await mysql.createConnection(dbConfig);
-
-    const selectQuery = "SELECT email FROM codigos WHERE token = ?";
-    const [rows] = await connection.execute(selectQuery, [token]);
-
-    if (rows.length === 0) {
-      // Token no válido, mostrar un mensaje de error o redireccionar
-      res.send("Enlace inválido o expirado.");
-    } else {
-      // Token válido, mostrar una alerta en el navegador
-      res.send(`
-        <script>
-          alert("¡Enlace verificado con éxito para el correo ${rows[0].email}!");
-          // Puedes redirigir al usuario a una página de tu aplicación si lo deseas
-        </script>
-      `);
+  req.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error en la conexión a la base de datos:", err);
+      return res.status(500).json({
+        ok: false,
+        message: "Error en la conexión a la base de datos",
+      });
     }
-  } catch (error) {
-    console.error("Error al verificar el enlace en la base de datos:", error);
-    res.status(500).send("Error al verificar el enlace.");
-  }
+
+    const query = "SELECT * FROM codigos WHERE token = ?";
+    connection.query(query, [token], (err, results) => {
+      if (err) {
+        console.error("Error en la consulta a la base de datos:", err);
+        return res.status(500).json({
+          ok: false,
+          message: "Error en la consulta a la base de datos",
+        });
+      }
+
+      if (results.length === 0) {
+        return res.status(400).json({
+          ok: false,
+          message: "Token no válido o expirado",
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        token: token,
+        message: "Token verificado con éxito",
+      });
+    });
+  });
 });
 
 
