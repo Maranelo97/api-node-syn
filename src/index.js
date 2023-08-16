@@ -344,6 +344,58 @@ app.get("/verify-link/:token", (req, res) => {
   });
 });
 
+app.put("/update-record-by-mail/:token", (req, res) => {
+  const { token } = req.params;
+
+  req.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error en la conexión a la base de datos:", err);
+      return res.status(500).json({
+        ok: false,
+        message: "Error en la conexión a la base de datos",
+      });
+    }
+
+    // Consulta para obtener el registro asociado al token
+    const selectQuery = "SELECT * FROM registros WHERE token = ?";
+    connection.query(selectQuery, [token], (err, results) => {
+      if (err) {
+        console.error("Error en la consulta a la base de datos:", err);
+        return res.status(500).json({
+          ok: false,
+          message: "Error en la consulta a la base de datos",
+        });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({
+          ok: false,
+          message: "No se encontró el registro asociado al token",
+        });
+      }
+
+      // Actualizar los campos del registro (por ejemplo, nombre)
+      const updatedRecord = { ...results[0], status: "pendiente" };
+
+      // Consulta para actualizar el registro
+      const updateQuery = "UPDATE audience SET status = ? WHERE id = ?";
+      connection.query(updateQuery, [updatedRecord.nombre, updatedRecord.id], (err, updateResult) => {
+        if (err) {
+          console.error("Error al actualizar el registro:", err);
+          return res.status(500).json({
+            ok: false,
+            message: "Error al actualizar el registro",
+          });
+        }
+
+        res.status(200).json({
+          ok: true,
+          message: "Registro actualizado con éxito",
+        });
+      });
+    });
+  });
+});
 
 
 const pdfStorage = multer.diskStorage({
