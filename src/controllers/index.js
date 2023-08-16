@@ -113,6 +113,23 @@ exports.getByDni = (req, res) => {
   });
 };
 
+
+exports.getCode = (req, res) => {
+  req.getConnection((err, conn) => {
+    if (err) return res.send(err);
+
+    conn.query(
+      `SELECT * FROM codigos WHERE codigo = ?`,
+      [req.params.dni],
+      (err, result) => {
+        if (err) return res.send(err);
+
+        res.json(result);
+      }
+    );
+  });
+};
+
 exports.editAudience = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
