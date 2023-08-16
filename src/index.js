@@ -312,7 +312,7 @@ app.get("/verify-link/:token", async function (req, res) {
   try {
     const connection = await mysql.createConnection(dbConfig);
 
-    const selectQuery = "SELECT email FROM enlaces_verificacion WHERE token = ?";
+    const selectQuery = "SELECT email FROM codigos WHERE token = ?";
     const [rows] = await connection.execute(selectQuery, [token]);
 
     if (rows.length === 0) {
