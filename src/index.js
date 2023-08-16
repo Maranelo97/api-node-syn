@@ -255,6 +255,58 @@ app.get("/verify-code/:codigo", (req, res) => {
   });
 });
 
+
+
+//Envio y Enlace de Validación Post Formulario
+
+function generarTokenUnico(length = 32) {
+  return crypto.randomBytes(length).toString('hex');
+}
+
+
+app.post("/send-link/:email/link", async function (req, res) {
+  const { email } = req.params;
+  const linkToken = generarTokenUnico(); // Genera un token único para el enlace
+
+  const link = `https://syngt-onboarding.web.app/verify-link/${linkToken}`; // Reemplaza "tudominio.com" por tu dominio real
+
+  // Puedes personalizar el contenido del correo con el enlace
+  const mailOptions = {
+    from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
+    to: email,
+    subject: "Enlace de verificación",
+    text: `Haz clic en el siguiente enlace para verificar tu cuenta: ${link}`,
+  };
+
+  transporter.sendMail(mailOptions, async (error, info) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send("Hubo un error al enviar el correo.");
+    } else {
+      try {
+        const connection = await mysql.createConnection(dbConfig);
+
+        const query = "INSERT INTO codigos (email, token) VALUES (?, ?)";
+        await connection.execute(query, [email, linkToken]);
+
+        console.log("Correo enviado: " + info.response);
+        res.status(200).json({
+          ok: true,
+          message: "Enlace enviado con éxito. Por favor verifica tu correo.",
+        });
+      } catch (error) {
+        console.error("Error al insertar enlace en la base de datos:", error);
+        res
+          .status(500)
+          .json({ ok: false, message: "Error al enviar el enlace" });
+      }
+    }
+  });
+});
+
+
+
+
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "uploads", "pdfs"));
