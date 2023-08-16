@@ -269,7 +269,7 @@ app.post("/send-link/:email/link", async function (req, res) {
   const { email } = req.params;
   const linkToken = generarTokenUnico(); // Genera un token único para el enlace
 
-  const link = `https://syngt-onboarding.web.app/verify-link/${linkToken}`; // Reemplaza "tudominio.com" por tu dominio real
+  const link = `https://api-node-syn-production.up.railway.app/verify-link/${linkToken}`; // Reemplaza "tudominio.com" por tu dominio real
 
   // Puedes personalizar el contenido del correo con el enlace
   const mailOptions = {
