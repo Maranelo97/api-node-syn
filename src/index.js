@@ -306,6 +306,33 @@ app.post("/send-link/:email/link", async function (req, res) {
 });
 
 
+app.get("/verify-link/:token", async function (req, res) {
+  const { token } = req.params;
+
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+
+    const selectQuery = "SELECT email FROM enlaces_verificacion WHERE token = ?";
+    const [rows] = await connection.execute(selectQuery, [token]);
+
+    if (rows.length === 0) {
+      // Token no válido, mostrar un mensaje de error o redireccionar
+      res.send("Enlace inválido o expirado.");
+    } else {
+      // Token válido, mostrar una alerta en el navegador
+      res.send(`
+        <script>
+          alert("¡Enlace verificado con éxito para el correo ${rows[0].email}!");
+          // Puedes redirigir al usuario a una página de tu aplicación si lo deseas
+        </script>
+      `);
+    }
+  } catch (error) {
+    console.error("Error al verificar el enlace en la base de datos:", error);
+    res.status(500).send("Error al verificar el enlace.");
+  }
+});
+
 
 
 const pdfStorage = multer.diskStorage({
