@@ -21,6 +21,8 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("client conected");
+
+  
   app.put("/update/:id", (req, res) => {
     {
       req.getConnection((err, connect) => {
