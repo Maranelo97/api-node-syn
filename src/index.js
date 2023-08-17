@@ -8,26 +8,120 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 const nodemailer = require("nodemailer");
-const crypto = require('crypto');
+const crypto = require("crypto");
 const app = express();
-const http = require('http');
+const http = require("http");
 const server = http.createServer(app);
-const { Server } = require('socket.io')
+const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
-    origin: '*'
-  }
-})
+    origin: "*",
+  },
+});
 
+io.on("connection", (socket) => {
+  console.log("client conected");
+  app.put("/update/:id", (req, res) => {
+    {
+      req.getConnection((err, connect) => {
+        if (err) return res.send(err);
 
+        const dataToBeChangedd = {
+          dni: req.body.dni,
+          cuil: req.body.cuil,
+          name: req.body.name,
+          area: req.body.area,
+          status: req.body.status,
+          lastname: req.body.lastname,
+          email: req.body.email,
+          emailSyngenta: req.body.emailSyngenta,
+          phone: req.body.phone,
+          phone2: req.body.phone2,
+          importation: req.body.importation,
+          added: new Date(req.body.added),
+          address: req.body.address,
+          address2: req.body.address2,
+          location: req.body.location,
+          province: req.body.province,
+          zipCode: req.body.zipCode,
+          ingress: new Date(req.body.ingress),
+          dob: new Date(req.body.dob),
+          imageURL1: req.body.imageURL1,
+          imagelURL2: req.body.imagelURL2,
+          aports: req.body.aports,
+          profile: req.body.profile,
+          onBoarding: req.body.onBoarding,
+          pdfURL: req.body.pdfURL,
+        };
 
-io.on('connection', socket => {
-  console.log("client conected")
+        // Iniciar transacción
+        connect.beginTransaction((err) => {
+          if (err) return res.send(err);
 
+          // Obtener el registro actual
+          connect.query(
+            "SELECT * FROM audiencia WHERE id = ?",
+            [req.params.id],
+            (err, currentRecord) => {
+              if (err) {
+                connect.rollback(() => {
+                  res.send(err);
+                });
+              } else {
+                const registroId = req.params.id;
+                const accionId = 2; // Valor de la acción para la edición (ejemplo: 2 para "Editó")
 
+                // Insertar en la tabla de registros_acciones
+                const nuevaAccion = {
+                  accionId,
+                  registroId,
+                  fecha: new Date(),
+                };
 
-})
-
+                connect.query(
+                  "INSERT INTO registros_acciones SET ?",
+                  nuevaAccion,
+                  (err, result) => {
+                    if (err) {
+                      connect.rollback(() => {
+                        res.send(err);
+                      });
+                    } else {
+                      // Actualizar el registro en la tabla de audiencia
+                      connect.query(
+                        "UPDATE audiencia SET ? WHERE id = ?",
+                        [dataToBeChangedd, req.params.id],
+                        (err, updateResult) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            // Commit de la transacción
+                            connect.commit((err) => {
+                              if (err) {
+                                connect.rollback(() => {
+                                  res.send(err);
+                                });
+                              } else {
+                                res.send("Actualizado");
+                                io.emit("modificado", req.params.id);
+                              }
+                            });
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              }
+            }
+          );
+        });
+      });
+    }
+  });
+});
 
 const PORT = process.env.PORT || 4002;
 const dbConfig = {
@@ -100,10 +194,6 @@ app.get("/download/:filename", (req, res) => {
     }
   });
 });
-
-
-
-
 
 function generarCodigoAlfanumerico(longitud) {
   const caracteres =
@@ -197,14 +287,11 @@ app.get("/verify-code/:codigo", (req, res) => {
   });
 });
 
-
-
 //Envio y Enlace de Validación Post Formulario
 
 function generarTokenUnico(length = 32) {
-  return crypto.randomBytes(length).toString('hex');
+  return crypto.randomBytes(length).toString("hex");
 }
-
 
 app.post("/send-link/:email/link", async function (req, res) {
   const { email } = req.params;
@@ -228,7 +315,8 @@ app.post("/send-link/:email/link", async function (req, res) {
       try {
         const connection = await mysql.createConnection(dbConfig);
 
-        const query = "INSERT INTO codigos (email, token, codigo) VALUES (?, ?, DEFAULT)";
+        const query =
+          "INSERT INTO codigos (email, token, codigo) VALUES (?, ?, DEFAULT)";
         await connection.execute(query, [email, linkToken]);
 
         console.log("Correo enviado: " + info.response);
@@ -245,7 +333,6 @@ app.post("/send-link/:email/link", async function (req, res) {
     }
   });
 });
-
 
 app.get("/verify-link/:token", (req, res) => {
   const { token } = req.params;
@@ -284,9 +371,6 @@ app.get("/verify-link/:token", (req, res) => {
     });
   });
 });
-
-
-
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
