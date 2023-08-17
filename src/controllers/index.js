@@ -26,7 +26,9 @@ exports.addAudiencia = (req, res) => {
       emailsSent: 0,
       imageURL1: req.body.imageURL1 || null,
       imagelURL2: req.body.imagelURL2 || null,
-      pdfURL: req.body.pdfURL
+      pdfURL: req.body.pdfURL,
+      aports: req.body.aports,
+      profile: req.body.profile
     };
 
     // Iniciar transacción
