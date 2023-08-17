@@ -24,6 +24,8 @@ io.on("connection", (socket) => {
 
   socket.on("client:modificado", (data) => {
     console.log(data);
+
+    io.emit("server:modificado", data)
   });
 });
 
