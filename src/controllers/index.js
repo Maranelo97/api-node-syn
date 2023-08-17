@@ -740,6 +740,11 @@ exports.importCSV = (req, res) => {
 
   const query = 'INSERT INTO audiencia (name, lastname, status, email, phone, area, importation, added, emailSyngenta, dob, address) VALUES ?';
   const values = data.map(row => [row.name, row.lastname, row.status, row.email, row.phone, row.area, row.importation, row.added, row.emailSyngenta, row.dob, row.address]); 
+  data= [
+    ["John", "Doe", "suscripto", "john@example.com", "1234567890", "RRHH"],
+    ["Jane", "Smith", "inactive", "jane@example.com", "9876543210", "IT"]
+    // ...otros datos del CSV...
+  ]
   req.getConnection((err, connect) => {
     if (err) {
       console.error('Error obtaining connection:', err);
