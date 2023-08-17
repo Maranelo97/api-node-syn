@@ -638,7 +638,7 @@ exports.toValidar = (req, res) => {
       province: req.body.province,
       zipCode: req.body.zipCode,
       imageURL1: req.body.imageURL1,
-      imageURL2: req.body.imageURL2,
+      imagelURL2: req.body.imagelURL2,
       pdfURL: req.body.pdfURL,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
