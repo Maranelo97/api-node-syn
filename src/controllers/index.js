@@ -737,14 +737,31 @@ exports.deleteAudience = (req, res) => {
 
 exports.importCSV = (req, res) => {
   const data = req.body.data; // Suponiendo que los datos se envían en el cuerpo de la solicitud
+  const columnMapping = {
+    "NOMBRE": "name",
+    "APELLIDO": "lastname",
+    "COD POSTAL": "zipCode",
+    "CUIT": "cuit",
+    "DNI": "dni",
+    "DOMICILIO1": "address",
+    "DOMICILIO2": "address2",
+    "EMAIL1": "email",
+    "EMAIL2": "email2",
+    "F. DE NAC.": "dob",
+    "INGRESO": "ingress",
+    "LOCALIDAD": "location",
+    "Provincia": "province",
+    "TEL1": "phone",
+    "TEL2": "phone2",
+  };
+
+
+
+
 
   const query = 'INSERT INTO audiencia (name, lastname, status, email, phone, area, importation, added, emailSyngenta, dob, address) VALUES ?';
   const values = data.map(row => [row.name, row.lastname, row.status, row.email, row.phone, row.area, row.importation, row.added, row.emailSyngenta, row.dob, row.address]); 
-  data= [
-    ["John", "Doe", "suscripto", "john@example.com", "1234567890", "RRHH"],
-    ["Jane", "Smith", "inactive", "jane@example.com", "9876543210", "IT"]
-    // ...otros datos del CSV...
-  ]
+  
   req.getConnection((err, connect) => {
     if (err) {
       console.error('Error obtaining connection:', err);

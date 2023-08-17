@@ -6,13 +6,24 @@ const route = require("./routes/index");
 const routeActions = require("./routes/actionRoutes");
 const cors = require("cors");
 const multer = require("multer");
-const csv = require("fast-csv");
-const fs = require("fs");
 const path = require("path");
 const nodemailer = require("nodemailer");
 const crypto = require('crypto');
-
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require('socket.io')
+const io = new Server(server, {
+  cors: {
+    origin: '*'
+  }
+})
+
+
+io.on('connection', socket => {
+  console.log("client conected")
+})
+
 
 const PORT = process.env.PORT || 4002;
 const dbConfig = {
@@ -85,18 +96,7 @@ app.get("/download/:filename", (req, res) => {
     }
   });
 });
-//upload CSV
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads", "csv")); // Cambiado el destino para guardar en la carpeta /csv
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
+
 
 
 
@@ -320,6 +320,6 @@ app.post("/upload-pdf", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
 });
