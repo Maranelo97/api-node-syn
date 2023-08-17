@@ -1,4 +1,6 @@
 // Audience
+const io = require('../index')
+
 exports.addAudiencia = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
@@ -218,6 +220,7 @@ exports.editAudience = (req, res) => {
                             });
                           } else {
                             res.send("Actualizado");
+                            io.emit("modificado", req.params.id)
                           }
                         });
                       }
