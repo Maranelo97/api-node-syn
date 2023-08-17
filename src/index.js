@@ -104,8 +104,11 @@ io.on("connection", (socket) => {
                                   res.send(err);
                                 });
                               } else {
-                                res.send("Actualizado");
+                                // En tu servidor
                                 io.emit("modificado", req.params.id);
+                                console.log(
+                                  `Evento 'modificado' emitido para el ID ${req.params.id}`
+                                );
                               }
                             });
                           }
