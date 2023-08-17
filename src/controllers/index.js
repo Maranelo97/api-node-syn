@@ -624,6 +624,8 @@ exports.toValidar = (req, res) => {
       cuil: req.body.cuil,
       name: req.body.name,
       area: req.body.area,
+      aport: req.body.aports,
+      profile: req.body.profile,
       status: req.body.status,
       lastname: req.body.lastname,
       email: req.body.email,
