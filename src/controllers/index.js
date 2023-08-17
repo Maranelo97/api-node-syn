@@ -737,7 +737,667 @@ exports.deleteAudience = (req, res) => {
 };
 
 
+//CONTROLADORES DE ABANDONO
 
+exports.abandono3 = (req, res) => {
+  req.getConnection((err, connect) => {
+    if (err) return res.send(err);
+
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
+    };
+
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
+      if (err) return res.send(err);
+
+      // Obtener el registro actual
+      connect.query(
+        "SELECT * FROM audiencia WHERE id = ?",
+        [req.params.id],
+        (err, currentRecord) => {
+          if (err) {
+            connect.rollback(() => {
+              res.send(err);
+            });
+          } else {
+            const registroId = req.params.id;
+            const accionId = 8; 
+
+            // Insertar en la tabla de registros_acciones
+            const nuevaAccion = {
+              accionId,
+              registroId,
+              fecha: new Date(),
+            };
+
+            connect.query(
+              "INSERT INTO registros_acciones SET ?",
+              nuevaAccion,
+              (err, result) => {
+                if (err) {
+                  connect.rollback(() => {
+                    res.send(err);
+                  });
+                } else {
+                  // Actualizar el registro en la tabla de audiencia
+                  connect.query(
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
+                    (err, updateResult) => {
+                      if (err) {
+                        connect.rollback(() => {
+                          res.send(err);
+                        });
+                      } else {
+                        // Commit de la transacción
+                        connect.commit((err) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            res.send("Actualizado");
+                          }
+                        });
+                      }
+                    }
+                  );
+                  
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  });
+};
+
+
+exports.abandono4 = (req, res) => {
+  req.getConnection((err, connect) => {
+    if (err) return res.send(err);
+
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
+    };
+
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
+      if (err) return res.send(err);
+
+      // Obtener el registro actual
+      connect.query(
+        "SELECT * FROM audiencia WHERE id = ?",
+        [req.params.id],
+        (err, currentRecord) => {
+          if (err) {
+            connect.rollback(() => {
+              res.send(err);
+            });
+          } else {
+            const registroId = req.params.id;
+            const accionId = 9; 
+
+            // Insertar en la tabla de registros_acciones
+            const nuevaAccion = {
+              accionId,
+              registroId,
+              fecha: new Date(),
+            };
+
+            connect.query(
+              "INSERT INTO registros_acciones SET ?",
+              nuevaAccion,
+              (err, result) => {
+                if (err) {
+                  connect.rollback(() => {
+                    res.send(err);
+                  });
+                } else {
+                  // Actualizar el registro en la tabla de audiencia
+                  connect.query(
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
+                    (err, updateResult) => {
+                      if (err) {
+                        connect.rollback(() => {
+                          res.send(err);
+                        });
+                      } else {
+                        // Commit de la transacción
+                        connect.commit((err) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            res.send("Actualizado");
+                          }
+                        });
+                      }
+                    }
+                  );
+                  
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  });
+};
+
+
+exports.abandono5 = (req, res) => {
+  req.getConnection((err, connect) => {
+    if (err) return res.send(err);
+
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
+    };
+
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
+      if (err) return res.send(err);
+
+      // Obtener el registro actual
+      connect.query(
+        "SELECT * FROM audiencia WHERE id = ?",
+        [req.params.id],
+        (err, currentRecord) => {
+          if (err) {
+            connect.rollback(() => {
+              res.send(err);
+            });
+          } else {
+            const registroId = req.params.id;
+            const accionId = 10; 
+
+            // Insertar en la tabla de registros_acciones
+            const nuevaAccion = {
+              accionId,
+              registroId,
+              fecha: new Date(),
+            };
+
+            connect.query(
+              "INSERT INTO registros_acciones SET ?",
+              nuevaAccion,
+              (err, result) => {
+                if (err) {
+                  connect.rollback(() => {
+                    res.send(err);
+                  });
+                } else {
+                  // Actualizar el registro en la tabla de audiencia
+                  connect.query(
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
+                    (err, updateResult) => {
+                      if (err) {
+                        connect.rollback(() => {
+                          res.send(err);
+                        });
+                      } else {
+                        // Commit de la transacción
+                        connect.commit((err) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            res.send("Actualizado");
+                          }
+                        });
+                      }
+                    }
+                  );
+                  
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  });
+};
+
+exports.abandono6 = (req, res) => {
+  req.getConnection((err, connect) => {
+    if (err) return res.send(err);
+
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
+    };
+
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
+      if (err) return res.send(err);
+
+      // Obtener el registro actual
+      connect.query(
+        "SELECT * FROM audiencia WHERE id = ?",
+        [req.params.id],
+        (err, currentRecord) => {
+          if (err) {
+            connect.rollback(() => {
+              res.send(err);
+            });
+          } else {
+            const registroId = req.params.id;
+            const accionId = 11; 
+
+            // Insertar en la tabla de registros_acciones
+            const nuevaAccion = {
+              accionId,
+              registroId,
+              fecha: new Date(),
+            };
+
+            connect.query(
+              "INSERT INTO registros_acciones SET ?",
+              nuevaAccion,
+              (err, result) => {
+                if (err) {
+                  connect.rollback(() => {
+                    res.send(err);
+                  });
+                } else {
+                  // Actualizar el registro en la tabla de audiencia
+                  connect.query(
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
+                    (err, updateResult) => {
+                      if (err) {
+                        connect.rollback(() => {
+                          res.send(err);
+                        });
+                      } else {
+                        // Commit de la transacción
+                        connect.commit((err) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            res.send("Actualizado");
+                          }
+                        });
+                      }
+                    }
+                  );
+                  
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  });
+};
+
+exports.abandono7 = (req, res) => {
+  req.getConnection((err, connect) => {
+    if (err) return res.send(err);
+
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
+    };
+
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
+      if (err) return res.send(err);
+
+      // Obtener el registro actual
+      connect.query(
+        "SELECT * FROM audiencia WHERE id = ?",
+        [req.params.id],
+        (err, currentRecord) => {
+          if (err) {
+            connect.rollback(() => {
+              res.send(err);
+            });
+          } else {
+            const registroId = req.params.id;
+            const accionId = 12; 
+
+            // Insertar en la tabla de registros_acciones
+            const nuevaAccion = {
+              accionId,
+              registroId,
+              fecha: new Date(),
+            };
+
+            connect.query(
+              "INSERT INTO registros_acciones SET ?",
+              nuevaAccion,
+              (err, result) => {
+                if (err) {
+                  connect.rollback(() => {
+                    res.send(err);
+                  });
+                } else {
+                  // Actualizar el registro en la tabla de audiencia
+                  connect.query(
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
+                    (err, updateResult) => {
+                      if (err) {
+                        connect.rollback(() => {
+                          res.send(err);
+                        });
+                      } else {
+                        // Commit de la transacción
+                        connect.commit((err) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            res.send("Actualizado");
+                          }
+                        });
+                      }
+                    }
+                  );
+                  
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  });
+};
+
+exports.abandono8 = (req, res) => {
+  req.getConnection((err, connect) => {
+    if (err) return res.send(err);
+
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
+    };
+
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
+      if (err) return res.send(err);
+
+      // Obtener el registro actual
+      connect.query(
+        "SELECT * FROM audiencia WHERE id = ?",
+        [req.params.id],
+        (err, currentRecord) => {
+          if (err) {
+            connect.rollback(() => {
+              res.send(err);
+            });
+          } else {
+            const registroId = req.params.id;
+            const accionId = 13; 
+
+            // Insertar en la tabla de registros_acciones
+            const nuevaAccion = {
+              accionId,
+              registroId,
+              fecha: new Date(),
+            };
+
+            connect.query(
+              "INSERT INTO registros_acciones SET ?",
+              nuevaAccion,
+              (err, result) => {
+                if (err) {
+                  connect.rollback(() => {
+                    res.send(err);
+                  });
+                } else {
+                  // Actualizar el registro en la tabla de audiencia
+                  connect.query(
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
+                    (err, updateResult) => {
+                      if (err) {
+                        connect.rollback(() => {
+                          res.send(err);
+                        });
+                      } else {
+                        // Commit de la transacción
+                        connect.commit((err) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            res.send("Actualizado");
+                          }
+                        });
+                      }
+                    }
+                  );
+                  
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  });
+};
+
+exports.abandono9 = (req, res) => {
+  req.getConnection((err, connect) => {
+    if (err) return res.send(err);
+
+    const dataToBeChangedd = {
+      dni: req.body.dni,
+      cuil: req.body.cuil,
+      name: req.body.name,
+      area: req.body.area,
+      status: req.body.status,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      phone: req.body.phone,
+      phone2: req.body.phone2, 
+      importation: req.body.importation,
+      added: new Date(req.body.added),
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      province: req.body.province,
+      zipCode: req.body.zipCode,
+      ingress: new Date(req.body.ingress),
+      dob: new Date(req.body.dob),
+      aprobbed: new Date (req.body.aprobbed)
+    };
+
+    // Iniciar transacción
+    connect.beginTransaction((err) => {
+      if (err) return res.send(err);
+
+      // Obtener el registro actual
+      connect.query(
+        "SELECT * FROM audiencia WHERE id = ?",
+        [req.params.id],
+        (err, currentRecord) => {
+          if (err) {
+            connect.rollback(() => {
+              res.send(err);
+            });
+          } else {
+            const registroId = req.params.id;
+            const accionId = 14; 
+
+            // Insertar en la tabla de registros_acciones
+            const nuevaAccion = {
+              accionId,
+              registroId,
+              fecha: new Date(),
+            };
+
+            connect.query(
+              "INSERT INTO registros_acciones SET ?",
+              nuevaAccion,
+              (err, result) => {
+                if (err) {
+                  connect.rollback(() => {
+                    res.send(err);
+                  });
+                } else {
+                  // Actualizar el registro en la tabla de audiencia
+                  connect.query(
+                    "UPDATE audiencia SET ? WHERE id = ?",
+                    [dataToBeChangedd, req.params.id],
+                    (err, updateResult) => {
+                      if (err) {
+                        connect.rollback(() => {
+                          res.send(err);
+                        });
+                      } else {
+                        // Commit de la transacción
+                        connect.commit((err) => {
+                          if (err) {
+                            connect.rollback(() => {
+                              res.send(err);
+                            });
+                          } else {
+                            res.send("Actualizado");
+                          }
+                        });
+                      }
+                    }
+                  );
+                  
+                }
+              }
+            );
+          }
+        }
+      );
+    });
+  });
+};
 
 exports.importCSV = (req, res) => {
   const data = req.body.data; // Suponiendo que los datos se envían en el cuerpo de la solicitud
