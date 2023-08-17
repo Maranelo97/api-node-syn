@@ -21,11 +21,14 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("client conected");
-  socket.emit("ping")
 
   socket.on("client:modificado", data => {
     console.log(data)
+
+    socket.emit("server:modificado", data)
   })
+
+
 
 });
 
