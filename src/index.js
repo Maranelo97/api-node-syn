@@ -98,71 +98,23 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
-// ... (código anterior)
 
-function uploadCsv(uriFile, req) {
-  if (!fs.existsSync(uriFile)) {
-    console.log("File does not exist:", uriFile);
-    return;
-  }
+app.post('/insert-data', (req, res) => {
+  const data = req.body.data; // Suponiendo que los datos se envían en el cuerpo de la solicitud
 
-  let stream = fs.createReadStream(uriFile);
-  let csvDataColl = [];
-  let fileStream = csv
-    .parse()
-    .on("data", function (data) {
-      csvDataColl.push(data);
-    })
-    .on("end", function () {
-      csvDataColl.shift();
-
-      req.getConnection((error, connection) => {
-        if (error) {
-          console.error("Error en la conexión a la base de datos:", error);
-          return;
-        }
-
-        let query =
-          "INSERT INTO audiencia (name, lastname, status, email, phone, area, importation, added, emailsSent, emailSyngenta, dob, address, zipCode, province, cuil, location, accionId, dni, address2, ingress, imagelURL2, profile, aports, imageURL1, phone2, aprobbed, onBoarding, pdfURL) VALUES ?";
-        connection.query(query, [csvDataColl], (error, res) => {
-          if (error) {
-            console.error("Error en la consulta SQL:", error);
-            console.error("SQL Query:", query);
-          } else {
-            console.log("Filas insertadas:", res.affectedRows);
-          }
-          connection.release(); // Liberar la conexión
-        });
-      });
-
-      fs.unlinkSync(uriFile);
-    });
-
-  stream.pipe(fileStream);
-}
-
-//Petición Post
-app.post("/import-csv", upload.single("import-csv"), (req, res) => {
-  if (!req.file) {
-    res.status(400).send("Se debe proporcionar un archivo CSV");
-    return;
-  }
-
-  const uriFile = path.join(__dirname, "uploads", "csv", req.file.filename);
-  uploadCsv(uriFile, req);
-
-  // Imprime información sobre la respuesta
-  console.log("Response Status:", res.statusCode);
-  console.log("Response Headers:", res.getHeaders());
-
-  // Escucha el evento "finish" para imprimir el cuerpo de la respuesta
-  res.on("finish", () => {
-    console.log("Response Body:", res.get("Data Subida a la DB"));
+  const query = 'INSERT INTO audiencia (name	lastname	status	email	phone	area	importation	added	emailsSent	emailSyngenta	dob	address	zipCode	province	cuil	location	accionId	dni	address2	ingress	imagelURL2	profile	aports	imageURL1	phone2	aprobbed	onBoarding	pdfURL) VALUES ?';
+  const values = data.map(row => [row.name, row.lastname, row.status, row.email, row.phone, row.area, row.importation, row.added, row.emailSyngenta, row.dob, row.address]); // Ajusta los 
+  connect.query(query, [values], (error, results) => {
+    if (error) {
+      console.error('Error inserting data:', error);
+      res.status(500).json({ error: 'Error inserting data' });
+    } else {
+      console.log('Data inserted successfully:', results);
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
   });
-
-  res.send("Data Subida a la DB");
 });
+
 
 function generarCodigoAlfanumerico(longitud) {
   const caracteres =
