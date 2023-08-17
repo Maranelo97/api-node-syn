@@ -22,14 +22,9 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("client conected");
 
-  socket.on("client:modificado", data => {
-    console.log(data)
-
-    socket.emit("server:modificado", data)
-  })
-
-
-
+  socket.on("client:modificado", (data) => {
+    console.log(data);
+  });
 });
 
 const PORT = process.env.PORT || 4002;
