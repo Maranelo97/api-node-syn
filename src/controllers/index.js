@@ -735,3 +735,18 @@ exports.deleteAudience = (req, res) => {
 
 
 
+exports.importCSV = (req, res) => {
+  const data = req.body.data; // Suponiendo que los datos se envían en el cuerpo de la solicitud
+
+  const query = 'INSERT INTO audiencia (name	lastname	status	email	phone	area	importation	added	emailsSent	emailSyngenta	dob	address	zipCode	province	cuil	location	accionId	dni	address2	ingress	imagelURL2	profile	aports	imageURL1	phone2	aprobbed	onBoarding	pdfURL) VALUES ?';
+  const values = data.map(row => [row.name, row.lastname, row.status, row.email, row.phone, row.area, row.importation, row.added, row.emailSyngenta, row.dob, row.address]); // Ajusta los 
+  connect.query(query, [values], (error, results) => {
+    if (error) {
+      console.error('Error inserting data:', error);
+      res.status(500).json({ error: 'Error inserting data' });
+    } else {
+      console.log('Data inserted successfully:', results);
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+}

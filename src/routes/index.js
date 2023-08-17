@@ -1,12 +1,13 @@
 const express = require("express")
 const route = express.Router()
-const { addAudiencia, getAudience, editAudience, deleteAudience, getByDni, aceptarSub, rechazarSub, rollBackSub, ingressSub, toValidar, getCode } = require('../controllers/index')
+const { addAudiencia, getAudience, editAudience, deleteAudience, getByDni, aceptarSub, rechazarSub, rollBackSub, ingressSub, toValidar, getCode, importCSV } = require('../controllers/index')
 
 
 route.get('/audience', getAudience)
 route.get('/audience/:dni', getByDni)
 route.get('/getCode/:codigo', getCode)
 route.post("/add", addAudiencia)
+route.post("import-csv", importCSV)
 route.put('/update/:id', editAudience)
 route.put('/acceptSub/:id', aceptarSub)
 route.put('/reject-sub/:id', rechazarSub)
