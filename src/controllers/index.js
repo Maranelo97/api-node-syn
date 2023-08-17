@@ -738,8 +738,8 @@ exports.deleteAudience = (req, res) => {
 exports.importCSV = (req, res) => {
   const data = req.body.data; // Suponiendo que los datos se envían en el cuerpo de la solicitud
 
-  const query = 'INSERT INTO audiencia (name	lastname	status	email	phone	area	importation	added	emailsSent	emailSyngenta	dob	address	zipCode	province	cuil	location	accionId	dni	address2	ingress	imagelURL2	profile	aports	imageURL1	phone2	aprobbed	onBoarding	pdfURL) VALUES ?';
-  const values = data.map(row => [row.name, row.lastname, row.status, row.email, row.phone, row.area, row.importation, row.added, row.emailSyngenta, row.dob, row.address]); // Ajusta los 
+  const query = 'INSERT INTO audiencia (name, lastname, status, email, phone, area, importation, added, emailSyngenta, dob, address) VALUES ?';
+  const values = data.map(row => [row.name, row.lastname, row.status, row.email, row.phone, row.area, row.importation, row.added, row.emailSyngenta, row.dob, row.address]); 
   req.getConnection((err, connect) => {
     if (err) {
       console.error('Error obtaining connection:', err);
