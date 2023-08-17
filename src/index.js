@@ -18,6 +18,7 @@ const io = new Server(server, {
     origin: '*'
   }
 })
+module.exports = io
 
 
 io.on('connection', socket => {
