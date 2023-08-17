@@ -137,7 +137,7 @@ exports.getCode = (req, res) => {
 };
 
 
-exports.editAudience = (req, res) => {
+exports.editAudience = (req, res, io) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
 
