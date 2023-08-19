@@ -201,7 +201,7 @@ function generarTokenUnico(length = 32) {
 
 app.post("/token-account/:email/link", async function (req, res) {
   const { email } = req.params;
-  const { pdfURL } = req.body; // Obtén la URL del PDF del cuerpo de la solicitud
+  const { pdfURL } = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/LeBron_James_-_51959723161_%28cropped%29.jpg/220px-LeBron_James_-_51959723161_%28cropped%29.jpg"; // Obtén la URL del PDF del cuerpo de la solicitud
 
   const linkToken = generarTokenUnico(); // Genera un token único para el enlace
 
