@@ -199,18 +199,15 @@ function generarTokenUnico(length = 32) {
   return crypto.randomBytes(length).toString("hex");
 }
 
-app.post("/send-link/:email/link", async function (req, res) {
+app.post("/token-account/:email/link", async function (req, res) {
   const { email } = req.params;
-  const linkToken = generarTokenUnico(); // Genera un token único para el enlace
+  const codigoGenerado = generarCodigoAlfanumerico(5);
 
-  const link = `https://api-node-syn-production.up.railway.app/verify-link/${linkToken}`; // Reemplaza "tudominio.com" por tu dominio real
-
-  // Puedes personalizar el contenido del correo con el enlace
   const mailOptions = {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
-    subject: "Enlace de verificación",
-    text: `Haz clic en el siguiente enlace para verificar tu cuenta: ${link}`,
+    subject: "Codigo de seguridad",
+    text: `Clickea en este token para termianr el proceso: ${codigoGenerado}`,
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
@@ -221,20 +218,19 @@ app.post("/send-link/:email/link", async function (req, res) {
       try {
         const connection = await mysql.createConnection(dbConfig);
 
-        const query =
-          "INSERT INTO codigos (email, token, codigo) VALUES (?, ?, DEFAULT)";
-        await connection.execute(query, [email, linkToken]);
+        const query = "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
+        await connection.execute(query, [email, codigoGenerado]);
 
         console.log("Correo enviado: " + info.response);
         res.status(200).json({
           ok: true,
-          message: "Enlace enviado con éxito. Por favor verifica tu correo.",
+          message: `Código enviado con éxito, tu código es: ${codigoGenerado}`,
         });
       } catch (error) {
-        console.error("Error al insertar enlace en la base de datos:", error);
+        console.error("Error al insertar código en la base de datos:", error);
         res
           .status(500)
-          .json({ ok: false, message: "Error al enviar el enlace" });
+          .json({ ok: false, message: "Error al enviar el código" });
       }
     }
   });
