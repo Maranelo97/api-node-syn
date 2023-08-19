@@ -201,7 +201,7 @@ function generarTokenUnico(length = 32) {
 
 app.post("/token-account/:email/link", async function (req, res) {
   const { email } = req.params;
-  const { pdfURL } = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/LeBron_James_-_51959723161_%28cropped%29.jpg/220px-LeBron_James_-_51959723161_%28cropped%29.jpg"; // Obtén la URL del PDF del cuerpo de la solicitud
+  const pdfURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/LeBron_James_-_51959723161_%28cropped%29.jpg/220px-LeBron_James_-_51959723161_%28cropped%29.jpg"; // Obtén la URL del PDF del cuerpo de la solicitud
 
   const linkToken = generarTokenUnico(); // Genera un token único para el enlace
 
@@ -211,7 +211,12 @@ app.post("/token-account/:email/link", async function (req, res) {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
     subject: "Confirmación de cuenta",
-    text: `Clickea en este enlace para terminar el proceso: ${link}\n\nDescarga el PDF generado: ${pdfURL}`,
+    html: `
+      <p>¡Hola!</p>
+      <p>Clickea en este enlace para terminar el proceso: <a href="${link}">${link}</a></p>
+      <p>Descarga el PDF generado:</p>
+      <img src="${pdfURL}" alt="Imagen PDF">
+    `
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
@@ -239,6 +244,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     }
   });
 });
+
 
 app.get("/verify-link/:token", (req, res) => {
   const { token } = req.params;
