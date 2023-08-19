@@ -209,7 +209,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
     subject: "Codigo de seguridad",
-    text: `Clickea en este token para termianr el proceso: ${link}`,
+    text: `Clickea en este token para termianr el proceso: https://syngentaDigitalPension/${link}/conclude`,
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
