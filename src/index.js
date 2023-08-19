@@ -221,7 +221,7 @@ app.post("/token-account/:email/link", async function (req, res) {
         const connection = await mysql.createConnection(dbConfig);
 
         const query = "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
-        await connection.execute(query, [email, codigoGenerado]);
+        await connection.execute(query, [email, link]);
 
         console.log("Correo enviado: " + info.response);
         res.status(200).json({
