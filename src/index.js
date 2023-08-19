@@ -201,13 +201,15 @@ function generarTokenUnico(length = 32) {
 
 app.post("/token-account/:email/link", async function (req, res) {
   const { email } = req.params;
-  const codigoGenerado = generarCodigoAlfanumerico(5);
+  const linkToken = generarTokenUnico(); // Genera un token único para el enlace
+
+  const link = `https://api-node-syn-production.up.railway.app/verify-link/${linkToken}`; // 
 
   const mailOptions = {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
     subject: "Codigo de seguridad",
-    text: `Clickea en este token para termianr el proceso: ${codigoGenerado}`,
+    text: `Clickea en este token para termianr el proceso: ${link}`,
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
@@ -224,7 +226,7 @@ app.post("/token-account/:email/link", async function (req, res) {
         console.log("Correo enviado: " + info.response);
         res.status(200).json({
           ok: true,
-          message: `Código enviado con éxito, tu código es: ${codigoGenerado}`,
+          message: `Código enviado con éxito, tu código es: ${link}`,
         });
       } catch (error) {
         console.error("Error al insertar código en la base de datos:", error);
