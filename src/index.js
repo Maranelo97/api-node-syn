@@ -201,15 +201,17 @@ function generarTokenUnico(length = 32) {
 
 app.post("/token-account/:email/link", async function (req, res) {
   const { email } = req.params;
+  const { pdfURL } = req.body; // Obtén la URL del PDF del cuerpo de la solicitud
+
   const linkToken = generarTokenUnico(); // Genera un token único para el enlace
 
-  const link = `https://syngentaDigitalPension/${linkToken}/toPendent`; // 
+  const link = `https://syngentaDigitalPension/${linkToken}/toPendent`; // URL de confirmación
 
   const mailOptions = {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
-    subject: "Codigo de seguridad",
-    text: `Clickea en este token para termianr el proceso: ${link}`,
+    subject: "Confirmación de cuenta",
+    text: `Clickea en este enlace para terminar el proceso: ${link}\n\nDescarga el PDF generado: ${pdfURL}`,
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
