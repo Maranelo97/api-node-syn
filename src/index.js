@@ -203,13 +203,13 @@ app.post("/token-account/:email/link", async function (req, res) {
   const { email } = req.params;
   const linkToken = generarTokenUnico(); // Genera un token único para el enlace
 
-  const link = linkToken; // 
+  const link = `https://syngentaDigitalPension/${linkToken}/toPendent`; // 
 
   const mailOptions = {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
     subject: "Codigo de seguridad",
-    text: `Clickea en este token para termianr el proceso: https://syngentaDigitalPension/${link}/conclude`,
+    text: `Clickea en este token para termianr el proceso: ${link}`,
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
