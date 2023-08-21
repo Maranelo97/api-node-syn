@@ -205,7 +205,7 @@ app.post("/token-account/:email/link", async function (req, res) {
 
   const linkToken = generarTokenUnico(); // Genera un token único para el enlace
 
-  const link = `https://syngentaDigitalPension/${linkToken}/toPendent`; // URL de confirmación
+  const link = `${linkToken}`; // URL de confirmación
 
   const mailOptions = {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
@@ -213,7 +213,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     subject: "Confirmación de cuenta",
     html: `
       <p>¡Hola!</p>
-      <p>Clickea en este enlace para terminar el proceso: <a href="${link}">${link}</a></p>
+      <p>Clickea en este enlace para terminar el proceso: <a href="${link}">https://syngentaDigitalPension/verify-link/${link}</a></p>
       <p>Descarga el PDF generado:</p>
       <img src="${pdfURL}" alt="Imagen PDF">
     `
