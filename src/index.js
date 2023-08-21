@@ -284,6 +284,46 @@ app.get("/verify-link/:token", (req, res) => {
   });
 });
 
+app.get("/token-account/:linkToken/toPendent", (req, res) => {
+  const { linkToken } = req.params;
+
+  req.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error de conexión:", err);
+      res.status(500).send("Error de conexión a la base de datos.");
+      return;
+    }
+
+    const selectQuery = "SELECT email FROM codigos WHERE token = ?";
+    connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
+      if (selectErr) {
+        console.error("Error al seleccionar token:", selectErr);
+        res.status(500).send("Error al seleccionar el token.");
+        return;
+      }
+
+      if (selectResults.length === 0) {
+        res.status(404).send("Token no válido.");
+        return;
+      }
+
+      const email = selectResults[0].email;
+      const updateQuery = "UPDATE audiencia SET estado = 'pendiente' WHERE email = ?";
+      connection.query(updateQuery, [email], (updateErr, updateResults) => {
+        if (updateErr) {
+          console.error("Error al actualizar estado:", updateErr);
+          res.status(500).send("Error al actualizar el estado.");
+          return;
+        }
+
+        res.status(200).send("Cuenta confirmada correctamente.");
+      });
+    });
+  });
+});
+
+
+
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "uploads", "pdfs"));
