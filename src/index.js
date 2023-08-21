@@ -308,7 +308,7 @@ app.get("/token-account/:linkToken/toPendent", (req, res) => {
       }
 
       const email = selectResults[0].email;
-      const updateQuery = "UPDATE audiencia SET estado = 'pendiente' WHERE email = ?";
+      const updateQuery = "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
       connection.query(updateQuery, [email], (updateErr, updateResults) => {
         if (updateErr) {
           console.error("Error al actualizar estado:", updateErr);
