@@ -231,7 +231,7 @@ app.post("/token-account/:email/link", async function (req, res) {
         res.status(500).send("Hubo un error al enviar el correo.");
       } else {
         try {
-          const connection = await createConnection(dbConfig);
+          const connection = await mysql.createConnection(dbConfig);
 
           const query = "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
           await connection.execute(query, [email, link]);
