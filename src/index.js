@@ -206,7 +206,8 @@ app.post("/token-account/:email/link", async function (req, res) {
     
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
     
-    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
+    const link = `https://api-node-syn-production.up.railway.app/token-account/${encodeURIComponent(linkToken)}/toPendent`;
+    ; // URL de confirmación
     // Adjuntar el PDF al correo
     const mailOptions = {
       from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
@@ -214,7 +215,7 @@ app.post("/token-account/:email/link", async function (req, res) {
       subject: "Confirmación de cuenta",
       html: `
         <p>¡Hola!</p>
-        <p>Clickea en este enlace para terminar el proceso: <a href="test">Link de confirmacion</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
+        <p>Clickea en este enlace para terminar el proceso: <a href="${link}">Link de confirmacion</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
         <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
       `,
       attachments: [
