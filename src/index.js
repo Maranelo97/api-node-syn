@@ -201,12 +201,12 @@ function generarTokenUnico(length = 32) {
 
 app.post("/token-account/:email/link", async function (req, res) {
   try {
-    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
     const { email } = req.params;
     const { pdfURL } = req.body; // Recupera la URL del PDF adjunto desde el cuerpo de la solicitud
-
+    
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
-
+    
+    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
     // Adjuntar el PDF al correo
     const mailOptions = {
       from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
