@@ -284,7 +284,7 @@ app.get("/verify-link/:token", (req, res) => {
   });
 });
 
-app.get("/token-account/:linkToken/toPendent", (req, res) => {
+app.get("/token-account/https://api-node-syn-production.up.railway.app/token-account/02d679c6565708a4c1e8f02496687b6b8f431f5db934934a77877da75ad0101e/toPendent/toPendent", (req, res) => {
   const { linkToken } = req.params;
 
   req.getConnection((err, connection) => {
