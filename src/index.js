@@ -215,7 +215,7 @@ app.post("/token-account/:email/link", async function (req, res) {
       <p>¡Hola!</p>
       <p>Clickea en este enlace para terminar el proceso: <a href="${link}">${link}</a></p>
       <p>Descarga el PDF generado:</p>
-      <iframe src="${pdfURL}" width="100%" height="600px"></iframe>
+      <img src="${pdfURL}" alt="Imagen PDF">
     `
   };
 
