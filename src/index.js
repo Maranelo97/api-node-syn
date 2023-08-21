@@ -214,13 +214,13 @@ app.post("/token-account/:email/link", async function (req, res) {
       subject: "Confirmación de cuenta",
       html: `
         <p>¡Hola!</p>
-        <p>Clickea en este enlace para terminar el proceso: <a href="${link}">https://api-node-syn-production.up.railway.app/token-account/${link}/toPendent</a></p>
-        <p>Adjunto encontrarás el PDF generado.</p>
+        <p>Clickea en este enlace para terminar el proceso: <a href="https://api-node-syn-production.up.railway.app/token-account/${link}/toPendent">https://api-node-syn-production.up.railway.app/token-account/${link}/toPendent</a></p>
+        <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
       `,
       attachments: [
         {
-          filename: "document.pdf", // Nombre del archivo adjunto
-          href: pdfURL // URL del PDF adjunto (en lugar de content)
+          filename: "Declaración Jurada Digital Pension.pdf", 
+          href: pdfURL 
         }
       ]
     };
