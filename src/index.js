@@ -200,49 +200,60 @@ function generarTokenUnico(length = 32) {
 }
 
 app.post("/token-account/:email/link", async function (req, res) {
-  const { email } = req.params;
-  const pdfURL = req.body.pdfURL;
+  try {
+    const { email } = req.params;
 
-  const linkToken = generarTokenUnico(); // Genera un token único para el enlace
+    // ... Tu código para generar el PDF y obtener pdfURL ...
 
-  const link = `${linkToken}`; // URL de confirmación
+    const linkToken = generarTokenUnico(); // Genera un token único para el enlace
+    const link = `${linkToken}`; // URL de confirmación
 
-  const mailOptions = {
-    from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
-    to: email,
-    subject: "Confirmación de cuenta",
-    html: `
-      <p>¡Hola!</p>
-      <p>Clickea en este enlace para terminar el proceso: <a href="${link}">${link}</a></p>
-      <p>Descarga el PDF generado:</p>
-      <img src="${pdfURL}" alt="Imagen PDF">
-    `
-  };
+    // Adjuntar el PDF al correo
+    const mailOptions = {
+      from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
+      to: email,
+      subject: "Confirmación de cuenta",
+      html: `
+        <p>¡Hola!</p>
+        <p>Clickea en este enlace para terminar el proceso: <a href="${link}">${link}</a></p>
+        <p>Adjunto encontrarás el PDF generado.</p>
+      `,
+      attachments: [
+        {
+          filename: "document.pdf", // Nombre del archivo adjunto
+          content: pdfBlob // Contenido del archivo adjunto (PDF)
+        }
+      ]
+    };
 
-  transporter.sendMail(mailOptions, async (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send("Hubo un error al enviar el correo.");
-    } else {
-      try {
-        const connection = await mysql.createConnection(dbConfig);
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send("Hubo un error al enviar el correo.");
+      } else {
+        try {
+          const connection = await createConnection(dbConfig);
 
-        const query = "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
-        await connection.execute(query, [email, link]);
+          const query = "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
+          await connection.execute(query, [email, link]);
 
-        console.log("Correo enviado: " + info.response);
-        res.status(200).json({
-          ok: true,
-          message: `Código enviado con éxito, tu código es: ${link}`,
-        });
-      } catch (error) {
-        console.error("Error al insertar código en la base de datos:", error);
-        res
-          .status(500)
-          .json({ ok: false, message: "Error al enviar el código" });
+          console.log("Correo enviado: " + info.response);
+          res.status(200).json({
+            ok: true,
+            message: `Código enviado con éxito, tu código es: ${link}`,
+          });
+        } catch (error) {
+          console.error("Error al insertar código en la base de datos:", error);
+          res
+            .status(500)
+            .json({ ok: false, message: "Error al enviar el código" });
+        }
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Error en el servidor.");
+  }
 });
 
 
