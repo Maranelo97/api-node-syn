@@ -231,10 +231,11 @@ app.post("/token-account/:email/link", async function (req, res) {
         res.status(500).send("Hubo un error al enviar el correo.");
       } else {
         try {
-          const connection = await createConnection(dbConfig);
+          const connection = req.getConnection();
 
           const query = "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
-          await connection.execute(query, [email, link]);
+          await connection.query(query, [email, link]);
+
 
           console.log("Correo enviado: " + info.response);
           res.status(200).json({
