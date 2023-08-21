@@ -214,7 +214,7 @@ app.post("/token-account/:email/link", async function (req, res) {
       subject: "Confirmación de cuenta",
       html: `
         <p>¡Hola!</p>
-        <p>Clickea en este enlace para terminar el proceso: <a href="${link}">${link}</a></p>
+        <p>Clickea en este enlace para terminar el proceso: <a href="${link}">https://api-node-syn-production.up.railway.app/token-account/${link}/toPendent</a></p>
         <p>Adjunto encontrarás el PDF generado.</p>
       `,
       attachments: [
