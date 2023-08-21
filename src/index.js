@@ -202,8 +202,7 @@ function generarTokenUnico(length = 32) {
 app.post("/token-account/:email/link", async function (req, res) {
   try {
     const { email } = req.params;
-
-    // ... Tu código para generar el PDF y obtener pdfURL ...
+    const { pdfURL } = req.body; // Recupera la URL del PDF adjunto desde el cuerpo de la solicitud
 
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
     const link = `${linkToken}`; // URL de confirmación
@@ -221,7 +220,7 @@ app.post("/token-account/:email/link", async function (req, res) {
       attachments: [
         {
           filename: "document.pdf", // Nombre del archivo adjunto
-          content: pdfBlob // Contenido del archivo adjunto (PDF)
+          href: pdfURL // URL del PDF adjunto (en lugar de content)
         }
       ]
     };
@@ -255,6 +254,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     res.status(500).send("Error en el servidor.");
   }
 });
+
 
 
 app.get("/verify-link/:token", (req, res) => {
