@@ -213,7 +213,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     subject: "Confirmación de cuenta",
     html: `
       <p>¡Hola!</p>
-      <p>Clickea en este enlace para terminar el proceso: <a href="${link}">https://syngentaDigitalPension/verify-link/${link}</a></p>
+      <p>Clickea en este enlace para terminar el proceso: <a href="https://api-node-syn-production.up.railway.app/token-account/02d679c6565708a4c1e8f02496687b6b8f431f5db934934a77877da75ad0101e/toPendent">https://api-node-syn-production.up.railway.app/token-account/02d679c6565708a4c1e8f02496687b6b8f431f5db934934a77877da75ad0101e/toPendent</a></p>
       <p>Descarga el PDF generado:</p>
       <img src="${pdfURL}" alt="Imagen PDF">
     `
