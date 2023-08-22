@@ -205,7 +205,7 @@ app.post("/insert-audience", (req, res) => {
       });
     }
 
-    const insertQuery = "INSERT INTO audiecniaTEst (nombre, edad, ciudad) VALUES (?, ?, ?)";
+    const insertQuery = "INSERT INTO audiecniaTEst (nombre, apellidos, ciudad) VALUES (?, ?, ?)";
 
     // Iterar sobre cada fila de datos del CSV y ejecutar la consulta INSERT
     audienceData.forEach(data => {
