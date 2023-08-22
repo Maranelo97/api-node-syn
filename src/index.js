@@ -280,8 +280,9 @@ app.post("/token-account/:email/link", async function (req, res) {
     const { email } = req.params;
     const { pdfURL } = req.body; // Recupera la URL del PDF adjunto desde el cuerpo de la solicitud
 
+
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
-    const link = linkToken; // URL de confirmación
+    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
     // Adjuntar el PDF al correo
     const mailOptions = {
       from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
@@ -289,7 +290,7 @@ app.post("/token-account/:email/link", async function (req, res) {
       subject: "Confirmación de cuenta",
       html: `
         <p>¡Hola!</p>
-        <p>Clickea en este enlace para terminar el proceso: <a href="https://fakedomain.com">${link}</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
+        <p>Clickea en este enlace para terminar el proceso: <a href="https://fakedomain.com">TEST CONFIRAMCIÖN</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
         <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
       `,
       attachments: [
@@ -369,7 +370,7 @@ app.get("/verify-link/:token", (req, res) => {
   });
 });
 
-app.get("/token-account/:linkToken/toPendent", (req, res) => {
+app.get(":linkToken/toPendent", (req, res) => {
   const { linkToken } = req.params;
 
   req.getConnection((err, connection) => {
