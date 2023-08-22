@@ -299,7 +299,7 @@ app.post("/token-account/:email/link", async function (req, res) {
           href: pdfURL,
         },
         {
-          filename: "index.html",
+          filename: "test.pdf",
           href: link,
         }
       ],
