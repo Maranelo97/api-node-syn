@@ -224,10 +224,10 @@ app.post("/insert-audience", (req, res) => {
     )
       .then(() => {
         // Después de insertar en audiencia, registrar en la tabla de importaciones
-        const importName = "Nombre de la importación"; // Define el nombre de la importación
+        const importName = "Import Test"; // Define el nombre de la importación
         const importedRows = audienceData.length;
 
-        const importInsertQuery = "INSERT INTO importaciones (nombre_de_importacion, cantidad_de_registros) VALUES (?, ?)";
+        const importInsertQuery = "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
         connect.query(importInsertQuery, [importName, importedRows], (err, result) => {
           if (err) {
             console.error("Error al registrar la importación:", err);
