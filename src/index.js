@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
   socket.on("client:modificado", (data) => {
     console.log(data);
 
-    io.emit("server:modificado", data)
+    io.emit("server:modificado", data);
   });
 });
 
@@ -205,20 +205,28 @@ app.post("/insert-audience", (req, res) => {
       });
     }
 
-    const insertQuery = "INSERT INTO audiencia (name, lastname, province, email, phone) VALUES (?, ?, ?, ?, ?)";
+    const insertQuery =
+      "INSERT INTO audiencia (name, lastname, province, email, phone, dni) VALUES (?, ?, ?, ?, ?, ?)";
 
     Promise.all(
-      audienceData.map(data => {
-        const { name, lastname, province, email, phone } = data;
+      audienceData.map((data) => {
+        const { name, lastname, province, email, phone, dni } = data;
         return new Promise((resolve, reject) => {
-          connect.query(insertQuery, [name, lastname, province, email, phone], (err, result) => {
-            if (err) {
-              console.error("Error al insertar datos en la base de datos:", err);
-              reject(err);
-            } else {
-              resolve(result);
+          connect.query(
+            insertQuery,
+            [name, lastname, province, email, phone, dni],
+            (err, result) => {
+              if (err) {
+                console.error(
+                  "Error al insertar datos en la base de datos:",
+                  err
+                );
+                reject(err);
+              } else {
+                resolve(result);
+              }
             }
-          });
+          );
         });
       })
     )
@@ -227,28 +235,35 @@ app.post("/insert-audience", (req, res) => {
         const importName = "Import Test"; // Define el nombre de la importación
         const importedRows = audienceData.length;
 
-        const importInsertQuery = "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
-        connect.query(importInsertQuery, [importName, importedRows], (err, result) => {
-          if (err) {
-            console.error("Error al registrar la importación:", err);
-            return res.status(500).json({
-              ok: false,
-              message: "Error al registrar la importación en la base de datos",
-              error: err.message
+        const importInsertQuery =
+          "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
+        connect.query(
+          importInsertQuery,
+          [importName, importedRows],
+          (err, result) => {
+            if (err) {
+              console.error("Error al registrar la importación:", err);
+              return res.status(500).json({
+                ok: false,
+                message:
+                  "Error al registrar la importación en la base de datos",
+                error: err.message,
+              });
+            }
+
+            res.status(200).json({
+              ok: true,
+              message:
+                "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
             });
           }
-          
-          res.status(200).json({
-            ok: true,
-            message: "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
-          });
-        });
+        );
       })
-      .catch(error => {
+      .catch((error) => {
         res.status(500).json({
           ok: false,
           message: "Error al insertar datos en la base de datos",
-          error: error.message
+          error: error.message,
         });
       });
   });
@@ -264,11 +279,10 @@ app.post("/token-account/:email/link", async function (req, res) {
   try {
     const { email } = req.params;
     const { pdfURL } = req.body; // Recupera la URL del PDF adjunto desde el cuerpo de la solicitud
-    
+
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
-    
-   const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
-; // URL de confirmación
+
+    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
     // Adjuntar el PDF al correo
     const mailOptions = {
       from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
@@ -281,10 +295,10 @@ app.post("/token-account/:email/link", async function (req, res) {
       `,
       attachments: [
         {
-          filename: "Declaración Jurada Digital Pension.pdf", 
-          href: pdfURL 
-        }
-      ]
+          filename: "Declaración Jurada Digital Pension.pdf",
+          href: pdfURL,
+        },
+      ],
     };
 
     transporter.sendMail(mailOptions, async (error, info) => {
@@ -295,7 +309,8 @@ app.post("/token-account/:email/link", async function (req, res) {
         try {
           const connection = await mysql.createConnection(dbConfig);
 
-          const query = "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
+          const query =
+            "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
           await connection.execute(query, [email, link]);
 
           console.log("Correo enviado: " + info.response);
@@ -316,8 +331,6 @@ app.post("/token-account/:email/link", async function (req, res) {
     res.status(500).send("Error en el servidor.");
   }
 });
-
-
 
 app.get("/verify-link/:token", (req, res) => {
   const { token } = req.params;
@@ -381,7 +394,8 @@ app.get("/token-account/:linkToken/toPendent", (req, res) => {
       }
 
       const email = selectResults[0].email;
-      const updateQuery = "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
+      const updateQuery =
+        "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
       connection.query(updateQuery, [email], (updateErr, updateResults) => {
         if (updateErr) {
           console.error("Error al actualizar estado:", updateErr);
@@ -394,8 +408,6 @@ app.get("/token-account/:linkToken/toPendent", (req, res) => {
     });
   });
 });
-
-
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
