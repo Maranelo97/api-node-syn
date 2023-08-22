@@ -194,7 +194,7 @@ app.get("/verify-code/:codigo", (req, res) => {
 });
 
 app.post("/insert-audience", (req, res) => {
-  const audienceData = req.body; // Supongo que estás enviando los datos como un array de objetos desde el cliente
+  const audienceData = req.body;
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -207,7 +207,6 @@ app.post("/insert-audience", (req, res) => {
 
     const insertQuery = "INSERT INTO audiencia (name, lastname, province, email, phone) VALUES (?, ?, ?, ?, ?)";
 
-    // Usamos Promise.all para asegurarnos de que todas las inserciones se completen antes de responder
     Promise.all(
       audienceData.map(data => {
         const { name, lastname, province, email, phone } = data;
@@ -224,9 +223,25 @@ app.post("/insert-audience", (req, res) => {
       })
     )
       .then(() => {
-        res.status(200).json({
-          ok: true,
-          message: "Datos insertados correctamente en la tabla de audiencia",
+        // Después de insertar en audiencia, registrar en la tabla de importaciones
+        const importName = "Nombre de la importación"; // Define el nombre de la importación
+        const importedRows = audienceData.length;
+
+        const importInsertQuery = "INSERT INTO importaciones (nombre_de_importacion, cantidad_de_registros) VALUES (?, ?)";
+        connect.query(importInsertQuery, [importName, importedRows], (err, result) => {
+          if (err) {
+            console.error("Error al registrar la importación:", err);
+            return res.status(500).json({
+              ok: false,
+              message: "Error al registrar la importación en la base de datos",
+              error: err.message
+            });
+          }
+          
+          res.status(200).json({
+            ok: true,
+            message: "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
+          });
         });
       })
       .catch(error => {
