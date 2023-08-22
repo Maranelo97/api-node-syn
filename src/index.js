@@ -271,8 +271,8 @@ app.post("/insert-audience", (req, res) => {
 
 //Envio y Enlace de Validación Post Formulario
 
-function generarTokenUnico(length = 32) {
-  return crypto.randomBytes(length).toString("hex");
+function generarTokenUnico(length = 10) {
+  return crypto.randomBytes(Math.ceil(length / 2)).toString("hex").slice(0, length);
 }
 
 app.post("/token-account/:email/link", async function (req, res) {
