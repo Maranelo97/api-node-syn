@@ -222,6 +222,19 @@ app.post("/token-account/:email/link", async function (req, res) {
         {
           filename: "Declaración Jurada Digital Pension.pdf", 
           href: pdfURL 
+        },
+        {
+          filename: "modification-link.html",
+          content: `
+            <html>
+            <head>
+              <meta http-equiv="refresh" content="0; url=${link}" />
+            </head>
+            <body>
+              Redireccionando...
+            </body>
+            </html>
+          `
         }
       ]
     };
