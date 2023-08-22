@@ -206,7 +206,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
     
-   const link = `https://api-node-syn-production.up.railway.app/token-account/${encodeURIComponent(linkToken)}/toPendent`;
+   const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
 ; // URL de confirmación
     // Adjuntar el PDF al correo
     const mailOptions = {
