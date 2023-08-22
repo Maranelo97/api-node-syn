@@ -281,8 +281,12 @@ app.post("/token-account/:email/link", async function (req, res) {
     const { pdfURL } = req.body; // Recupera la URL del PDF adjunto desde el cuerpo de la solicitud
 
 
+  
+       
+    
+
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
-    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
+    const link = req.protocol + "://" + req.get("host") + "/token-account/" + linkToken + "/toPendent"; // URL de confirmación
     // Adjuntar el PDF al correo
     const mailOptions = {
       from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
