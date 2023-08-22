@@ -271,7 +271,7 @@ app.post("/insert-audience", (req, res) => {
 
 //Envio y Enlace de Validación Post Formulario
 
-function generarTokenUnico(length = 6) {
+function generarTokenUnico(length = 8) {
   return crypto.randomBytes(Math.ceil(length / 2)).toString("hex").slice(0, length);
 }
 
@@ -282,7 +282,7 @@ app.post("/token-account/:email/link", async function (req, res) {
 
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
 
-    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
+    const link = `${linkToken}`; // URL de confirmación
     // Adjuntar el PDF al correo
     const mailOptions = {
       from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
