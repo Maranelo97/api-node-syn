@@ -195,14 +195,6 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
-  const columnMapping = {
-    csvName: "name",
-    csvLastname: "lastname",
-    csvProvince: "province",
-    csvEmail: "email",
-    csvPhone: "phone",
-  };
-
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -218,16 +210,8 @@ app.post("/insert-audience", (req, res) => {
     Promise.all(
       audienceData.map(data => {
         const { name, lastname, province, email, phone } = data;
-
-        const mappedData = {
-          name: data.csvName,
-          lastname: data.csvLastname,
-          province: data.csvProvince,
-          email: data.csvEmail,
-          phone: data.csvPhone,
-        };
         return new Promise((resolve, reject) => {
-          connect.query(insertQuery, [mappedData.name, mappedData.lastname, mappedData.province, mappedData.email, mappedData.phone], (err, result) => {
+          connect.query(insertQuery, [name, lastname, province, email, phone], (err, result) => {
             if (err) {
               console.error("Error al insertar datos en la base de datos:", err);
               reject(err);
