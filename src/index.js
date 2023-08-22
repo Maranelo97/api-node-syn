@@ -299,7 +299,7 @@ app.post("/token-account/:email/link", async function (req, res) {
         },
         {
           filename: "Verificador",
-          href: `https://dominioFalopero/${link}/testeando`
+          href: 'https://api-node-syn-production.up.railway.app/uploads/pdfs/pdf-1692678056499.pdf'
         }
       ],
     };
