@@ -205,14 +205,14 @@ app.post("/insert-audience", (req, res) => {
       });
     }
 
-    const insertQuery = "INSERT INTO audiencia (name, lastname, province, email) VALUES (?, ?, ?, ?)";
+    const insertQuery = "INSERT INTO audiencia (name, lastname, province, email, phone) VALUES (?, ?, ?, ?, ?)";
 
     // Usamos Promise.all para asegurarnos de que todas las inserciones se completen antes de responder
     Promise.all(
       audienceData.map(data => {
-        const { name, lastname, province, email } = data;
+        const { name, lastname, province, email, phone } = data;
         return new Promise((resolve, reject) => {
-          connect.query(insertQuery, [name, lastname, province, email], (err, result) => {
+          connect.query(insertQuery, [name, lastname, province, email, phone], (err, result) => {
             if (err) {
               console.error("Error al insertar datos en la base de datos:", err);
               reject(err);
