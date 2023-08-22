@@ -209,8 +209,8 @@ app.post("/insert-audience", (req, res) => {
 
     // Iterar sobre cada fila de datos del CSV y ejecutar la consulta INSERT
     audienceData.forEach(data => {
-      const { nombre, edad, ciudad } = data;
-      connect.query(insertQuery, [nombre, edad, ciudad], (err, result) => {
+      const { nombre, apellidos, ciudad } = data;
+      connect.query(insertQuery, [nombre, apellidos, ciudad], (err, result) => {
         if (err) {
           console.error("Error al insertar datos en la base de datos:", err);
           return res.status(500).json({
