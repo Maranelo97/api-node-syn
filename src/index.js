@@ -193,6 +193,42 @@ app.get("/verify-code/:codigo", (req, res) => {
   });
 });
 
+app.post("/insert-audience", (req, res) => {
+  const audienceData = req.body; // Supongo que estás enviando los datos como un array de objetos desde el cliente
+
+  req.getConnection((err, connect) => {
+    if (err) {
+      console.error("Error en la conexión a la base de datos:", err);
+      return res.status(500).json({
+        ok: false,
+        message: "Error en la conexión a la base de datos",
+      });
+    }
+
+    const insertQuery = "INSERT INTO audiecniaTEst (nombre, edad, ciudad) VALUES (?, ?, ?)";
+
+    // Iterar sobre cada fila de datos del CSV y ejecutar la consulta INSERT
+    audienceData.forEach(data => {
+      const { nombre, edad, ciudad } = data;
+      connect.query(insertQuery, [nombre, edad, ciudad], (err, result) => {
+        if (err) {
+          console.error("Error al insertar datos en la base de datos:", err);
+          return res.status(500).json({
+            ok: false,
+            message: "Error al insertar datos en la base de datos",
+          });
+        }
+      });
+    });
+
+    res.status(200).json({
+      ok: true,
+      message: "Datos insertados correctamente en la tabla de audiencia",
+    });
+  });
+});
+
+
 //Envio y Enlace de Validación Post Formulario
 
 function generarTokenUnico(length = 32) {
