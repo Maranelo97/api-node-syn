@@ -207,27 +207,37 @@ app.post("/insert-audience", (req, res) => {
 
     const insertQuery = "INSERT INTO audiecniaTEst (nombre, apellidos, ciudad) VALUES (?, ?, ?)";
 
-    // Iterar sobre cada fila de datos del CSV y ejecutar la consulta INSERT
-    audienceData.forEach(data => {
-      const { nombre, apellidos, ciudad } = data;
-      connect.query(insertQuery, [nombre, apellidos, ciudad], (err, result) => {
-        if (err) {
-          console.error("Error al insertar datos en la base de datos:", err);
-          return res.status(500).json({
-            ok: false,
-            message: "Error al insertar datos en la base de datos",
+    // Usamos Promise.all para asegurarnos de que todas las inserciones se completen antes de responder
+    Promise.all(
+      audienceData.map(data => {
+        const { nombre, apellidos, ciudad } = data;
+        return new Promise((resolve, reject) => {
+          connect.query(insertQuery, [nombre, apellidos, ciudad], (err, result) => {
+            if (err) {
+              console.error("Error al insertar datos en la base de datos:", err);
+              reject(err);
+            } else {
+              resolve(result);
+            }
           });
-        }
+        });
+      })
+    )
+      .then(() => {
+        res.status(200).json({
+          ok: true,
+          message: "Datos insertados correctamente en la tabla de audiencia",
+        });
+      })
+      .catch(error => {
+        res.status(500).json({
+          ok: false,
+          message: "Error al insertar datos en la base de datos",
+          error: error.message
+        });
       });
-    });
-
-    res.status(200).json({
-      ok: true,
-      message: "Datos insertados correctamente en la tabla de audiencia",
-    });
   });
 });
-
 
 //Envio y Enlace de Validación Post Formulario
 
