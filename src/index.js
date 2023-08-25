@@ -261,7 +261,7 @@ app.post("/insert-audience", (req, res) => {
             });
 
 
-            io.emit('server:audienceInserted', { importName, importedRows: audienceData.length });
+            io.emit('server:audienceInserted', { importName, importedRows: audienceData.length, etiquetas });
           }
         );
       })
