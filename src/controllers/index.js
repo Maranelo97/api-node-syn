@@ -1,7 +1,3 @@
-const io = require("../index")
-
-
-
 exports.addAudiencia = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
@@ -31,7 +27,7 @@ exports.addAudiencia = (req, res) => {
       imagelURL2: req.body.imagelURL2 || null,
       pdfURL: req.body.pdfURL,
       aports: req.body.aports,
-      profile: req.body.profile
+      profile: req.body.profile,
     };
 
     // Iniciar transacción
@@ -118,19 +114,32 @@ exports.getByDni = (req, res) => {
   });
 };
 
-
 exports.getCode = (req, res) => {
   req.getConnection((err, conn) => {
-    if (err) return res.status(500).json({ ok: false, message: "Error en la conexión a la base de datos" });
+    if (err)
+      return res
+        .status(500)
+        .json({
+          ok: false,
+          message: "Error en la conexión a la base de datos",
+        });
 
     conn.query(
       `SELECT * FROM codigos WHERE codigo = ?`,
       [req.params.codigo],
       (err, result) => {
-        if (err) return res.status(500).json({ ok: false, message: "Error en la consulta a la base de datos" });
+        if (err)
+          return res
+            .status(500)
+            .json({
+              ok: false,
+              message: "Error en la consulta a la base de datos",
+            });
 
         if (result.length === 0) {
-          return res.status(404).json({ ok: false, message: "Código no encontrado" });
+          return res
+            .status(404)
+            .json({ ok: false, message: "Código no encontrado" });
         }
 
         res.json(result);
@@ -138,7 +147,6 @@ exports.getCode = (req, res) => {
     );
   });
 };
-
 
 exports.editAudience = (req, res) => {
   req.getConnection((err, connect) => {
@@ -154,7 +162,7 @@ exports.editAudience = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -169,7 +177,7 @@ exports.editAudience = (req, res) => {
       aports: req.body.aports,
       profile: req.body.profile,
       onBoarding: req.body.onBoarding,
-      pdfURL: req.body.pdfURL
+      pdfURL: req.body.pdfURL,
     };
 
     // Iniciar transacción
@@ -228,7 +236,6 @@ exports.editAudience = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -253,7 +260,7 @@ exports.aceptarSub = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -263,7 +270,7 @@ exports.aceptarSub = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (Date.now())
+      aprobbed: new Date(Date.now()),
     };
 
     // Iniciar transacción
@@ -281,7 +288,7 @@ exports.aceptarSub = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 3; 
+            const accionId = 3;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -317,13 +324,11 @@ exports.aceptarSub = (req, res) => {
                             });
                           } else {
                             res.send("Actualizado");
-                            io.emmit("server:aprobado", dataToBeChangedd)
                           }
                         });
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -333,7 +338,6 @@ exports.aceptarSub = (req, res) => {
     });
   });
 };
-
 
 exports.rechazarSub = (req, res) => {
   req.getConnection((err, connect) => {
@@ -349,7 +353,7 @@ exports.rechazarSub = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -362,7 +366,6 @@ exports.rechazarSub = (req, res) => {
     };
 
     const justificacion = req.body.justificacion;
-
 
     // Iniciar transacción
     connect.beginTransaction((err) => {
@@ -379,7 +382,7 @@ exports.rechazarSub = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 4; 
+            const accionId = 4;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -421,7 +424,6 @@ exports.rechazarSub = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -431,7 +433,6 @@ exports.rechazarSub = (req, res) => {
     });
   });
 };
-
 
 exports.rollBackSub = (req, res) => {
   req.getConnection((err, connect) => {
@@ -447,7 +448,7 @@ exports.rollBackSub = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -457,7 +458,7 @@ exports.rollBackSub = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -475,7 +476,7 @@ exports.rollBackSub = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 5; 
+            const accionId = 5;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -516,7 +517,6 @@ exports.rollBackSub = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -541,7 +541,7 @@ exports.ingressSub = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -551,7 +551,7 @@ exports.ingressSub = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -569,7 +569,7 @@ exports.ingressSub = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 6; 
+            const accionId = 6;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -610,7 +610,6 @@ exports.ingressSub = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -637,7 +636,7 @@ exports.toValidar = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -650,8 +649,8 @@ exports.toValidar = (req, res) => {
       pdfURL: req.body.pdfURL,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed),
-      onBoarding: new Date (req.body.onBoarding)
+      aprobbed: new Date(req.body.aprobbed),
+      onBoarding: new Date(req.body.onBoarding),
     };
 
     // Iniciar transacción
@@ -669,7 +668,7 @@ exports.toValidar = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 7; 
+            const accionId = 7;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -710,7 +709,6 @@ exports.toValidar = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -720,7 +718,6 @@ exports.toValidar = (req, res) => {
     });
   });
 };
-
 
 //aqui
 
@@ -740,7 +737,6 @@ exports.deleteAudience = (req, res) => {
   });
 };
 
-
 //CONTROLADORES DE ABANDONO
 
 exports.abandono3 = (req, res) => {
@@ -757,7 +753,7 @@ exports.abandono3 = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -767,7 +763,7 @@ exports.abandono3 = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -785,7 +781,7 @@ exports.abandono3 = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 8; 
+            const accionId = 8;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -826,7 +822,6 @@ exports.abandono3 = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -836,7 +831,6 @@ exports.abandono3 = (req, res) => {
     });
   });
 };
-
 
 exports.abandono4 = (req, res) => {
   req.getConnection((err, connect) => {
@@ -852,7 +846,7 @@ exports.abandono4 = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -862,7 +856,7 @@ exports.abandono4 = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -880,7 +874,7 @@ exports.abandono4 = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 9; 
+            const accionId = 9;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -921,7 +915,6 @@ exports.abandono4 = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -931,7 +924,6 @@ exports.abandono4 = (req, res) => {
     });
   });
 };
-
 
 exports.abandono5 = (req, res) => {
   req.getConnection((err, connect) => {
@@ -947,7 +939,7 @@ exports.abandono5 = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -957,7 +949,7 @@ exports.abandono5 = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -975,7 +967,7 @@ exports.abandono5 = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 10; 
+            const accionId = 10;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -1016,7 +1008,6 @@ exports.abandono5 = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -1041,7 +1032,7 @@ exports.abandono6 = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -1051,7 +1042,7 @@ exports.abandono6 = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -1069,7 +1060,7 @@ exports.abandono6 = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 11; 
+            const accionId = 11;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -1110,7 +1101,6 @@ exports.abandono6 = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -1135,7 +1125,7 @@ exports.abandono7 = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -1145,7 +1135,7 @@ exports.abandono7 = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -1163,7 +1153,7 @@ exports.abandono7 = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 12; 
+            const accionId = 12;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -1204,7 +1194,6 @@ exports.abandono7 = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -1229,7 +1218,7 @@ exports.abandono8 = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -1239,7 +1228,7 @@ exports.abandono8 = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -1257,7 +1246,7 @@ exports.abandono8 = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 13; 
+            const accionId = 13;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -1298,7 +1287,6 @@ exports.abandono8 = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -1323,7 +1311,7 @@ exports.abandono9 = (req, res) => {
       email: req.body.email,
       emailSyngenta: req.body.emailSyngenta,
       phone: req.body.phone,
-      phone2: req.body.phone2, 
+      phone2: req.body.phone2,
       importation: req.body.importation,
       added: new Date(req.body.added),
       address: req.body.address,
@@ -1333,7 +1321,7 @@ exports.abandono9 = (req, res) => {
       zipCode: req.body.zipCode,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
-      aprobbed: new Date (req.body.aprobbed)
+      aprobbed: new Date(req.body.aprobbed),
     };
 
     // Iniciar transacción
@@ -1351,7 +1339,7 @@ exports.abandono9 = (req, res) => {
             });
           } else {
             const registroId = req.params.id;
-            const accionId = 14; 
+            const accionId = 14;
 
             // Insertar en la tabla de registros_acciones
             const nuevaAccion = {
@@ -1392,7 +1380,6 @@ exports.abandono9 = (req, res) => {
                       }
                     }
                   );
-                  
                 }
               }
             );
@@ -1406,44 +1393,53 @@ exports.abandono9 = (req, res) => {
 exports.importCSV = (req, res) => {
   const data = req.body.data; // Suponiendo que los datos se envían en el cuerpo de la solicitud
   const columnMapping = {
-    "NOMBRE": "name",
-    "APELLIDO": "lastname",
+    NOMBRE: "name",
+    APELLIDO: "lastname",
     "COD POSTAL": "zipCode",
-    "CUIT": "cuit",
-    "DNI": "dni",
-    "DOMICILIO1": "address",
-    "DOMICILIO2": "address2",
-    "EMAIL1": "email",
-    "EMAIL2": "email2",
+    CUIT: "cuit",
+    DNI: "dni",
+    DOMICILIO1: "address",
+    DOMICILIO2: "address2",
+    EMAIL1: "email",
+    EMAIL2: "email2",
     "F. DE NAC.": "dob",
-    "INGRESO": "ingress",
-    "LOCALIDAD": "location",
-    "Provincia": "province",
-    "TEL1": "phone",
-    "TEL2": "phone2",
+    INGRESO: "ingress",
+    LOCALIDAD: "location",
+    Provincia: "province",
+    TEL1: "phone",
+    TEL2: "phone2",
   };
 
+  const query =
+    "INSERT INTO audiencia (name, lastname, status, email, phone, area, importation, added, emailSyngenta, dob, address) VALUES ?";
+  const values = data.map((row) => [
+    row.name,
+    row.lastname,
+    row.status,
+    row.email,
+    row.phone,
+    row.area,
+    row.importation,
+    row.added,
+    row.emailSyngenta,
+    row.dob,
+    row.address,
+  ]);
 
-
-
-
-  const query = 'INSERT INTO audiencia (name, lastname, status, email, phone, area, importation, added, emailSyngenta, dob, address) VALUES ?';
-  const values = data.map(row => [row.name, row.lastname, row.status, row.email, row.phone, row.area, row.importation, row.added, row.emailSyngenta, row.dob, row.address]); 
-  
   req.getConnection((err, connect) => {
     if (err) {
-      console.error('Error obtaining connection:', err);
-      return res.status(500).json({ error: 'Error obtaining connection' });
+      console.error("Error obtaining connection:", err);
+      return res.status(500).json({ error: "Error obtaining connection" });
     }
 
     connect.query(query, [values], (error, results) => {
       if (error) {
-        console.error('Error inserting data:', error);
-        res.status(500).json({ error: 'Error inserting data' });
+        console.error("Error inserting data:", error);
+        res.status(500).json({ error: "Error inserting data" });
       } else {
-        console.log('Data inserted successfully:', results);
-        res.status(200).json({ message: 'Data inserted successfully' });
+        console.log("Data inserted successfully:", results);
+        res.status(200).json({ message: "Data inserted successfully" });
       }
     });
   });
-}
+};
