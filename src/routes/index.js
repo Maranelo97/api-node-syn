@@ -21,7 +21,7 @@ const {
     abandono8,
     abandono9,
 } = require("../controllers/index");
-const { getImports } = require("../controllers/imports");
+const { getImports, deleteImport } = require("../controllers/imports");
 
 route.get("/audience", getAudience);
 route.get("/audience/:dni", getByDni);
@@ -45,6 +45,7 @@ route.put("/abandono-9/:id", abandono9);
 route.delete("/delete/:id", deleteAudience);
 
 //import
-route.get("/getImports", getImports)
+route.get("/getImports", getImports);
+route.delete("/deleteImport/:id", deleteImport)
 
 module.exports = route;
