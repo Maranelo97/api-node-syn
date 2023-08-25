@@ -1,3 +1,6 @@
+const io = require("../index")
+
+
 
 exports.addAudiencia = (req, res) => {
   req.getConnection((err, connect) => {
@@ -314,6 +317,7 @@ exports.aceptarSub = (req, res) => {
                             });
                           } else {
                             res.send("Actualizado");
+                            io.emmit("server:aprobado", dataToBeChangedd)
                           }
                         });
                       }
