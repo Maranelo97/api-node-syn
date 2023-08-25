@@ -260,6 +260,9 @@ app.post("/insert-audience", (req, res) => {
               message:
                 "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
             });
+
+
+            io.emit('server:audienceInserted', { importName, importedRows: audienceData.length });
           }
         );
       })
