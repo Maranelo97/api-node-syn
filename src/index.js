@@ -195,6 +195,9 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
+  const etiquetas = req.body.etiquetas;
+  const importName = req.body.importName;
+
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -232,14 +235,15 @@ app.post("/insert-audience", (req, res) => {
     )
       .then(() => {
         // Después de insertar en audiencia, registrar en la tabla de importaciones
-        const importName = "Import Test"; // Define el nombre de la importación
+
         const importedRows = audienceData.length;
 
+
         const importInsertQuery =
-          "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
+          "INSERT INTO imports (importName, importedRows, etiquetas) VALUES (?, ?, ?)";
         connect.query(
           importInsertQuery,
-          [importName, importedRows],
+          [importName, importedRows, etiquetas],
           (err, result) => {
             if (err) {
               console.error("Error al registrar la importación:", err);
