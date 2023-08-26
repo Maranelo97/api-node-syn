@@ -236,7 +236,7 @@ app.post("/insert-audience", (req, res) => {
 
         const importedRows = audienceData.length;
         const etiquetas = req.body.etiquetas;
-        const importName = req.body.importName;
+        const importName = "TEST";
 
         const importInsertQuery =
           "INSERT INTO imports (importName, importedRows, etiquetas) VALUES (?, ?, ?)";
