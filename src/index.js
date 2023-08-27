@@ -195,8 +195,7 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
-  const importName = req.body.importName
-
+  const importName = req.body.importName;
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -240,7 +239,6 @@ app.post("/insert-audience", (req, res) => {
       )
         .then(() => {
           const importedRows = audienceData.length;
-          const importName = req.body.importName
 
           const importInsertQuery =
             "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
@@ -327,7 +325,7 @@ app.post("/token-account/:email/link", async function (req, res) {
       subject: "Confirmación de cuenta",
       html: `
         <p>¡Hola!</p>
-        <p>Clickea en este enlace para terminar el proceso: <a href="test">Link de Confirmación</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
+        <p>Clickea en este enlace para terminar el proceso: <a href=${link}>Link de Confirmación</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
         <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
       `,
       attachments: [
