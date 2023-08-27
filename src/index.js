@@ -318,7 +318,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     const { pdfURL } = req.body;
 
     const linkToken = generarTokenUnico();
-    const fullLink = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
+    const fullLink = `https://api-node-syn-production.up.railway.app/${linkToken}/toPendent`;
     
     try {
       const requestOptions = {
