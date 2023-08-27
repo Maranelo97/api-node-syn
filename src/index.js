@@ -318,8 +318,8 @@ app.post("/token-account/:email/link", async function (req, res) {
     const { pdfURL } = req.body;
 
     const linkToken = generarTokenUnico();
-    const fullLink = `https://api-node-syn-production.up.railway.app/${linkToken}/toPendent`;
-    
+    const fullLink = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
+
     try {
       const requestOptions = {
         method: 'POST',
@@ -378,8 +378,8 @@ app.post("/token-account/:email/link", async function (req, res) {
             const connection = await mysql.createConnection(dbConfig);
 
             const query =
-              "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
-            await connection.execute(query, [email, shortLink]);
+              "INSERT INTO codigos (email, codigo, token, enlace_acortado) VALUES (?, DEFAULT, ?, ?)";
+            await connection.execute(query, [email, linkToken, shortLink]);
 
             console.log("Correo enviado: " + info.response);
             res.status(200).json({
@@ -442,7 +442,7 @@ app.get("/verify-link/:token", (req, res) => {
   });
 });
 
-app.get(":linkToken/toPendent", (req, res) => {
+app.get("/:linkToken/toPendent", (req, res) => {
   const { linkToken } = req.params;
 
   req.getConnection((err, connection) => {
@@ -452,7 +452,7 @@ app.get(":linkToken/toPendent", (req, res) => {
       return;
     }
 
-    const selectQuery = "SELECT email FROM codigos WHERE token = ?";
+    const selectQuery = "SELECT token, enlace_acortado FROM codigos WHERE token = ?";
     connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
       if (selectErr) {
         console.error("Error al seleccionar token:", selectErr);
@@ -465,22 +465,14 @@ app.get(":linkToken/toPendent", (req, res) => {
         return;
       }
 
-      const email = selectResults[0].email;
-      const updateQuery =
-        "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
-      connection.query(updateQuery, [email], (updateErr, updateResults) => {
-        if (updateErr) {
-          console.error("Error al actualizar estado:", updateErr);
-          res.status(500).send("Error al actualizar el estado.");
-          return;
-        }
-
-        res.status(200).send("Cuenta confirmada correctamente.");
-      });
+      const originalToken = selectResults[0].token;
+      const fullLink = selectResults[0].enlace_acortado;
+      
+      // Redirecciona al enlace original completo
+      res.redirect(fullLink);
     });
   });
 });
-
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "uploads", "pdfs"));
