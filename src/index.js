@@ -318,7 +318,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     const { pdfURL } = req.body;
 
     const linkToken = generarTokenUnico();
-    const fullLink = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
+    const fullLink = `https://api-node-syn-production.up.railway.app/${linkToken}/toPendent`;
 
     try {
       const requestOptions = {
@@ -452,7 +452,7 @@ app.get("/:linkToken/toPendent", (req, res) => {
       return;
     }
 
-    const selectQuery = "SELECT token, enlace_acortado FROM codigos WHERE token = ?";
+    const selectQuery = "SELECT token FROM codigos WHERE token = ?";
     connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
       if (selectErr) {
         console.error("Error al seleccionar token:", selectErr);
@@ -465,7 +465,6 @@ app.get("/:linkToken/toPendent", (req, res) => {
         return;
       }
 
-      const originalToken = selectResults[0].token;
       const fullLink = selectResults[0].enlace_acortado;
       
       // Redirecciona al enlace original completo
