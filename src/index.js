@@ -196,7 +196,6 @@ app.get("/verify-code/:codigo", (req, res) => {
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
 
-
   req.getConnection((err, connect) => {
     if (err) {
       console.error("Error en la conexión a la base de datos:", err);
@@ -206,72 +205,92 @@ app.post("/insert-audience", (req, res) => {
       });
     }
 
-    const insertQuery =
-      "INSERT INTO audiencia (name, lastname, province, email, phone, dni) VALUES (?, ?, ?, ?, ?, ?)";
+    connect.beginTransaction((transactionErr) => {
+      if (transactionErr) {
+        console.error("Error al iniciar la transacción:", transactionErr);
+        return res.status(500).json({
+          ok: false,
+          message: "Error al iniciar la transacción",
+          error: transactionErr.message,
+        });
+      }
 
-    Promise.all(
-      audienceData.map((data) => {
-        const { name, lastname, province, email, phone, dni } = data;
-        return new Promise((resolve, reject) => {
+      const insertQuery =
+        "INSERT INTO audiencia (name, lastname, province, email, phone, dni) VALUES (?, ?, ?, ?, ?, ?)";
+
+      Promise.all(
+        audienceData.map((data) => {
+          const { name, lastname, province, email, phone, dni } = data;
+          return new Promise((resolve, reject) => {
+            connect.query(
+              insertQuery,
+              [name, lastname, province, email, phone, dni],
+              (err, result) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(result);
+                }
+              }
+            );
+          });
+        })
+      )
+        .then(() => {
+          const importedRows = audienceData.length;
+          const etiquetas = req.body.etiquetas;
+          const importName = req.body.importName;
+
+          const importInsertQuery =
+            "INSERT INTO imports (importName, importedRows, etiquetas) VALUES (?, ?, ?)";
           connect.query(
-            insertQuery,
-            [name, lastname, province, email, phone, dni],
+            importInsertQuery,
+            [importName, importedRows, etiquetas],
             (err, result) => {
               if (err) {
-                console.error(
-                  "Error al insertar datos en la base de datos:",
-                  err
-                );
-                reject(err);
+                connect.rollback(() => {
+                  console.error("Error al hacer rollback:", err);
+                  res.status(500).json({
+                    ok: false,
+                    message: "Error al registrar la importación",
+                    error: err.message,
+                  });
+                });
               } else {
-                resolve(result);
+                connect.commit((commitErr) => {
+                  if (commitErr) {
+                    connect.rollback(() => {
+                      console.error("Error al hacer commit de la transacción:", commitErr);
+                      res.status(500).json({
+                        ok: false,
+                        message: "Error al hacer commit de la transacción",
+                        error: commitErr.message,
+                      });
+                    });
+                  } else {
+                    res.status(200).json({
+                      ok: true,
+                      message:
+                        "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
+                    });
+                    io.emit('server:audienceInserted', { importName, importedRows: audienceData.length, etiquetas });
+                  }
+                });
               }
             }
           );
-        });
-      })
-    )
-      .then(() => {
-        // Después de insertar en audiencia, registrar en la tabla de importaciones
-
-        const importedRows = audienceData.length;
-        const etiquetas = req.body.etiquetas;
-        const importName = req.body.importName;
-
-        const importInsertQuery =
-          "INSERT INTO imports (importName, importedRows, etiquetas) VALUES (?, ?, ?)";
-        connect.query(
-          importInsertQuery,
-          [importName, importedRows, etiquetas],
-          (err, result) => {
-            if (err) {
-              console.error("Error al registrar la importación:", err);
-              return res.status(500).json({
-                ok: false,
-                message:
-                  "Error al registrar la importación en la base de datos",
-                error: err.message,
-              });
-            }
-
-            res.status(200).json({
-              ok: true,
-              message:
-                "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
+        })
+        .catch((error) => {
+          connect.rollback(() => {
+            console.error("Error al insertar datos en la base de datos:", error);
+            res.status(500).json({
+              ok: false,
+              message: "Error al insertar datos en la base de datos",
+              error: error.message,
             });
-
-
-            io.emit('server:audienceInserted', { importName, importedRows: audienceData.length, etiquetas });
-          }
-        );
-      })
-      .catch((error) => {
-        res.status(500).json({
-          ok: false,
-          message: "Error al insertar datos en la base de datos",
-          error: error.message,
+          });
         });
-      });
+    });
   });
 });
 
