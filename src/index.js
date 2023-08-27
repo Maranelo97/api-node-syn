@@ -465,13 +465,16 @@ app.get("/:linkToken/toPendent", (req, res) => {
         return;
       }
 
-      const fullLink = selectResults[0].enlace_acortado;
-      
+      const enlaceAcortado = selectResults[0].enlace_acortado;
+      const fullLink = `${enlaceAcortado}/toPendent`; // Construir la URL completa
+
       // Redirecciona al enlace original completo
       res.redirect(fullLink);
     });
   });
 });
+
+
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "uploads", "pdfs"));
