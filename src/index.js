@@ -194,10 +194,7 @@ app.get("/verify-code/:codigo", (req, res) => {
 });
 
 app.post("/insert-audience", (req, res) => {
-  const audienceData = req.body;
-  const importName = req.body.importName;
-
-
+  const { audienceData, importName } = req.body;
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -233,6 +230,7 @@ app.post("/insert-audience", (req, res) => {
                   reject(err);
                 } else {
                   resolve(result);
+                  importName
                 }
               }
             );
@@ -241,8 +239,8 @@ app.post("/insert-audience", (req, res) => {
       )
         .then(() => {
           const importedRows = audienceData.length;
-    
-
+          const importName = data.importName
+          
 
           const importInsertQuery =
             "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
@@ -263,7 +261,10 @@ app.post("/insert-audience", (req, res) => {
                 connect.commit((commitErr) => {
                   if (commitErr) {
                     connect.rollback(() => {
-                      console.error("Error al hacer commit de la transacción:", commitErr);
+                      console.error(
+                        "Error al hacer commit de la transacción:",
+                        commitErr
+                      );
                       res.status(500).json({
                         ok: false,
                         message: "Error al hacer commit de la transacción",
@@ -276,7 +277,10 @@ app.post("/insert-audience", (req, res) => {
                       message:
                         "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
                     });
-                    io.emit('server:audienceInserted', { importName, importedRows: audienceData.length });
+                    io.emit("server:audienceInserted", {
+                      importName,
+                      importedRows: audienceData.length,
+                    });
                   }
                 });
               }
@@ -285,7 +289,10 @@ app.post("/insert-audience", (req, res) => {
         })
         .catch((error) => {
           connect.rollback(() => {
-            console.error("Error al insertar datos en la base de datos:", error);
+            console.error(
+              "Error al insertar datos en la base de datos:",
+              error
+            );
             res.status(500).json({
               ok: false,
               message: "Error al insertar datos en la base de datos",
@@ -300,14 +307,16 @@ app.post("/insert-audience", (req, res) => {
 //Envio y Enlace de Validación Post Formulario
 
 function generarTokenUnico(length = 8) {
-  return crypto.randomBytes(Math.ceil(length / 2)).toString("hex").slice(0, length);
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
 }
 
 app.post("/token-account/:email/link", async function (req, res) {
   try {
     const { email } = req.params;
     const { pdfURL } = req.body; // Recupera la URL del PDF adjunto desde el cuerpo de la solicitud
-
 
     const linkToken = generarTokenUnico(); // Genera un token único para el enlace
     const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
@@ -325,7 +334,7 @@ app.post("/token-account/:email/link", async function (req, res) {
         {
           filename: "Declaración Jurada Digital Pension.pdf",
           href: pdfURL,
-        }
+        },
       ],
     };
 
@@ -473,8 +482,6 @@ app.post("/upload-pdf", (req, res) => {
   });
 });
 
-
-
 app.put("/accept/:id", (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
@@ -553,7 +560,7 @@ app.put("/accept/:id", (req, res) => {
                             });
                           } else {
                             res.send("Actualizado");
-                            io.emit("server:aprobado", dataToBeChangedd)
+                            io.emit("server:aprobado", dataToBeChangedd);
                           }
                         });
                       }
@@ -567,7 +574,7 @@ app.put("/accept/:id", (req, res) => {
       );
     });
   });
-})
+});
 
 server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
