@@ -452,11 +452,11 @@ app.get("/:linkToken/toPendent", (req, res) => {
       return;
     }
 
-    const selectQuery = "SELECT token FROM codigos WHERE token = ?";
+    const selectQuery = "SELECT enlace_acortado FROM codigos WHERE token = ?";
     connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
       if (selectErr) {
-        console.error("Error al seleccionar token:", selectErr);
-        res.status(500).send("Error al seleccionar el token.");
+        console.error("Error al seleccionar enlace acortado:", selectErr);
+        res.status(500).send("Error al seleccionar el enlace acortado.");
         return;
       }
 
