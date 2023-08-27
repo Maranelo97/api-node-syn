@@ -314,53 +314,68 @@ function generarTokenUnico(length = 8) {
 app.post("/token-account/:email/link", async function (req, res) {
   try {
     const { email } = req.params;
-    const { pdfURL } = req.body; // Recupera la URL del PDF adjunto desde el cuerpo de la solicitud
+    const { pdfURL } = req.body;
 
-    const linkToken = generarTokenUnico(); // Genera un token único para el enlace
-    const link = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`; // URL de confirmación
-    // Adjuntar el PDF al correo
-    const mailOptions = {
-      from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
-      to: email,
-      subject: "Confirmación de cuenta",
-      html: `
-        <p>¡Hola!</p>
-        <p>Clickea en este enlace para terminar el proceso: <a href=${link}>Link de Confirmación</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
-        <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
-      `,
-      attachments: [
-        {
-          filename: "Declaración Jurada Digital Pension.pdf",
-          href: pdfURL,
+    const linkToken = generarTokenUnico();
+    const fullLink = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
+    
+    try {
+      const response = await axios.post('https://api-ssl.bitly.com/v4/shorten', {
+        long_url: fullLink,
+      }, {
+        headers: {
+          'Authorization': '784c4e43f277c9074369548156500a4c9c91a879', // Reemplaza con tu token de Bitly
         },
-      ],
-    };
+      });
 
-    transporter.sendMail(mailOptions, async (error, info) => {
-      if (error) {
-        console.error(error);
-        res.status(500).send("Hubo un error al enviar el correo.");
-      } else {
-        try {
-          const connection = await mysql.createConnection(dbConfig);
+      const shortLink = response.data.id;
 
-          const query =
-            "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
-          await connection.execute(query, [email, link]);
+      const mailOptions = {
+        from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
+        to: email,
+        subject: "Confirmación de cuenta",
+        html: `
+          <p>¡Hola!</p>
+          <p>Clickea en este enlace para terminar el proceso: <a href="${shortLink}">Link de Confirmación</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
+          <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
+        `,
+        attachments: [
+          {
+            filename: "Declaración Jurada Digital Pension.pdf",
+            href: pdfURL,
+          },
+        ],
+      };
 
-          console.log("Correo enviado: " + info.response);
-          res.status(200).json({
-            ok: true,
-            message: `Código enviado con éxito, tu código es: ${link}`,
-          });
-        } catch (error) {
-          console.error("Error al insertar código en la base de datos:", error);
-          res
-            .status(500)
-            .json({ ok: false, message: "Error al enviar el código" });
+      transporter.sendMail(mailOptions, async (error, info) => {
+        if (error) {
+          console.error(error);
+          res.status(500).send("Hubo un error al enviar el correo.");
+        } else {
+          try {
+            const connection = await mysql.createConnection(dbConfig);
+
+            const query =
+              "INSERT INTO codigos (email, codigo, token) VALUES (?, DEFAULT, ?)";
+            await connection.execute(query, [email, shortLink]);
+
+            console.log("Correo enviado: " + info.response);
+            res.status(200).json({
+              ok: true,
+              message: `Código enviado con éxito, tu código es: ${shortLink}`,
+            });
+          } catch (error) {
+            console.error("Error al insertar código en la base de datos:", error);
+            res
+              .status(500)
+              .json({ ok: false, message: "Error al enviar el código" });
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.error("Error al acortar el enlace:", error);
+      res.status(500).send("Error en el servidor al acortar el enlace.");
+    }
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Error en el servidor.");
