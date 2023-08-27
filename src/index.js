@@ -195,7 +195,7 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
-  const importName = "anda esta mierda?";
+  const importName = req.body.importName;
 
 
 
