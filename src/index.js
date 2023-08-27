@@ -312,7 +312,7 @@ function generarTokenUnico(length = 8) {
     .slice(0, length);
 }
 
-const tinyurl = require('tinyurl'); // Importa el módulo TinyURL
+
 
 app.post("/token-account/:email/link", async function (req, res) {
   try {
