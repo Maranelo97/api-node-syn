@@ -11,6 +11,7 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const app = express();
 const http = require("http");
+const https = require('https');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
@@ -320,15 +321,36 @@ app.post("/token-account/:email/link", async function (req, res) {
     const fullLink = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
     
     try {
-      const response = await axios.post('https://api-ssl.bitly.com/v4/shorten', {
-        long_url: fullLink,
-      }, {
+      const requestOptions = {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': '784c4e43f277c9074369548156500a4c9c91a879', // Reemplaza con tu token de Bitly
         },
+      };
+
+      const response = await new Promise((resolve, reject) => {
+        const req = https.request('https://api-ssl.bitly.com/v4/shorten', requestOptions, (res) => {
+          let data = '';
+
+          res.on('data', (chunk) => {
+            data += chunk;
+          });
+
+          res.on('end', () => {
+            resolve(data);
+          });
+        });
+
+        req.on('error', (error) => {
+          reject(error);
+        });
+
+        req.write(JSON.stringify({ long_url: fullLink }));
+        req.end();
       });
 
-      const shortLink = response.data.id;
+      const shortLink = JSON.parse(response).id;
 
       const mailOptions = {
         from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
