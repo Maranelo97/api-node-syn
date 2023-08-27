@@ -195,8 +195,7 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
-  const etiquetas = req.body.etiquetas;
-  const importName = req.body.importName;
+
 
 
   req.getConnection((err, connect) => {
@@ -241,12 +240,14 @@ app.post("/insert-audience", (req, res) => {
       )
         .then(() => {
           const importedRows = audienceData.length;
-    
+          const importName = req.body.importName;
+
+
           const importInsertQuery =
-            "INSERT INTO imports (importName, importedRows, etiquetas) VALUES (?, ?, ?)";
+            "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
           connect.query(
             importInsertQuery,
-            [importName, importedRows, etiquetas],
+            [importName, importedRows],
             (err, result) => {
               if (err) {
                 connect.rollback(() => {
@@ -274,7 +275,7 @@ app.post("/insert-audience", (req, res) => {
                       message:
                         "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
                     });
-                    io.emit('server:audienceInserted', { importName, importedRows: audienceData.length, etiquetas });
+                    io.emit('server:audienceInserted', { importName, importedRows: audienceData.length });
                   }
                 });
               }
