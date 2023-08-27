@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const app = express();
 const http = require("http");
-const https = require('https');
+const tinyurl = require('tinyurl');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
@@ -312,87 +312,69 @@ function generarTokenUnico(length = 8) {
     .slice(0, length);
 }
 
+const tinyurl = require('tinyurl'); // Importa el módulo TinyURL
+
 app.post("/token-account/:email/link", async function (req, res) {
   try {
     const { email } = req.params;
     const { pdfURL } = req.body;
 
     const linkToken = generarTokenUnico();
-    const fullLink = `https://api-node-syn-production.up.railway.app/${linkToken}/toPendent`;
+    const fullLink = `https://api-node-syn-production.up.railway.app/token-account/${linkToken}/toPendent`;
 
     try {
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': '784c4e43f277c9074369548156500a4c9c91a879', // Reemplaza con tu token de Bitly
-        },
-      };
-
-      const response = await new Promise((resolve, reject) => {
-        const req = https.request('https://api-ssl.bitly.com/v4/shorten', requestOptions, (res) => {
-          let data = '';
-
-          res.on('data', (chunk) => {
-            data += chunk;
-          });
-
-          res.on('end', () => {
-            resolve(data);
-          });
-        });
-
-        req.on('error', (error) => {
-          reject(error);
-        });
-
-        req.write(JSON.stringify({ long_url: fullLink }));
-        req.end();
-      });
-
-      const shortLink = JSON.parse(response).id;
-
-      const mailOptions = {
-        from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
-        to: email,
-        subject: "Confirmación de cuenta",
-        html: `
-          <p>¡Hola!</p>
-          <p>Clickea en este enlace para terminar el proceso: <a href="${shortLink}">Link de Confirmación</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
-          <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
-        `,
-        attachments: [
-          {
-            filename: "Declaración Jurada Digital Pension.pdf",
-            href: pdfURL,
-          },
-        ],
-      };
-
-      transporter.sendMail(mailOptions, async (error, info) => {
-        if (error) {
-          console.error(error);
-          res.status(500).send("Hubo un error al enviar el correo.");
-        } else {
-          try {
-            const connection = await mysql.createConnection(dbConfig);
-
-            const query =
-              "INSERT INTO codigos (email, codigo, token, enlace_acortado) VALUES (?, DEFAULT, ?, ?)";
-            await connection.execute(query, [email, linkToken, shortLink]);
-
-            console.log("Correo enviado: " + info.response);
-            res.status(200).json({
-              ok: true,
-              message: `Código enviado con éxito, tu código es: ${shortLink}`,
-            });
-          } catch (error) {
-            console.error("Error al insertar código en la base de datos:", error);
-            res
-              .status(500)
-              .json({ ok: false, message: "Error al enviar el código" });
-          }
+      // Acorta la URL con TinyURL
+      tinyurl.shorten(fullLink, async (tinyURLResponse) => {
+        if (tinyURLResponse.startsWith('Error')) {
+          console.error("Error al acortar el enlace:", tinyURLResponse);
+          res.status(500).send("Error al acortar el enlace.");
+          return;
         }
+
+        const shortLink = tinyURLResponse;
+
+        const mailOptions = {
+          from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
+          to: email,
+          subject: "Confirmación de cuenta",
+          html: `
+            <p>¡Hola!</p>
+            <p>Clickea en este enlace para terminar el proceso: <a href="${shortLink}">Link de Confirmación</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
+            <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
+          `,
+          attachments: [
+            {
+              filename: "Declaración Jurada Digital Pension.pdf",
+              href: pdfURL,
+            },
+          ],
+        };
+
+        transporter.sendMail(mailOptions, async (error, info) => {
+          if (error) {
+            console.error(error);
+            res.status(500).send("Hubo un error al enviar el correo.");
+          } else {
+            try {
+              const connection = await mysql.createConnection(dbConfig);
+
+              const query =
+                "INSERT INTO codigos (email, codigo, token, enlace_acortado) VALUES (?, DEFAULT, ?, ?)";
+              await connection.execute(query, [email, linkToken, shortLink]);
+
+              console.log("Correo enviado: " + info.response);
+              res.status(200).json({
+                ok: true,
+                message: `Código enviado con éxito, tu código es: ${shortLink}`,
+              });
+            } catch (error) {
+              console.error("Error al insertar código en la base de datos:", error);
+              res
+                .status(500)
+                .json({ ok: false, message: "Error al enviar el código" });
+            }
+          }
+        });
       });
     } catch (error) {
       console.error("Error al acortar el enlace:", error);
