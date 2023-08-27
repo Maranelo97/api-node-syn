@@ -195,6 +195,9 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
+  const etiquetas = req.body.etiquetas;
+  const importName = req.body.importName;
+
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -238,9 +241,7 @@ app.post("/insert-audience", (req, res) => {
       )
         .then(() => {
           const importedRows = audienceData.length;
-          const etiquetas = req.body.etiquetas;
-          const importName = req.body.importName;
-
+    
           const importInsertQuery =
             "INSERT INTO imports (importName, importedRows, etiquetas) VALUES (?, ?, ?)";
           connect.query(
