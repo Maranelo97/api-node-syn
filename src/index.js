@@ -670,7 +670,7 @@ app.post("/add", (req, res) => {
                       imageURL1: data.imageURL1,
                       imagelURL2: data.imagelURL2,
                     });
-                    io.emit("server:creado")
+                    io.emit("server:creado", data)
                   }
                 });
               }
