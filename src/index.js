@@ -434,11 +434,11 @@ app.get("/:linkToken/toPending", (req, res) => {
       return;
     }
 
-    const selectQuery = "SELECT * FROM codigos WHERE token = ?";
+    const selectQuery = "SELECT email FROM codigos WHERE token = ?";
     connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
       if (selectErr) {
-        console.error("Error al seleccionar token:", selectErr);
-        res.status(500).send("Error al seleccionar el token.");
+        console.error("Error al seleccionar email:", selectErr);
+        res.status(500).send("Error al seleccionar el email.");
         return;
       }
 
@@ -447,16 +447,18 @@ app.get("/:linkToken/toPending", (req, res) => {
         return;
       }
 
-      // Aquí puedes acceder a los datos relacionados con el token
       const email = selectResults[0].email;
-      const enlaceAcortado = selectResults[0].enlace_acortado;
 
-      // Realiza las operaciones adicionales que necesites con los datos obtenidos
+      // Actualizar el estado en la base de datos
+      const updateQuery = "UPDATE tu_tabla SET estado = 'pendiente' WHERE email = ?";
+      connection.query(updateQuery, [email], (updateErr, updateResults) => {
+        if (updateErr) {
+          console.error("Error al actualizar estado:", updateErr);
+          res.status(500).send("Error al actualizar el estado.");
+          return;
+        }
 
-      // Luego puedes enviar una respuesta al cliente si es necesario
-      res.status(200).json({
-        email: email,
-        enlaceAcortado: enlaceAcortado,
+        res.status(200).send("Estado actualizado correctamente a 'pendiente'.");
       });
     });
   });
