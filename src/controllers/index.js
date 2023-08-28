@@ -1,3 +1,5 @@
+const io = require('../index')
+
 exports.addAudiencia = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
@@ -72,6 +74,7 @@ exports.addAudiencia = (req, res) => {
                       imageURL1: data.imageURL1,
                       imagelURL2: data.imagelURL2,
                     });
+                    io.emit("server:creado")
                   }
                 });
               }
