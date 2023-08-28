@@ -26,7 +26,7 @@ const { getImports, deleteImport } = require("../controllers/imports");
 route.get("/audience", getAudience);
 route.get("/audience/:dni", getByDni);
 route.get("/getCode/:codigo", getCode);
-route.post("/add", addAudiencia);
+
 route.post("/import-csv", importCSV);
 route.put("/update/:id", editAudience);
 route.put("/acceptSub/:id", aceptarSub);
