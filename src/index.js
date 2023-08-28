@@ -458,7 +458,8 @@ app.get("/:linkToken/toPending", (req, res) => {
           return;
         }
 
-        res.status(200).send("Estado actualizado correctamente a 'pendiente'.");
+        res.status(200).send("Registro de Onboarding Verificado Correctamente!");
+        io.emit("server:toPending")
       });
     });
   });
