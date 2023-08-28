@@ -424,7 +424,7 @@ app.get("/verify-link/:token", (req, res) => {
   });
 });
 
-app.get("/:linkToken/toPendent", (req, res) => {
+app.get("/:linkToken/toPending", (req, res) => {
   const { linkToken } = req.params;
 
   req.getConnection((err, connection) => {
@@ -434,11 +434,11 @@ app.get("/:linkToken/toPendent", (req, res) => {
       return;
     }
 
-    const selectQuery = "SELECT enlace_acortado FROM codigos WHERE token = ?";
+    const selectQuery = "SELECT email FROM codigos WHERE token = ?";
     connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
       if (selectErr) {
-        console.error("Error al seleccionar enlace acortado:", selectErr);
-        res.status(500).send("Error al seleccionar el enlace acortado.");
+        console.error("Error al seleccionar email:", selectErr);
+        res.status(500).send("Error al seleccionar el email.");
         return;
       }
 
@@ -447,11 +447,23 @@ app.get("/:linkToken/toPendent", (req, res) => {
         return;
       }
 
-      const enlaceAcortado = selectResults[0].enlace_acortado;
-      const fullLink = `${enlaceAcortado}/toPendent`; // Construir la URL completa
+      const email = selectResults[0].email;
 
-      // Redirecciona al enlace original completo
-      res.redirect(fullLink);
+      // Actualizar el estado en la base de datos
+      const updateQuery = "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
+      connection.query(updateQuery, [email], (updateErr, updateResults) => {
+        if (updateErr) {
+          console.error("Error al actualizar estado:", updateErr);
+          res.status(500).send("Error al actualizar el estado.");
+          return;
+        }
+
+        // Construir la URL completa a la página de confirmación
+        const confirmationPageURL = `https://tu-sitio-web.com/confirmation/${email}`;
+
+        // Redireccionar a la página de confirmación
+        res.redirect(confirmationPageURL);
+      });
     });
   });
 });
