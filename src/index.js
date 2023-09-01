@@ -14,6 +14,17 @@ const http = require("http");
 const tinyurl = require('tinyurl');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const hbs = require('nodemailer-express-handlebars')
+const handleBarOptions = {
+  viewEngine:
+  {
+    extName: ".html",
+    partialsDir: path.resolve("./views"),
+    defaultLayout: false
+  },
+  viewPath: path.resolve('./views'),
+  extName: ".handlebars"
+}
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -123,6 +134,8 @@ const transporter = nodemailer.createTransport({
     pass: "testeando123",
   },
 });
+transporter.use('compile', hbs(handleBarOptions))
+
 app.post("/verify-code/:email/code", async function (req, res) {
   const { email } = req.params;
   const codigoGenerado = generarCodigoAlfanumerico(5);
@@ -131,7 +144,10 @@ app.post("/verify-code/:email/code", async function (req, res) {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
     subject: "Codigo de seguridad",
-    text: `Este es el código de seguridad para tu Onboarding de Digital Pension: ${codigoGenerado}`,
+    template: "email",
+    context:{
+      codigo: codigoGenerado
+    }
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
