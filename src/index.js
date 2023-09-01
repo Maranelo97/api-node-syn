@@ -144,7 +144,7 @@ app.post("/verify-code/:email/code", async function (req, res) {
     from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
     to: email,
     subject: "Codigo de seguridad",
-    template: "email",
+    template: "syn01",
     context:{
       codigo: codigoGenerado
     }
