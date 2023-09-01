@@ -31,6 +31,23 @@ exports.getByDni = (req, res) => {
   });
 };
 
+
+exports.getByEmail = (req, res) => {
+  req.getConnection((err, conn) => {
+    if (err) return res.send(err);
+
+    conn.query(
+      `SELECT * FROM audiencia WHERE email = ?`,
+      [req.params.email],
+      (err, result) => {
+        if (err) return res.send(err);
+
+        res.json(result);
+      }
+    );
+  });
+};
+
 exports.getCode = (req, res) => {
   req.getConnection((err, conn) => {
     if (err)

@@ -1,7 +1,6 @@
 const express = require("express");
 const route = express.Router();
 const {
-    addAudiencia,
     getAudience,
     editAudience,
     deleteAudience,
@@ -20,11 +19,14 @@ const {
     abandono7,
     abandono8,
     abandono9,
+    getByEmail,
 } = require("../controllers/index");
 const { getImports, deleteImport } = require("../controllers/imports");
 
 route.get("/audience", getAudience);
 route.get("/audience/:dni", getByDni);
+route.get("/audiencia/:email", getByEmail)
+
 route.get("/getCode/:codigo", getCode);
 
 route.post("/import-csv", importCSV);
