@@ -19,10 +19,10 @@ const handleBarOptions = {
   viewEngine:
   {
     extName: ".html",
-    partialsDir: path.resolve("./views"),
+    partialsDir: path.resolve("./src/views"),
     defaultLayout: false
   },
-  viewPath: path.resolve('./views'),
+  viewPath: path.resolve('./src/views'),
   extName: ".handlebars"
 }
 const io = new Server(server, {
