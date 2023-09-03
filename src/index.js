@@ -352,7 +352,7 @@ app.post("/token-account/:email/link", async function (req, res) {
           subject: "Confirmación de Cuenta",
           template: "syn02",
           context: {
-            codigo: shortLink,
+            validador: shortLink,
           },
           attachments: [
             {
