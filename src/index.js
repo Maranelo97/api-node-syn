@@ -211,7 +211,16 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
-  const importName = req.body.importName;
+  const importName = "Test Import";
+
+  const columnMapping = {
+    "name": "nombre",
+    "lastname": "apellido",
+    "province": "provincia",
+    "email": "correo",
+    "phone": "telefono",
+    "dni": "dni"
+  };
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -237,11 +246,17 @@ app.post("/insert-audience", (req, res) => {
 
       Promise.all(
         audienceData.map((data) => {
-          const { name, lastname, province, email, phone, dni } = data;
+          const mappedData = {};
+          for (const key in data) {
+            if (columnMapping[key]) {
+              mappedData[columnMapping[key]] = data[key];
+            }
+          }
+
           return new Promise((resolve, reject) => {
             connect.query(
               insertQuery,
-              [name, lastname, province, email, phone, dni],
+              [mappedData.name, mappedData.lastname, mappedData.province, mappedData.email, mappedData.phone, mappedData.dni],
               (err, result) => {
                 if (err) {
                   reject(err);
@@ -317,6 +332,7 @@ app.post("/insert-audience", (req, res) => {
     });
   });
 });
+
 
 //Envio y Enlace de Validación Post Formulario
 
