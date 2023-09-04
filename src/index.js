@@ -214,13 +214,14 @@ app.post("/insert-audience", (req, res) => {
   const importName = "Test Import";
 
   const columnMapping = {
-    "name": "nombre",
-    "lastname": "apellido",
-    "province": "provincia",
-    "email": "correo",
-    "phone": "telefono",
+    "nombre": "name",
+    "apellido": "lastname",
+    "provincia": "province",
+    "correo": "email",
+    "telefono": "phone",
     "dni": "dni"
   };
+  
 
   req.getConnection((err, connect) => {
     if (err) {
