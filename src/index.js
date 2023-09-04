@@ -213,16 +213,6 @@ app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
   const importName = "Test Import";
 
-  const columnMapping = {
-    "nombre": "name",
-    "apellido": "lastname",
-    "provincia": "province",
-    "correo": "email",
-    "telefono": "phone",
-    "dni": "dni"
-  };
-  
-
   req.getConnection((err, connect) => {
     if (err) {
       console.error("Error en la conexión a la base de datos:", err);
@@ -247,17 +237,11 @@ app.post("/insert-audience", (req, res) => {
 
       Promise.all(
         audienceData.map((data) => {
-          const mappedData = {};
-          for (const key in data) {
-            if (columnMapping[key]) {
-              mappedData[columnMapping[key]] = data[key];
-            }
-          }
-
+          const { name, lastname, province, email, phone, dni } = data;
           return new Promise((resolve, reject) => {
             connect.query(
               insertQuery,
-              [mappedData.name, mappedData.lastname, mappedData.province, mappedData.email, mappedData.phone, mappedData.dni],
+              [name, lastname, province, email, phone, dni],
               (err, result) => {
                 if (err) {
                   reject(err);
@@ -332,8 +316,7 @@ app.post("/insert-audience", (req, res) => {
         });
     });
   });
-});
-
+}); 
 
 //Envio y Enlace de Validación Post Formulario
 
