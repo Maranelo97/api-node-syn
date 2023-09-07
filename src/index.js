@@ -113,6 +113,19 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 
+app.get("/downloadPDF/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, "uploads", "pdfs", filename);
+
+  res.download(filePath, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Error al descargar el archivo");
+    }
+  });
+});
+
+
 function generarCodigoAlfanumerico(longitud) {
   const caracteres =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
