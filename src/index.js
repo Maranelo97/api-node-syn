@@ -580,7 +580,6 @@ app.get("/:linkToken/toPending", (req, res) => {
   });
 });
 
-const asd = require("./assets/img/on")
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
