@@ -488,7 +488,7 @@ app.get("/:linkToken/toPending", (req, res) => {
           return;
         }
 
-        res.status(200)
+        res.status(200);
         res.send(`<!DOCTYPE html>
         <html lang="es">
         
@@ -557,15 +557,15 @@ app.get("/:linkToken/toPending", (req, res) => {
         
                     <div class="foot">
                         <span>Powered By</span>
-                        <img style="margin-left: 2%; width: 75px;" src="../assets/img/logo_AON.png" />
+                        <img style="margin-left: 2%; width: 75px;" src="./assets/img/logo_AON.png" />
                        <span style="margin-left: 5%;"> + </span>
         
-                       <img style="margin-left: 2%;;" src="../assets/img/Logo_Criteria_Positivo_Gramde.png" />
+                       <img style="margin-left: 2%;;" src="./assets/img/Logo_Criteria_Positivo_Gramde.png" />
                     </div>
             </div>
         
             <div style="width: 45%;">
-                <img style="width: 100%; margin-top: 15%;" src="../assets/img/onboarding_validated3.png" />
+                <img style="width: 100%; margin-top: 15%;" src="./assets/img/onboarding_validated3.png" />
             </div>
         
         
@@ -573,12 +573,14 @@ app.get("/:linkToken/toPending", (req, res) => {
         
         </body>
         
-        </html>`)
+        </html>`);
         io.emit("server:toPending");
       });
     });
   });
 });
+
+const asd = require("./assets/img/on")
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
