@@ -11,20 +11,19 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const app = express();
 const http = require("http");
-const tinyurl = require('tinyurl');
+const tinyurl = require("tinyurl");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const hbs = require('nodemailer-express-handlebars')
+const hbs = require("nodemailer-express-handlebars");
 const handleBarOptions = {
-  viewEngine:
-  {
+  viewEngine: {
     extName: ".html",
     partialsDir: path.resolve("./src/views"),
-    defaultLayout: false
+    defaultLayout: false,
   },
-  viewPath: path.resolve('./src/views'),
-  extName: ".handlebars"
-}
+  viewPath: path.resolve("./src/views"),
+  extName: ".handlebars",
+};
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -148,7 +147,7 @@ const transporter = nodemailer.createTransport({
     pass: "testeando123",
   },
 });
-transporter.use('compile', hbs(handleBarOptions))
+transporter.use("compile", hbs(handleBarOptions));
 
 app.post("/verify-code/:email/code", async function (req, res) {
   const { email } = req.params;
@@ -159,9 +158,9 @@ app.post("/verify-code/:email/code", async function (req, res) {
     to: email,
     subject: "Codigo de seguridad",
     template: "syn01",
-    context:{
-      codigo: codigoGenerado
-    }
+    context: {
+      codigo: codigoGenerado,
+    },
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
@@ -226,7 +225,8 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
-  const importName = req.body.importName;
+
+
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -270,6 +270,7 @@ app.post("/insert-audience", (req, res) => {
       )
         .then(() => {
           const importedRows = audienceData.length;
+          const importName = req.body.importName;
 
           const importInsertQuery =
             "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
@@ -331,7 +332,7 @@ app.post("/insert-audience", (req, res) => {
         });
     });
   });
-});
+}); 
 
 //Envio y Enlace de Validación Post Formulario
 
@@ -341,8 +342,6 @@ function generarTokenUnico(length = 8) {
     .toString("hex")
     .slice(0, length);
 }
-
-
 
 app.post("/token-account/:email/link", async function (req, res) {
   try {
@@ -355,7 +354,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     try {
       // Acorta la URL con TinyURL
       tinyurl.shorten(fullLink, async (tinyURLResponse) => {
-        if (tinyURLResponse.startsWith('Error')) {
+        if (tinyURLResponse.startsWith("Error")) {
           console.error("Error al acortar el enlace:", tinyURLResponse);
           res.status(500).send("Error al acortar el enlace.");
           return;
@@ -366,12 +365,11 @@ app.post("/token-account/:email/link", async function (req, res) {
         const mailOptions = {
           from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
           to: email,
-          subject: "Confirmación de cuenta",
-          html: `
-            <p>¡Hola!</p>
-            <p>Clickea en este enlace para terminar el proceso: <a href="${shortLink}">Link de Confirmación</a> Al clickear aqui podrás recibir los beneficios de Syngenta Digital Pension</p>
-            <p>Adjunto encontrarás el PDF de tu declaración jurada.</p>
-          `,
+          subject: "Confirmación de Cuenta",
+          template: "syn02",
+          context: {
+            validador: shortLink,
+          },
           attachments: [
             {
               filename: "Declaración Jurada Digital Pension.pdf",
@@ -398,7 +396,10 @@ app.post("/token-account/:email/link", async function (req, res) {
                 message: `Código enviado con éxito, tu código es: ${shortLink}`,
               });
             } catch (error) {
-              console.error("Error al insertar código en la base de datos:", error);
+              console.error(
+                "Error al insertar código en la base de datos:",
+                error
+              );
               res
                 .status(500)
                 .json({ ok: false, message: "Error al enviar el código" });
@@ -480,7 +481,8 @@ app.get("/:linkToken/toPending", (req, res) => {
       const email = selectResults[0].email;
 
       // Actualizar el estado en la base de datos
-      const updateQuery = "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
+      const updateQuery =
+        "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
       connection.query(updateQuery, [email], (updateErr, updateResults) => {
         if (updateErr) {
           console.error("Error al actualizar estado:", updateErr);
@@ -488,13 +490,14 @@ app.get("/:linkToken/toPending", (req, res) => {
           return;
         }
 
-        res.status(200).send("Registro de Onboarding Verificado Correctamente!");
-        io.emit("server:toPending")
+        res
+          .status(200)
+          .send("Registro de Onboarding Verificado Correctamente!");
+        io.emit("server:toPending");
       });
     });
   });
 });
-
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -701,7 +704,7 @@ app.post("/add", (req, res) => {
                       imagelURL2: data.imagelURL2,
                     });
 
-                    io.emit("server:creado", data)
+                    io.emit("server:creado", data);
                   }
                 });
               }
@@ -711,13 +714,7 @@ app.post("/add", (req, res) => {
       });
     });
   });
-})
-
-
-
-
-
-
+});
 
 server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
