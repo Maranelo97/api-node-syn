@@ -488,7 +488,8 @@ app.get("/:linkToken/toPending", (req, res) => {
           return;
         }
 
-        res.status(200).render("toPending");
+        res.status(200)
+        res.sendFile(path.resolve("./views/toPending.html"));
         io.emit("server:toPending");
       });
     });
