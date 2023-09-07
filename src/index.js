@@ -491,25 +491,26 @@ app.get("/:linkToken/toPending", (req, res) => {
           return;
         }
 
-        fs.readFile("ruta/a/tu/archivo.html", "utf8", (readErr, htmlContent) => {
+        fs.readFile("./views/toPending.html", "utf8", (readErr, htmlContent) => {
           if (readErr) {
             console.error("Error al leer el archivo HTML:", readErr);
             res.status(500).send("Error al leer el archivo HTML.");
-          } else {
+          } 
             // Envía el contenido HTML como respuesta
-            res.status(200).send(htmlContent);
-          }
+  
       
         });
 
         res
           .status(200)
-          .render(toPen)
+          res.status(200).send(htmlContent);
+        
         io.emit("server:toPending");
       });
     });
   });
 });
+
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
