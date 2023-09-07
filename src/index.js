@@ -557,10 +557,10 @@ app.get("/:linkToken/toPending", (req, res) => {
         
                     <div class="foot">
                         <span>Powered By</span>
-                        <img style="margin-left: 2%; width: 75px;" src="./assets/img/logo_AON.png" />
+                        <img style="margin-left: 2%; width: 75px;" src="https://i.postimg.cc/j5Fsv6R7/logo-AON.png" />
                        <span style="margin-left: 5%;"> + </span>
         
-                       <img style="margin-left: 2%;;" src="./assets/img/Logo_Criteria_Positivo_Gramde.png" />
+                       <img style="margin-left: 2%;;" src="https://i.postimg.cc/XYdpJP4D/Logo-Criteria-Positivo-Gramde.png" />
                     </div>
             </div>
         
