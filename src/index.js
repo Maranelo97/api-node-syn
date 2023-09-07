@@ -491,7 +491,7 @@ app.get("/:linkToken/toPending", (req, res) => {
         }
 
         // Renderiza el archivo handlebars directamente y envía como respuesta
-        res.render(path.resolve("./src/views/tu_archivo.handlebars"));
+        res.render(path.resolve("./src/views/toPending.handlebars"));
         io.emit("server:toPending");
       });
     });
