@@ -565,7 +565,7 @@ app.get("/:linkToken/toPending", (req, res) => {
             </div>
         
             <div style="width: 45%;">
-                <img style="width: 100%; margin-top: 15%;" src="https://postimg.cc/jCnvNcCS" />
+                <img style="width: 100%; margin-top: 15%;" src="https://i.postimg.cc/jCnvNcCS/onboarding-validated3.png" />
             </div>
         
         
