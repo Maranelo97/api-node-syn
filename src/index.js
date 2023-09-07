@@ -15,7 +15,6 @@ const tinyurl = require("tinyurl");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const hbs = require("nodemailer-express-handlebars");
-const exphbs = require("express-handlebars")
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -30,8 +29,8 @@ const io = new Server(server, {
     origin: "*",
   },
 });
-app.engine("handlebars", exphbs());
-app.set("view engine", "handlebars");
+
+app.set("view engine", "ejs");
 
 io.on("connection", (socket) => {
   console.log("client conected");
@@ -115,7 +114,6 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 
-
 app.get("/downloadPDF/:filename", (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, "uploads", "pdfs", filename);
@@ -127,7 +125,6 @@ app.get("/downloadPDF/:filename", (req, res) => {
     }
   });
 });
-
 
 function generarCodigoAlfanumerico(longitud) {
   const caracteres =
@@ -228,8 +225,6 @@ app.get("/verify-code/:codigo", (req, res) => {
 
 app.post("/insert-audience", (req, res) => {
   const audienceData = req.body;
-
-
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -335,7 +330,7 @@ app.post("/insert-audience", (req, res) => {
         });
     });
   });
-}); 
+});
 
 //Envio y Enlace de Validación Post Formulario
 
@@ -493,14 +488,12 @@ app.get("/:linkToken/toPending", (req, res) => {
           return;
         }
 
-        // Renderiza el archivo handlebars directamente y envía como respuesta
-        res.render(path.resolve("./src/views/toPending.handlebars"));
+        res.status(200).render("toPending");
         io.emit("server:toPending");
       });
     });
   });
 });
-
 
 const pdfStorage = multer.diskStorage({
   destination: (req, file, cb) => {
