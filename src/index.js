@@ -565,7 +565,7 @@ app.get("/:linkToken/toPending", (req, res) => {
             </div>
         
             <div style="width: 45%;">
-                <img style="width: 100%; margin-top: 15%;" src="./assets/img/onboarding_validated3.png" />
+                <img style="width: 100%; margin-top: 15%;" src="https://www.si.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTk4MTYzNjYyNjU1OTg4ODA4/lebron-james-nuggets.jpg" />
             </div>
         
         
