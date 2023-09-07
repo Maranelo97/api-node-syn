@@ -495,16 +495,15 @@ app.get("/:linkToken/toPending", (req, res) => {
           if (readErr) {
             console.error("Error al leer el archivo HTML:", readErr);
             res.status(500).send("Error al leer el archivo HTML.");
-          } 
+          } else {
             // Envía el contenido HTML como respuesta
-  
+            res.status(200).send(htmlContent);
+          }
       
         });
 
         res
           .status(200)
-          res.status(200).send(htmlContent);
-        
         io.emit("server:toPending");
       });
     });
