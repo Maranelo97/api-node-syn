@@ -15,6 +15,7 @@ const tinyurl = require("tinyurl");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const hbs = require("nodemailer-express-handlebars");
+const fs = require("fs");
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
