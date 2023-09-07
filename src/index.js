@@ -15,7 +15,6 @@ const tinyurl = require("tinyurl");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const hbs = require("nodemailer-express-handlebars");
-const fs = require("fs");
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -491,19 +490,8 @@ app.get("/:linkToken/toPending", (req, res) => {
           return;
         }
 
-        fs.readFile("./views/toPending.html", "utf8", (readErr, htmlContent) => {
-          if (readErr) {
-            console.error("Error al leer el archivo HTML:", readErr);
-            res.status(500).send("Error al leer el archivo HTML.");
-          } else {
-            // Envía el contenido HTML como respuesta
-            res.status(200).send(htmlContent);
-          }
-      
-        });
-
-        res
-          .status(200)
+        // Renderiza el archivo handlebars directamente y envía como respuesta
+        res.render(path.resolve("./src/views/tu_archivo.handlebars"));
         io.emit("server:toPending");
       });
     });
