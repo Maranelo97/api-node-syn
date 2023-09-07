@@ -113,6 +113,7 @@ app.get("/download/:filename", (req, res) => {
   });
 });
 
+
 app.get("/downloadPDF/:filename", (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, "uploads", "pdfs", filename);
