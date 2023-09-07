@@ -15,6 +15,7 @@ const tinyurl = require("tinyurl");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const hbs = require("nodemailer-express-handlebars");
+const exphbs = require("express-handlebars")
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -29,6 +30,8 @@ const io = new Server(server, {
     origin: "*",
   },
 });
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
 
 io.on("connection", (socket) => {
   console.log("client conected");
