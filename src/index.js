@@ -489,7 +489,91 @@ app.get("/:linkToken/toPending", (req, res) => {
         }
 
         res.status(200)
-        res.sendFile(path.resolve("../src/views/toPending.html"));
+        res.send(`<!DOCTYPE html>
+        <html lang="es">
+        
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Bienvenido a Syngenta Digital Pension</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&family=Ubuntu:wght@500&display=swap"
+                rel="stylesheet">
+            <style>
+                body {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    background-color: #46D1C7;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-around;
+                }
+        
+                h1 {
+                    color: #fff;
+                    font-size: 3rem;
+                    font-weight: bold;
+                    font-family: "Ubuntu";
+                }
+        
+        
+                .divText {
+                    margin-left: 5%;
+                    margin-top: 6.8%;
+                }
+        
+                .divText p {
+                    text-align: left;
+                    font-size: 2rem;
+                    color: #fff;
+                    font-family: "Raleway";
+                }
+        
+                .foot{
+                    bottom: 12%;
+                    position: absolute;
+                    display: flex;
+                    align-items: center;
+                }
+        
+                .foot span {
+                    font-family: "Ubuntu";
+                    font-size: 1.2rem;
+                    color: #fff;
+                }
+            </style>
+        </head>
+        
+        <body>
+        
+            <div class="divText" style="width: 40%;">
+                <h1>Te damos la bienvenida al plan de Pensión </h1>
+        
+                <p>¡Has finalizado el registro en el Plan de Pensión Syngenta! Una gran decisión para tu futuro. En breve
+                    comenzarás a disfrutar de los beneficios de ser parte de este proyecto.</p>
+        
+        
+                    <div class="foot">
+                        <span>Powered By</span>
+                        <img style="margin-left: 2%; width: 75px;" src="../assets/img/logo_AON.png" />
+                       <span style="margin-left: 5%;"> + </span>
+        
+                       <img style="margin-left: 2%;;" src="../assets/img/Logo_Criteria_Positivo_Gramde.png" />
+                    </div>
+            </div>
+        
+            <div style="width: 45%;">
+                <img style="width: 100%; margin-top: 15%;" src="../assets/img/onboarding_validated3.png" />
+            </div>
+        
+        
+        
+        
+        </body>
+        
+        </html>`)
         io.emit("server:toPending");
       });
     });
