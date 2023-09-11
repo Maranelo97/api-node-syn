@@ -149,8 +149,8 @@ const transporter = nodemailer.createTransport({
 });
 transporter.use("compile", hbs(handleBarOptions));
 
-app.post("/verify-code/:email/code", async function (req, res) {
-  const { email } = req.params;
+app.post("/verify-code/:email/code/:dni", async function (req, res) {
+  const { email, dni } = req.params;
   const codigoGenerado = generarCodigoAlfanumerico(5);
 
   const mailOptions = {
@@ -171,8 +171,8 @@ app.post("/verify-code/:email/code", async function (req, res) {
       try {
         const connection = await mysql.createConnection(dbConfig);
 
-        const query = "INSERT INTO codigos (email, codigo) VALUES (?, ?)";
-        await connection.execute(query, [email, codigoGenerado]);
+        const query = "INSERT INTO codigos (email, codigo, dni) VALUES (?, ?, ?)";
+        await connection.execute(query, [email, codigoGenerado, dni]);
 
         console.log("Correo enviado: " + info.response);
         res.status(200).json({
