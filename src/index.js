@@ -341,9 +341,9 @@ function generarTokenUnico(length = 8) {
     .slice(0, length);
 }
 
-app.post("/token-account/:email/link", async function (req, res) {
+app.post("/token-account/:email/link/:dni", async function (req, res) {
   try {
-    const { email } = req.params;
+    const { email, dni } = req.params;
     const { pdfURL } = req.body;
 
     const linkToken = generarTokenUnico();
@@ -385,7 +385,7 @@ app.post("/token-account/:email/link", async function (req, res) {
               const connection = await mysql.createConnection(dbConfig);
 
               const query =
-                "INSERT INTO codigos (email, codigo, token, enlace_acortado) VALUES (?, DEFAULT, ?, ?)";
+                "INSERT INTO codigos (email, codigo, token, enlace_acortado, dni) VALUES (?, DEFAULT, ?, ?, ?)";
               await connection.execute(query, [email, linkToken, shortLink]);
 
               console.log("Correo enviado: " + info.response);
@@ -454,7 +454,7 @@ app.get("/verify-link/:token", (req, res) => {
 });
 
 app.get("/:linkToken/toPending", (req, res) => {
-  const { linkToken } = req.params;
+  const { linkToken, dni } = req.params;
 
   req.getConnection((err, connection) => {
     if (err) {
@@ -464,7 +464,7 @@ app.get("/:linkToken/toPending", (req, res) => {
     }
 
     const selectQuery = "SELECT dni FROM codigos WHERE token = ?";
-    connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
+    connection.query(selectQuery, [linkToken, dni], (selectErr, selectResults) => {
       if (selectErr) {
         console.error("Error al seleccionar email:", selectErr);
         res.status(500).send("Error al seleccionar el email.");
