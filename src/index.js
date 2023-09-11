@@ -463,7 +463,7 @@ app.get("/:linkToken/toPending", (req, res) => {
       return;
     }
 
-    const selectQuery = "SELECT dni FROM codigos WHERE token = ?";
+    const selectQuery = "SELECT email FROM codigos WHERE token = ?";
     connection.query(selectQuery, [linkToken], (selectErr, selectResults) => {
       if (selectErr) {
         console.error("Error al seleccionar email:", selectErr);
@@ -476,12 +476,12 @@ app.get("/:linkToken/toPending", (req, res) => {
         return;
       }
 
-      const dni = selectResults[0].dni;
+      const email = selectResults[0].email;
 
       // Actualizar el estado en la base de datos
       const updateQuery =
         "UPDATE audiencia SET status = 'pendiente' WHERE dni = ?";
-      connection.query(updateQuery, [dni], (updateErr, updateResults) => {
+      connection.query(updateQuery, [email], (updateErr, updateResults) => {
         if (updateErr) {
           console.error("Error al actualizar estado:", updateErr);
           res.status(500).send("Error al actualizar el estado.");
