@@ -549,8 +549,11 @@ app.get("/:linkToken/toPending", (req, res) => {
         <body>
         
             <div class="divText" style="width: 40%;">
-                <h1>Te damos la bienvenida al plan de Pensión Syngenta</h1>
-        
+              
+            <h1>
+            Te damos la bienvenida al plan de Pensión
+            <img width="33%" style="vertical-align: middle; margin-right: 10px;" src="https://i.postimg.cc/vBd7TnJ5/Logo-Syngenta-Neg.png" />
+        </h1>
                 <p>¡Has finalizado el registro en el Plan de Pensión Syngenta! Una gran decisión para tu futuro. En breve
                     comenzarás a disfrutar de los beneficios de ser parte de este proyecto.</p>
         
