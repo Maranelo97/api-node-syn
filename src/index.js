@@ -480,7 +480,7 @@ app.get("/:linkToken/toPending", (req, res) => {
 
       // Actualizar el estado en la base de datos
       const updateQuery =
-        "UPDATE audiencia SET status = 'pendiente' WHERE dni = ?";
+        "UPDATE audiencia SET status = 'pendiente' WHERE email = ?";
       connection.query(updateQuery, [email], (updateErr, updateResults) => {
         if (updateErr) {
           console.error("Error al actualizar estado:", updateErr);
