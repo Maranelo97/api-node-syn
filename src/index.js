@@ -512,16 +512,17 @@ app.get("/:linkToken/toPending", (req, res) => {
                 }
         
                 h1 {
-                  color: #fff;
-                  font-size: 2.5rem;
-                  font-weight: bold;
-                  font-family: "Ubuntu";
-              }
-      
+                    color: #fff;
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    font-family: "Ubuntu";
+                }
+        
         
                 .divText {
                     margin-left: 5%;
                     margin-top: 6.8%;
+                    width: 40%;
                 }
         
                 .divText p {
@@ -543,34 +544,84 @@ app.get("/:linkToken/toPending", (req, res) => {
                     font-size: 1.2rem;
                     color: #fff;
                 }
+        
+                @media (max-width: 360px) and (max-height: 740px) {
+                    
+                    h1 {
+            color: #fff;
+            font-size: 1.7rem;
+            font-weight: bold;
+            font-family: "Ubuntu";
+        }
+        
+        h1 img {
+            width: 124px;
+        }
+        
+            .divText {
+                width: 75%;
+            margin-left: 5%;
+            margin-top: 69.8%;
+        }
+        
+        
+        .divText p {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #fff;
+            font-family: "Raleway";
+        }
+        .foot {
+            bottom: 0%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-left: 59px;
+        }
+        
+        .foot .aon {
+            width: 62px;
+        }
+        
+        .foot .cri {
+            width: 145px;
+        }
+        
+        .fly{
+            width: 75%;
+            position: absolute;
+            margin-top: 8%;
+            left: 0%;
+            height: 30%;
+            margin-left: 43px;
+        }
+        
+        }
+        
             </style>
         </head>
         
         <body>
         
-            <div class="divText" style="width: 40%;">
-              
-            <h1>
-            Te damos la bienvenida al plan de Pensión
-            <img width="33%" style="vertical-align: middle; margin-right: 10px; margin-bottom: 6px;" src="https://i.postimg.cc/vBd7TnJ5/Logo-Syngenta-Neg.png" />
-        </h1>
-                <p>¡Has finalizado el registro en el Plan de Pensión Syngenta! Una gran decisión para tu futuro. En breve
-                    comenzarás a disfrutar de los beneficios de ser parte de este proyecto.</p>
+            <div class="divText">
         
+                    <h1>
+                        Te damos la bienvenida al plan de Pensión
+                        <img width="33%" style="vertical-align: middle; margin-right: 10px; margin-bottom: 6px;" src="https://i.postimg.cc/vBd7TnJ5/Logo-Syngenta-Neg.png" />
+                    </h1>
         
-                    <div class="foot">
-                        <span>Powered By</span>
-                        <img style="margin-left: 2%; width: 75px;" src="https://i.postimg.cc/j5Fsv6R7/logo-AON.png" />
-                       <span style="margin-left: 5%;"> + </span>
-        
-                       <img style="margin-left: 2%;;" src="https://i.postimg.cc/XYdpJP4D/Logo-Criteria-Positivo-Gramde.png" />
-                    </div>
+                <p>¡Has finalizado el registro en el Plan de Pensión Syngenta! Una gran decisión para tu futuro. En breve comenzarás a disfrutar de los beneficios de ser parte de este proyecto.</p>
+                <div class="foot">
+                    <span>Powered By</span>
+                    <img class="aon" style="margin-left: 2%; width: 75px;" src="../assets/img/logo_AON.png" />
+                    <span style="margin-left: 5%;"> + </span>
+                    <img class="cri" style="margin-left: 2%;" src="../assets/img/Logo_Criteria_Positivo_Gramde.png" />
+                </div>
             </div>
-        
-            <div style="width: 45%;">
-                <img style="width: 100%; margin-top: 15%;" src="https://i.postimg.cc/tR2cKmjW/onboarding-validated3.png" />
+            <div class="fly">
+                <img style="width: 100%; margin-top: 5%;" src="../assets/img/onboarding_validated3.png" />
             </div>
-        
         
         
         
