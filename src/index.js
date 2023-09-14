@@ -725,13 +725,13 @@ app.get("/:linkToken/toPending", (req, res) => {
                     comenzarás a disfrutar de los beneficios de ser parte de este proyecto.</p>
                 <div class="foot">
                     <span>Powered By</span>
-                    <img class="aon" style="margin-left: 2%; width: 75px;" src="../assets/img/logo_AON.png" />
+                    <img class="aon" style="margin-left: 2%; width: 75px;" src="https://i.postimg.cc/j5Fsv6R7/logo-AON.png" />
                     <span style="margin-left: 5%;"> + </span>
-                    <img class="cri" style="margin-left: 2%;" src="../assets/img/Logo_Criteria_Positivo_Gramde.png" />
+                    <img class="cri" style="margin-left: 2%;" src="https://i.postimg.cc/XYdpJP4D/Logo-Criteria-Positivo-Gramde.png" />
                 </div>
             </div>
             <div class="fly">
-                <img style="width: 100%; margin-top: 5%;" src="../assets/img/onboarding_validated3.png" />
+                <img style="width: 100%; margin-top: 5%;" src="https://i.postimg.cc/tR2cKmjW/onboarding-validated3.png" />
             </div>
         
         
