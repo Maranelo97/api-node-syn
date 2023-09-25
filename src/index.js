@@ -224,7 +224,7 @@ app.get("/verify-code/:codigo", (req, res) => {
 });
 
 app.post("/insert-audience", (req, res) => {
-  const { importName, importedRows, recordsToSend } = req.body; // Desestructura los campos
+  const { importName, importedRows, records } = req.body; // Desestructura los campos
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -249,7 +249,7 @@ app.post("/insert-audience", (req, res) => {
         "INSERT INTO audiencia (name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       Promise.all(
-        recordsToSend.map((data) => { // Usar recordsToSend en lugar de audienceData
+        records.map((data) => { // Usar recordsToSend en lugar de audienceData
           const { name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta } = data;
           return new Promise((resolve, reject) => {
             connect.query(
