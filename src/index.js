@@ -224,7 +224,7 @@ app.get("/verify-code/:codigo", (req, res) => {
 });
 
 app.post("/insert-audience", (req, res) => {
-  const audienceData = req.body;
+  const { importName, importedRows, recordsToSend } = req.body; // Desestructura los campos
 
   req.getConnection((err, connect) => {
     if (err) {
@@ -249,7 +249,7 @@ app.post("/insert-audience", (req, res) => {
         "INSERT INTO audiencia (name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       Promise.all(
-        audienceData.map((data) => {
+        recordsToSend.map((data) => { // Usar recordsToSend en lugar de audienceData
           const { name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta } = data;
           return new Promise((resolve, reject) => {
             connect.query(
@@ -267,9 +267,6 @@ app.post("/insert-audience", (req, res) => {
         })
       )
         .then(() => {
-          const importedRows = audienceData.length;
-          const importName = req.body.importName;
-
           const importInsertQuery =
             "INSERT INTO imports (importName, importedRows) VALUES (?, ?)";
           connect.query(
@@ -304,11 +301,11 @@ app.post("/insert-audience", (req, res) => {
                       ok: true,
                       message:
                         "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
-                        importName
+                      importName
                     });
                     io.emit("server:audienceInserted", {
                       importName,
-                      importedRows: audienceData.length,
+                      importedRows: recordsToSend.length, // Usar recordsToSend en lugar de audienceData
                     });
                   }
                 });
@@ -332,6 +329,7 @@ app.post("/insert-audience", (req, res) => {
     });
   });
 });
+
 
 //Envio y Enlace de Validación Post Formulario
 
