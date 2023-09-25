@@ -246,15 +246,15 @@ app.post("/insert-audience", (req, res) => {
       }
 
       const insertQuery =
-        "INSERT INTO audiencia (name, lastname, province, email, phone, dni, address, address2, zipCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO audiencia (name, lastname, province, email, phone, dni, address, address2, zipCode, dob) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       Promise.all(
         audienceData.map((data) => {
-          const { name, lastname, province, email, phone, dni, address, address2, zipCode } = data;
+          const { name, lastname, province, email, phone, dni, address, address2, zipCode, dob } = data;
           return new Promise((resolve, reject) => {
             connect.query(
               insertQuery,
-              [name, lastname, province, email, phone, dni, address, address2, zipCode],
+              [name, lastname, province, email, phone, dni, address, address2, zipCode, dob],
               (err, result) => {
                 if (err) {
                   reject(err);
