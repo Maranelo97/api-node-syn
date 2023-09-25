@@ -304,6 +304,7 @@ app.post("/insert-audience", (req, res) => {
                       ok: true,
                       message:
                         "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
+                        importName
                     });
                     io.emit("server:audienceInserted", {
                       importName,
