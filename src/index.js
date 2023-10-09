@@ -307,6 +307,58 @@ app.post("/insert-audience", (req, res) => {
                       importName,
                       importedRows: recordsToSend.length, // Usar recordsToSend en lugar de audienceData
                     });
+
+                    connect.beginTransaction((err) => {
+                      if (err) return res.send(err);
+                
+                      // Insertar en la tabla de audiencia
+                      connect.query("INSERT INTO audiencia SET ?", [data], (err, result) => {
+                        if (err) {
+                          connect.rollback(() => {
+                            res.send(err);
+                          });
+                        } else {
+                          const registroId = result.insertId;
+                          const accionId = 15; // Valor de la acción inicial (ejemplo: 1 para "Creó")
+                
+                          // Insertar en la tabla de registros_acciones
+                          const nuevaAccion = {
+                            accionId,
+                            registroId,
+                            fecha: new Date(),
+                          };
+                
+                          connect.query(
+                            "INSERT INTO registros_acciones SET ?",
+                            nuevaAccion,
+                            (err, result) => {
+                              if (err) {
+                                connect.rollback(() => {
+                                  res.send(err);
+                                });
+                              } else {
+                                // Commit de la transacción
+                                connect.commit((err) => {
+                                  if (err) {
+                                    connect.rollback(() => {
+                                      res.send(err);
+                                    });
+                                  } else {
+                                    res.status(200).json({
+                                      message: "Creación exitosa",
+                                      imageURL1: data.imageURL1,
+                                      imagelURL2: data.imagelURL2,
+                                    });
+                
+                                    io.emit("server:creado", data);
+                                  }
+                                });
+                              }
+                            }
+                          );
+                        }
+                      });
+                    });
                   }
                 });
               }
