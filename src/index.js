@@ -309,12 +309,15 @@ app.post("/insert-audience", (req, res) => {
                   });
                 });
               } else {
-                const accionId = 15; // Acción "importó"
+                const accionId = 3; // Acción "importó"
+
+                // Obtener el registroId de la importación recién insertada
+                const registroId = result.insertId;
 
                 // Insertar la acción "importó" en la tabla registros_acciones
                 const nuevaAccion = {
                   accionId,
-                  registroId: result.insertId, // Supongo que result.insertId es el ID de la importación
+                  registroId,
                   fecha: new Date(),
                 };
 
@@ -384,6 +387,7 @@ app.post("/insert-audience", (req, res) => {
     });
   });
 });
+
 
 
 
