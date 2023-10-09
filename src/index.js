@@ -249,12 +249,38 @@ app.post("/insert-audience", (req, res) => {
         "INSERT INTO audiencia (name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta, area) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       Promise.all(
-        records.map((data) => { // Usar recordsToSend en lugar de audienceData
-          const { name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta, area } = data;
+        records.map((data) => {
+          const {
+            name,
+            lastname,
+            province,
+            email,
+            phone,
+            dni,
+            address,
+            address2,
+            zipCode,
+            location,
+            emailSyngenta,
+            area,
+          } = data;
           return new Promise((resolve, reject) => {
             connect.query(
               insertQuery,
-              [name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta, area],
+              [
+                name,
+                lastname,
+                province,
+                email,
+                phone,
+                dni,
+                address,
+                address2,
+                zipCode,
+                location,
+                emailSyngenta,
+                area,
+              ],
               (err, result) => {
                 if (err) {
                   reject(err);
@@ -283,32 +309,61 @@ app.post("/insert-audience", (req, res) => {
                   });
                 });
               } else {
-                connect.commit((commitErr) => {
-                  if (commitErr) {
-                    connect.rollback(() => {
-                      console.error(
-                        "Error al hacer commit de la transacción:",
-                        commitErr
-                      );
-                      res.status(500).json({
-                        ok: false,
-                        message: "Error al hacer commit de la transacción",
-                        error: commitErr.message,
+                const accionId = 15; // Acción "importó"
+
+                // Insertar la acción "importó" en la tabla registros_acciones
+                const nuevaAccion = {
+                  accionId,
+                  registroId: result.insertId, // Supongo que result.insertId es el ID de la importación
+                  fecha: new Date(),
+                };
+
+                connect.query(
+                  "INSERT INTO registros_acciones SET ?",
+                  nuevaAccion,
+                  (err, actionResult) => {
+                    if (err) {
+                      connect.rollback(() => {
+                        console.error(
+                          "Error al hacer rollback al insertar la acción:",
+                          err
+                        );
+                        res.status(500).json({
+                          ok: false,
+                          message: "Error al insertar la acción 'importó'",
+                          error: err.message,
+                        });
                       });
-                    });
-                  } else {
-                    res.status(200).json({
-                      ok: true,
-                      message:
-                        "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
-                      importName
-                    });
-                    io.emit("server:audienceInserted", {
-                      importName,
-                      importedRows: recordsToSend.length, // Usar recordsToSend en lugar de audienceData
-                    });
+                    } else {
+                      connect.commit((commitErr) => {
+                        if (commitErr) {
+                          connect.rollback(() => {
+                            console.error(
+                              "Error al hacer commit de la transacción:",
+                              commitErr
+                            );
+                            res.status(500).json({
+                              ok: false,
+                              message: "Error al hacer commit de la transacción",
+                              error: commitErr.message,
+                            });
+                          });
+                        } else {
+                          res.status(200).json({
+                            ok: true,
+                            message:
+                              "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
+                            importName,
+                          });
+                          io.emit("server:audienceInserted", {
+                            importName,
+                            importedRows: records.length,
+                          });
+                        }
+                      });
+                    }
                   }
-                });
+                );
               }
             }
           );
@@ -329,6 +384,7 @@ app.post("/insert-audience", (req, res) => {
     });
   });
 });
+
 
 
 //Envio y Enlace de Validación Post Formulario
