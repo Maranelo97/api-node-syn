@@ -788,6 +788,8 @@ exports.abandono4 = (req, res) => {
       location: req.body.location,
       province: req.body.province,
       zipCode: req.body.zipCode,
+      imageURL1: req.body.imageURL1 || null,
+      imagelURL2: req.body.imagelURL2 || null,
       ingress: new Date(req.body.ingress),
       dob: new Date(req.body.dob),
       aprobbed: new Date(req.body.aprobbed),
