@@ -290,6 +290,7 @@ app.post("/insert-audience", (req, res) => {
                   const nuevaAccion = {
                     accionId,
                     registroId,
+                    importName, // Agrega el importName como parte de la acción
                     fecha: new Date(),
                   };
 
