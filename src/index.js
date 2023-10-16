@@ -247,19 +247,63 @@ app.post("/insert-audience", (req, res) => {
 
       const insertQuery =
         "INSERT INTO audiencia (name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta, area) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      const accionId = 15; // Nuevo valor de accionId
 
       Promise.all(
-        records.map((data) => { // Usar recordsToSend en lugar de audienceData
-          const { name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta, area } = data;
+        records.map((data) => {
+          const {
+            name,
+            lastname,
+            province,
+            email,
+            phone,
+            dni,
+            address,
+            address2,
+            zipCode,
+            location,
+            emailSyngenta,
+            area,
+          } = data;
           return new Promise((resolve, reject) => {
             connect.query(
               insertQuery,
-              [name, lastname, province, email, phone, dni, address, address2, zipCode, location, emailSyngenta, area],
+              [
+                name,
+                lastname,
+                province,
+                email,
+                phone,
+                dni,
+                address,
+                address2,
+                zipCode,
+                location,
+                emailSyngenta,
+                area,
+              ],
               (err, result) => {
                 if (err) {
                   reject(err);
                 } else {
-                  resolve(result);
+                  const registroId = result.insertId;
+                  const nuevaAccion = {
+                    accionId,
+                    registroId,
+                    fecha: new Date(),
+                  };
+
+                  connect.query(
+                    "INSERT INTO registros_acciones SET ?",
+                    nuevaAccion,
+                    (err, result) => {
+                      if (err) {
+                        reject(err);
+                      } else {
+                        resolve(result);
+                      }
+                    }
+                  );
                 }
               }
             );
@@ -301,11 +345,11 @@ app.post("/insert-audience", (req, res) => {
                       ok: true,
                       message:
                         "Datos insertados correctamente en la tabla de audiencia y se registró la importación",
-                      importName
+                      importName,
                     });
                     io.emit("server:audienceInserted", {
                       importName,
-                      importedRows: recordsToSend.length, // Usar recordsToSend en lugar de audienceData
+                      importedRows: records.length,
                     });
                   }
                 });
