@@ -154,7 +154,7 @@ app.post("/verify-code/:email/code/:dni", async function (req, res) {
   const codigoGenerado = generarCodigoAlfanumerico(5);
 
   const mailOptions = {
-    from: '"Syngenta Digital Pension" <no-reply@pensionplan.com.ar>',
+    from: '"Syngenta Pension Plan" <no-reply@pensionplan.com.ar>',
     to: email,
     subject: "Codigo de seguridad",
     template: "syn01",
@@ -406,7 +406,7 @@ app.post("/token-account/:email/link", async function (req, res) {
         const shortLink = tinyURLResponse;
 
         const mailOptions = {
-          from: '"Syngenta Digital Pension" <no-reply@pensionplan.com.ar>',
+          from: '"Syngenta Pension Plan" <no-reply@pensionplan.com.ar>',
           to: email,
           subject: "Confirmación de Cuenta",
           template: "syn02",
