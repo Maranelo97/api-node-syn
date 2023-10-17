@@ -406,7 +406,7 @@ app.post("/token-account/:email/link", async function (req, res) {
         const shortLink = tinyURLResponse;
 
         const mailOptions = {
-          from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
+          from: '"Syngenta Digital Pension" <no-reply@pensionplan.com.ar>',
           to: email,
           subject: "Confirmación de Cuenta",
           template: "syn02",
