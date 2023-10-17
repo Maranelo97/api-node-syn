@@ -143,8 +143,8 @@ const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
   port: 587,
   auth: {
-    user: "syngentaDP@outlook.com",
-    pass: "testeando123",
+    user: "no-reply@pensionplan.com.ar",
+    pass: "Nu7$hdaydw%daw1Gd",
   },
 });
 transporter.use("compile", hbs(handleBarOptions));
@@ -154,7 +154,7 @@ app.post("/verify-code/:email/code/:dni", async function (req, res) {
   const codigoGenerado = generarCodigoAlfanumerico(5);
 
   const mailOptions = {
-    from: '"Syngenta Digital Pension" <syngentaDP@outlook.com>',
+    from: '"Syngenta Digital Pension" <no-reply@pensionplan.com.ar>',
     to: email,
     subject: "Codigo de seguridad",
     template: "syn01",
