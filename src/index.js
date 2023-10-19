@@ -1007,37 +1007,6 @@ app.post("/add", (req, res) => {
   });
 });
 
-const transporterContact = nodemailer.createTransport({
-  host: "smtp.office365.com",
-  port: 587,
-  auth: {
-    user: "syngentaDP@outlook.com",
-    pass: "testeando123",
-  },
-});
-
-
-
-app.post('/api/enviarCorreoDuda', (req, res) => {
-  const { remitente, contenido } = req.body;
-
-  const mailOptions = {
-    from: remitente,
-    to:"syngentaDP@outlook.com",
-    text: contenido
-  };
-
-  transporterContact.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error al enviar el correo:', error);
-      res.status(500).send('Error al enviar el correo');
-    } else {
-      console.log('Correo enviado:', info.response);
-      res.send('Correo enviado con éxito');
-    }
-  });
-});
-
 
 
 server.listen(PORT, () => {
