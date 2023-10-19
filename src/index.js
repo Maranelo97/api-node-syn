@@ -1007,39 +1007,6 @@ app.post("/add", (req, res) => {
   });
 });
 
-
-app.post('/enviar-consulta', (req, res) => {
-  const { nombre, apellido, email, mensaje } = req.body;
-
-  // Configura el transporte del correo
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      user: 'marianoveronsantos@gmail.com', // Reemplaza con tu dirección de correo electrónico
-      pass: 'negromg555',       // Reemplaza con tu contraseña
-    },
-  });
-
-  // Opciones del correo electrónico
-  const mailOptions = {
-    from: email,
-    to: 'marianoveronsantos@gmail.com', // Reemplaza con la dirección de correo de consultas
-    subject: 'Consulta Pension Digital',
-    text: `Nombre: ${nombre}\nApellido: ${apellido}\nEmail: ${email}\nMensaje: ${mensaje}`,
-  };
-
-  // Envía el correo electrónico
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      res.status(500).send('Error al enviar el correo electrónico');
-    } else {
-      console.log('Correo electrónico enviado: ' + info.response);
-      res.status(200).send('Correo electrónico enviado con éxito');
-    }
-  });
-});
-
 server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
 });
