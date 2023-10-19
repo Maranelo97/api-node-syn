@@ -1008,12 +1008,11 @@ app.post("/add", (req, res) => {
 });
 
 app.post('/api/enviarCorreoDuda', (req, res) => {
-  const { remitente, asunto, contenido } = req.body;
+  const { remitente, contenido } = req.body;
 
   const mailOptions = {
     from: remitente,
     to: 'marianoveronsantos@gmail.com',
-    subject: asunto,
     text: contenido
   };
 
