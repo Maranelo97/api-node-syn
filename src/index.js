@@ -1011,8 +1011,8 @@ const transporterContact = nodemailer.createTransport({
   host: "smtp.office365.com",
   port: 587,
   auth: {
-    user: "no-reply@pensionplan.com.ar",
-    pass: "Nu7$hdaydw%daw1Gd",
+    user: "syngentaDP@outlook.com",
+    pass: "testeando123",
   },
 });
 
