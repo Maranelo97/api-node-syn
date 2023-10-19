@@ -1007,6 +1007,29 @@ app.post("/add", (req, res) => {
   });
 });
 
+app.post('/api/enviarCorreoDuda', (req, res) => {
+  const { remitente, asunto, contenido } = req.body;
+
+  const mailOptions = {
+    from: remitente,
+    to: 'marianoveronsantos@gmail.com',
+    subject: asunto,
+    text: contenido
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error al enviar el correo:', error);
+      res.status(500).send('Error al enviar el correo');
+    } else {
+      console.log('Correo enviado:', info.response);
+      res.send('Correo enviado con éxito');
+    }
+  });
+});
+
+
+
 server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
 });
