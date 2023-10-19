@@ -1007,6 +1007,17 @@ app.post("/add", (req, res) => {
   });
 });
 
+const transporterContact = nodemailer.createTransport({
+  host: "smtp.office365.com",
+  port: 587,
+  auth: {
+    user: "no-reply@pensionplan.com.ar",
+    pass: "Nu7$hdaydw%daw1Gd",
+  },
+});
+
+
+
 app.post('/api/enviarCorreoDuda', (req, res) => {
   const { remitente, contenido } = req.body;
 
@@ -1016,7 +1027,7 @@ app.post('/api/enviarCorreoDuda', (req, res) => {
     text: contenido
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
+  transporterContact.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error('Error al enviar el correo:', error);
       res.status(500).send('Error al enviar el correo');
