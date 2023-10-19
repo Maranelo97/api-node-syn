@@ -1023,7 +1023,7 @@ app.post('/api/enviarCorreoDuda', (req, res) => {
 
   const mailOptions = {
     from: remitente,
-    to: 'marianoveronsantos@gmail.com',
+    to:"syngentaDP@outlook.com",
     text: contenido
   };
 
