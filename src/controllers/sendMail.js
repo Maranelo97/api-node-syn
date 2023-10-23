@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
+const transporterConsults = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: "SyngtTest@gmail.com",
@@ -10,8 +10,6 @@ const transporter = nodemailer.createTransport({
 
 const enviarCorreo = async (email, link) => {
   try {
-
-      // Configurar el mensaje del correo
       const mensajeCorreo = {
         from: 'Tu Nombre <tu_email@gmail.com>',
         to: email,

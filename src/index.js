@@ -75,6 +75,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/", route);
 app.use("/", routeActions);
 
+
+
 //upload IMG
 
 app.post("/upload-images", (req, res) => {
@@ -1007,6 +1009,30 @@ app.post("/add", (req, res) => {
   });
 });
 
+
+//email consulta
+const transporterConsult = nodemailer.createTransport({
+  host: "smtp.office365.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "SyngentaDP@outlook.com",
+    pass: "testeando123",
+  },
+});
+
+app.post("/send-help/:email", function (req, res) {
+  const { email } = req.params
+
+   transporterConsult.sendMail({
+    from: "SyngentaDP@outlook.com",
+    to: "marcelogmarquez@yahoo.com",
+    subject: "Ayuda Onboarding",
+    text: "Tenes una duda de " + email + ": la PODONGA" + "PD: TESTEANDO DESDE EL BACK"
+  })
+
+  res.status(200).json({ ok: true, message:"Consulta enviada" })
+})
 
 
 server.listen(PORT, () => {
