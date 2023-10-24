@@ -1022,17 +1022,26 @@ const transporterConsult = nodemailer.createTransport({
 });
 
 app.post("/send-help/:email", function (req, res) {
-  const { email } = req.params
+  const { email } = req.params;
+  const { message, name, lastname } = req.body; // Obtén nombre, apellido y mensaje del cuerpo de la solicitud
 
-   transporterConsult.sendMail({
+  const mailOptions = {
     from: "SyngentaDP@outlook.com",
-    to: "marcelogmarquez@yahoo.com",
+    to: "SyngentaDP@outlook.com",
     subject: "Ayuda Onboarding",
-    text: "Tenes una duda de " + email + ": la PODONGA" + "PD: TESTEANDO DESDE EL BACK"
-  })
+    text: `Nombre: ${name}\nApellido: ${lastname}\nCorreo electrónico: ${email}\nMensaje: ${message}`
+  };
 
-  res.status(200).json({ ok: true, message:"Consulta enviada" })
-})
+  transporterConsult.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error al enviar el correo:", error);
+      res.status(500).json({ ok: false, message: "Error al enviar el correo" });
+    } else {
+      console.log("Correo enviado:", info.response);
+      res.status(200).json({ ok: true, message: "Consulta enviada" });
+    }
+  });
+});
 
 
 server.listen(PORT, () => {
