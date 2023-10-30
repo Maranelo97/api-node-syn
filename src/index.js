@@ -75,8 +75,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/", route);
 app.use("/", routeActions);
 
-
-
 //upload IMG
 
 app.post("/upload-images", (req, res) => {
@@ -145,8 +143,8 @@ const transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
   port: 587,
   auth: {
-    user: "no-reply@pensionplan.com.ar",
-    pass: "Nu7$hdaydw%daw1Gd",
+    user: process.env.user,
+    pass: process.env.pass,
   },
 });
 transporter.use("compile", hbs(handleBarOptions));
@@ -173,7 +171,8 @@ app.post("/verify-code/:email/code/:dni", async function (req, res) {
       try {
         const connection = await mysql.createConnection(dbConfig);
 
-        const query = "INSERT INTO codigos (email, codigo, dni) VALUES (?, ?, ?)";
+        const query =
+          "INSERT INTO codigos (email, codigo, dni) VALUES (?, ?, ?)";
         await connection.execute(query, [email, codigoGenerado, dni]);
 
         console.log("Correo enviado: " + info.response);
@@ -376,8 +375,6 @@ app.post("/insert-audience", (req, res) => {
     });
   });
 });
-
-
 
 //Envio y Enlace de Validación Post Formulario
 
@@ -1009,7 +1006,6 @@ app.post("/add", (req, res) => {
   });
 });
 
-
 //email consulta
 const transporterConsult = nodemailer.createTransport({
   host: "smtp.office365.com",
@@ -1029,7 +1025,7 @@ app.post("/send-help/:email", function (req, res) {
     from: "SyngentaDP@outlook.com",
     to: "marcelogmarquez@yahoo.com",
     subject: "Ayuda Onboarding",
-    text: `Nombre: ${name}\nApellido: ${lastname}\nCorreo electrónico: ${email}\nMensaje: ${message}`
+    text: `Nombre: ${name}\nApellido: ${lastname}\nCorreo electrónico: ${email}\nMensaje: ${message}`,
   };
 
   transporterConsult.sendMail(mailOptions, (error, info) => {
@@ -1042,7 +1038,6 @@ app.post("/send-help/:email", function (req, res) {
     }
   });
 });
-
 
 server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
