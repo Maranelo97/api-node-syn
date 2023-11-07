@@ -34,3 +34,4 @@ jobs:
             cd /usr/local/lsws/sites/syngt-api
             git pull origin master
             npm install
+            systemctl restart lsws
