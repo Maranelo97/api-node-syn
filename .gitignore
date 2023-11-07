@@ -1,2 +1,6 @@
 /node_modules
 .env
+src/uploads/csv/*
+src/uploads/img/*
+src/uploads/pdfs/*
+.idea

@@ -1,31 +1,32 @@
 const express = require("express");
 const route = express.Router();
 const {
-    getAudience,
-    editAudience,
-    deleteAudience,
-    getByDni,
-    aceptarSub,
-    rechazarSub,
-    rollBackSub,
-    ingressSub,
-    toValidar,
-    getCode,
-    importCSV,
-    abandono3,
-    abandono4,
-    abandono5,
-    abandono6,
-    abandono7,
-    abandono8,
-    abandono9,
-    getByEmail,
+  getAudience,
+  editAudience,
+  deleteAudience,
+  getByDni,
+  aceptarSub,
+  rechazarSub,
+  rollBackSub,
+  ingressSub,
+  toValidar,
+  getCode,
+  importCSV,
+  abandono3,
+  abandono4,
+  abandono5,
+  abandono6,
+  abandono7,
+  abandono8,
+  abandono9,
+  getByEmail,
 } = require("../controllers/index");
 const { getImports, deleteImport } = require("../controllers/imports");
+const { getHealth } = require("../controllers/health-controller");
 
 route.get("/audience", getAudience);
 route.get("/audience/:dni", getByDni);
-route.get("/audiencia/:email", getByEmail)
+route.get("/audiencia/:email", getByEmail);
 
 route.get("/getCode/:codigo", getCode);
 
@@ -48,6 +49,9 @@ route.delete("/delete/:id", deleteAudience);
 
 //import
 route.get("/getImports", getImports);
-route.delete("/deleteImport/:id", deleteImport)
+route.delete("/deleteImport/:id", deleteImport);
+
+//health
+route.get("/health", getHealth);
 
 module.exports = route;
