@@ -1012,8 +1012,8 @@ const transporterConsult = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "SyngentaDP@outlook.com",
-    pass: "testeando123",
+    user: process.env.HELP_USER,
+    pass: process.env.HELP_PASS,
   },
 });
 
