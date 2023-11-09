@@ -1023,7 +1023,7 @@ app.post("/send-help/:email", function (req, res) {
 
   const mailOptions = {
     from: "SyngentaDP@outlook.com",
-    to: "marcelogmarquez@yahoo.com",
+    to: "marianoveronsantos@gmail.com",
     subject: "Ayuda Onboarding",
     text: `Nombre: ${name}\nApellido: ${lastname}\nCorreo electrónico: ${email}\nMensaje: ${message}`,
   };
