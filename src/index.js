@@ -18,10 +18,10 @@ const hbs = require("nodemailer-express-handlebars");
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
-    partialsDir:  path.resolve(__dirname, "/src/views"),
+    partialsDir: path.resolve(__dirname, "views"),
     defaultLayout: false,
   },
-  viewPath: path.resolve(__dirname, "/src/views"),
+  viewPath: path.resolve(__dirname, "views"),
   extName: ".handlebars",
 };
 const io = new Server(server, {
