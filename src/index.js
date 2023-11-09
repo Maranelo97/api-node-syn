@@ -1022,8 +1022,8 @@ app.post("/send-help/:email", function (req, res) {
   const { message, name, lastname } = req.body; // Obtén nombre, apellido y mensaje del cuerpo de la solicitud
 
   const mailOptions = {
-    from: "SyngentaDP@outlook.com",
-    to: "SyngentaDP@outlook.com",
+    from: "consultas@pensionplan.com.ar",
+    to: "consultas@pensionplan.com.ar",
     subject: "Ayuda Onboarding",
     text: `Nombre: ${name}\nApellido: ${lastname}\nCorreo electrónico: ${email}\nMensaje: ${message}`,
   };
