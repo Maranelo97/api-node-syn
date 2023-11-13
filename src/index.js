@@ -393,7 +393,7 @@ app.post("/token-account/:email/link", async function (req, res) {
     const { pdfURL } = req.body;
 
     const linkToken = generarTokenUnico();
-    const fullLink = `https://api-node-syn-production.up.railway.app/${linkToken}/toPending`;
+    const fullLink = `https://api.pensionplan.com.ar/${linkToken}/toPending`;
 
     try {
       // Acorta la URL con TinyURL
