@@ -27,6 +27,17 @@ exports.loginUser = (req, res) => {
     });
 };
 
+exports.getAllUsers = (req, res) => {
+    req.getConnection((err, conn) => {
+        if (err) return res.send(err);
+
+        conn.query('SELECT * FROM users', (err, results) => {
+            if (err) return res.send(err);
+            res.json(results);
+        });
+    });
+};
+
 
 exports.createUser = (req, res) => {
     req.getConnection((err, conn) => {
@@ -50,7 +61,7 @@ exports.createUser = (req, res) => {
 
 
 
-exports.updatePassword = (req, res) => {
+exports.update = (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.status(500).json({ error: 'Error interno del servidor' });
 
