@@ -16,6 +16,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const hbs = require("nodemailer-express-handlebars");
 const routeGeo = require("./routes/geoRoutes");
+const routeUser = require('./routes/ussersRoutes');
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -74,6 +75,7 @@ app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/", route);
+app.use('/', routeUser)
 app.use("/", routeActions);
 app.use("/", routeGeo);
 
