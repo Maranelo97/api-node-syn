@@ -16,7 +16,7 @@ exports.loginUser = (req, res) => {
                 }
 
                 if (results.length > 0) {
-
+                    const username = results[0].usuario;
                     res.json({ message: 'Inicio de sesión exitoso', username });
                 } else {
 
