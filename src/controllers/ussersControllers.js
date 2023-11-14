@@ -98,3 +98,20 @@ exports.update = (req, res) => {
         );
     });
 };
+
+exports.deleteUser = (req, res) => {
+    req.getConnection((err, connect) => {
+      if (err) return res.send(err);
+  
+      connect.query(
+        "DELETE FROM users WHERE id = ?",
+        [req.params.id],
+        (err, result) => {
+          if (err) return res.send(err);
+  
+          res.send("Eliminado con exito");
+        }
+      );
+    });
+  };
+  
