@@ -702,6 +702,17 @@ app.get("/:linkToken/toPending", (req, res) => {
                     }
                 }
         
+
+                @media screen and (min-width: 1200px) and (min-height: 600px){
+                  .fly{
+                      width: 50%;
+                  }
+                  .divText{
+                      margin-top: 2.8%;
+                  }
+              }
+      
+
                 @media (max-width: 360px) and (max-height: 740px),
                 (max-width: 390px) and (max-height: 844px),
                 (max-width: 720px) and (max-height: 1600px) {
@@ -769,8 +780,7 @@ app.get("/:linkToken/toPending", (req, res) => {
                         src="https://i.postimg.cc/vBd7TnJ5/Logo-Syngenta-Neg.png" />
                 </h1>
         
-                <p>¡Has finalizado el registro en el Plan de Pensión Syngenta! Una gran decisión para tu futuro. En breve
-                    comenzarás a disfrutar de los beneficios de ser parte de este proyecto.</p>
+                <p>¡Has finalizado el registro en el Plan de Pensión Syngenta! Una gran decisión para tu futuro.</p>
                 <div class="foot">
                     <span>Powered By</span>
                     <img class="aon" style="margin-left: 2%; width: 75px;" src="https://i.postimg.cc/j5Fsv6R7/logo-AON.png" />
