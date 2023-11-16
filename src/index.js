@@ -702,6 +702,17 @@ app.get("/:linkToken/toPending", (req, res) => {
                     }
                 }
         
+
+                @media screen and (min-width: 1200px) and (min-height: 600px){
+                  .fly{
+                      width: 50%;
+                  }
+                  .divText{
+                      margin-top: 2.8%;
+                  }
+              }
+      
+
                 @media (max-width: 360px) and (max-height: 740px),
                 (max-width: 390px) and (max-height: 844px),
                 (max-width: 720px) and (max-height: 1600px) {
