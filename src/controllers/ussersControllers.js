@@ -77,7 +77,7 @@ exports.update = (req, res) => {
 
         conn.query(
             updateUserQuery,
-            [nombre, usuario,apellido, email, id],
+            [nombre, apellido, email, usuario, id],
             (err, result) => {
                 if (err) {
                     console.error('Error al actualizar los datos:', err);
