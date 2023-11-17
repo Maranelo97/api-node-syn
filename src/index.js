@@ -938,7 +938,31 @@ app.post("/add", (req, res) => {
     if (err) return res.send(err);
 
     const data = {
-      // ... (tu código existente para obtener los datos del formulario)
+      dni: req.body.dni,
+      name: req.body.name,
+      lastname: req.body.lastname,
+      status: req.body.status,
+      email: req.body.email,
+      emailSyngenta: req.body.emailSyngenta,
+      dob: new Date(req.body.dob),
+      phone: req.body.phone,
+      phone2: req.body.phone2 !== undefined ? req.body.phone2 : null,
+      address: req.body.address,
+      address2: req.body.address2,
+      location: req.body.location,
+      zipCode: req.body.zipCode,
+      province: req.body.province,
+      cuil: req.body.cuil,
+      area: req.body.area,
+      ingress: new Date(req.body.ingress),
+      importation: "New Hires Mayo",
+      added: new Date(req.body.added),
+      emailsSent: 0,
+      imageURL1: req.body.imageURL1 || null,
+      imagelURL2: req.body.imagelURL2 || null,
+      pdfURL: req.body.pdfURL,
+      aports: req.body.aports,
+      profile: req.body.profile,
     };
 
     // Iniciar transacción
@@ -1042,7 +1066,6 @@ app.post("/add", (req, res) => {
     }
   });
 });
-
 
 
 //email consulta
