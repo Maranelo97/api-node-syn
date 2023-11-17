@@ -6,7 +6,7 @@ const { loginUser, createUser, updatePass, getAllUsers, deleteUser, update } = r
 routeUser.post('/login', loginUser);
 routeUser.get('/getUssers', getAllUsers);
 routeUser.post('/user/create', createUser);
-routeUser.put('/', update);
+routeUser.put('/user/update', update);
 routeUser.put('/user/changePassword', updatePass);
 routeUser.delete('/deleteUser/:id', deleteUser);
 
