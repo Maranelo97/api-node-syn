@@ -938,31 +938,7 @@ app.post("/add", (req, res) => {
     if (err) return res.send(err);
 
     const data = {
-      dni: req.body.dni,
-      name: req.body.name,
-      lastname: req.body.lastname,
-      status: req.body.status,
-      email: req.body.email,
-      emailSyngenta: req.body.emailSyngenta,
-      dob: new Date(req.body.dob),
-      phone: req.body.phone,
-      phone2: req.body.phone2 !== undefined ? req.body.phone2 : null,
-      address: req.body.address,
-      address2: req.body.address2,
-      location: req.body.location,
-      zipCode: req.body.zipCode,
-      province: req.body.province,
-      cuil: req.body.cuil,
-      area: req.body.area,
-      ingress: new Date(req.body.ingress),
-      importation: "New Hires Mayo",
-      added: new Date(req.body.added),
-      emailsSent: 0,
-      imageURL1: req.body.imageURL1 || null,
-      imagelURL2: req.body.imagelURL2 || null,
-      pdfURL: req.body.pdfURL,
-      aports: req.body.aports,
-      profile: req.body.profile,
+      // ... (tu código existente para obtener los datos del formulario)
     };
 
     // Iniciar transacción
@@ -995,32 +971,47 @@ app.post("/add", (req, res) => {
                   res.send(err);
                 });
               } else {
-                // Actualizar la cantidad de empleados en el área correspondiente por nombre
+                // Comprobar si el departamento existe
                 connect.query(
-                  "UPDATE Departamentos SET CantidadEmpleados = CantidadEmpleados + 1 WHERE NombreDepartamento = ?",
+                  "SELECT * FROM Departamentos WHERE NombreDepartamento = ?",
                   [data.area],
-                  (err, result) => {
+                  (err, results) => {
                     if (err) {
                       connect.rollback(() => {
                         res.send(err);
                       });
                     } else {
-                      // Commit de la transacción
-                      connect.commit((err) => {
-                        if (err) {
-                          connect.rollback(() => {
-                            res.send(err);
-                          });
-                        } else {
-                          res.status(200).json({
-                            message: "Creación exitosa",
-                            imageURL1: data.imageURL1,
-                            imagelURL2: data.imagelURL2,
-                          });
-
-                          io.emit("server:creado", data);
-                        }
-                      });
+                      if (results.length > 0) {
+                        // El departamento existe, realizar la actualización
+                        connect.query(
+                          "UPDATE Departamentos SET CantidadEmpleados = CantidadEmpleados + 1 WHERE NombreDepartamento = ?",
+                          [data.area],
+                          (err, result) => {
+                            if (err) {
+                              connect.rollback(() => {
+                                res.send(err);
+                              });
+                            } else {
+                              commitTransaction();
+                            }
+                          }
+                        );
+                      } else {
+                        // El departamento no existe, crearlo y luego realizar la actualización
+                        connect.query(
+                          "INSERT INTO Departamentos (NombreDepartamento, CantidadEmpleados) VALUES (?, 1)",
+                          [data.area],
+                          (err, result) => {
+                            if (err) {
+                              connect.rollback(() => {
+                                res.send(err);
+                              });
+                            } else {
+                              commitTransaction();
+                            }
+                          }
+                        );
+                      }
                     }
                   }
                 );
@@ -1030,8 +1021,28 @@ app.post("/add", (req, res) => {
         }
       });
     });
+
+    function commitTransaction() {
+      // Commit de la transacción
+      connect.commit((err) => {
+        if (err) {
+          connect.rollback(() => {
+            res.send(err);
+          });
+        } else {
+          res.status(200).json({
+            message: "Creación exitosa",
+            imageURL1: data.imageURL1,
+            imagelURL2: data.imagelURL2,
+          });
+
+          io.emit("server:creado", data);
+        }
+      });
+    }
   });
 });
+
 
 
 //email consulta
