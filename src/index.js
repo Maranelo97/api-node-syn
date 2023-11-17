@@ -995,22 +995,35 @@ app.post("/add", (req, res) => {
                   res.send(err);
                 });
               } else {
-                // Commit de la transacción
-                connect.commit((err) => {
-                  if (err) {
-                    connect.rollback(() => {
-                      res.send(err);
-                    });
-                  } else {
-                    res.status(200).json({
-                      message: "Creación exitosa",
-                      imageURL1: data.imageURL1,
-                      imagelURL2: data.imagelURL2,
-                    });
+                // Actualizar la cantidad de empleados en el área correspondiente por nombre
+                connect.query(
+                  "UPDATE Departamentos SET CantidadEmpleados = CantidadEmpleados + 1 WHERE NombreDepartamento = ?",
+                  [data.area],
+                  (err, result) => {
+                    if (err) {
+                      connect.rollback(() => {
+                        res.send(err);
+                      });
+                    } else {
+                      // Commit de la transacción
+                      connect.commit((err) => {
+                        if (err) {
+                          connect.rollback(() => {
+                            res.send(err);
+                          });
+                        } else {
+                          res.status(200).json({
+                            message: "Creación exitosa",
+                            imageURL1: data.imageURL1,
+                            imagelURL2: data.imagelURL2,
+                          });
 
-                    io.emit("server:creado", data);
+                          io.emit("server:creado", data);
+                        }
+                      });
+                    }
                   }
-                });
+                );
               }
             }
           );
@@ -1019,6 +1032,7 @@ app.post("/add", (req, res) => {
     });
   });
 });
+
 
 //email consulta
 const transporterConsult = nodemailer.createTransport({
