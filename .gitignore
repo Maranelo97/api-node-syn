@@ -4,3 +4,4 @@ src/uploads/csv/*
 src/uploads/img/*
 src/uploads/pdfs/*
 .idea
+process.json
