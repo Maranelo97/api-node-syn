@@ -63,46 +63,39 @@ exports.update = (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.status(500).json({ error: 'Error interno del servidor' });
 
-        const { usuario, password, newPassword, nombre, apellido, email } = req.body;
+        const { id } = req.params; 
+        const { password, nombre, apellido, email, usuario } = req.body;
+
+        const updateUserQuery = `
+            UPDATE users 
+            SET 
+                password = ?,
+                nombre = ?,
+                apellido = ?,
+                email = ?,
+                usuario = ?
+            WHERE id = ?`;
 
         conn.query(
-            'SELECT * FROM users WHERE usuario = ? AND password = ?',
-            [usuario, password],
-            (err, results) => {
+            updateUserQuery,
+            [password, nombre, usuario,apellido, email, id],
+            (err, result) => {
                 if (err) {
-                    console.error('Error al realizar la consulta:', err);
+                    console.error('Error al actualizar los datos:', err);
                     return res.status(500).json({ error: 'Error interno del servidor' });
                 }
 
-                if (results.length > 0) {
-                    const updateUserQuery = `
-                        UPDATE users 
-                        SET 
-                            password = ?,
-                            nombre = ?,
-                            apellido = ?,
-                            email = ?
-                        WHERE usuario = ?`;
-
-                    conn.query(
-                        updateUserQuery,
-                        [newPassword, nombre, apellido, email, usuario],
-                        (err, result) => {
-                            if (err) {
-                                console.error('Error al actualizar los datos:', err);
-                                return res.status(500).json({ error: 'Error interno del servidor' });
-                            }
-
-                            res.json({ message: 'Datos actualizados exitosamente' });
-                        }
-                    );
+                if (result.affectedRows > 0) {
+                    res.json({ message: 'Datos actualizados exitosamente' });
                 } else {
-                    res.status(401).json({ error: 'Credenciales incorrectas' });
+                    res.status(404).json({ error: 'Usuario no encontrado' });
                 }
             }
         );
     });
 };
+
+
 
 
 exports.updatePass = (req, res) => {
