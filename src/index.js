@@ -17,6 +17,7 @@ const { Server } = require("socket.io");
 const hbs = require("nodemailer-express-handlebars");
 const routeGeo = require("./routes/geoRoutes");
 const routeUser = require('./routes/ussersRoutes');
+const apartmentRoutes = require('./routes/apartmentsRoutes');
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -78,6 +79,7 @@ app.use("/", route);
 app.use('/', routeUser)
 app.use("/", routeActions);
 app.use("/", routeGeo);
+app.use('/', apartmentRoutes);
 
 //upload IMG
 
