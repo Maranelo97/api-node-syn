@@ -64,12 +64,11 @@ exports.update = (req, res) => {
         if (err) return res.status(500).json({ error: 'Error interno del servidor' });
 
         const { id } = req.params; 
-        const { password, nombre, apellido, email, usuario } = req.body;
+        const { nombre, apellido, email, usuario } = req.body;
 
         const updateUserQuery = `
             UPDATE users 
             SET 
-                password = ?,
                 nombre = ?,
                 apellido = ?,
                 email = ?,
@@ -78,7 +77,7 @@ exports.update = (req, res) => {
 
         conn.query(
             updateUserQuery,
-            [password, nombre, usuario,apellido, email, id],
+            [nombre, usuario,apellido, email, id],
             (err, result) => {
                 if (err) {
                     console.error('Error al actualizar los datos:', err);
