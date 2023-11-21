@@ -659,17 +659,42 @@ exports.deleteAudience = (req, res) => {
   req.getConnection((err, connect) => {
     if (err) return res.send(err);
 
+    // Obtener el área del empleado que se va a eliminar
     connect.query(
-      "DELETE FROM audiencia WHERE id = ?",
+      "SELECT area FROM audiencia WHERE id = ?",
       [req.params.id],
       (err, result) => {
         if (err) return res.send(err);
 
-        res.send("Eliminado con exito");
+        const areaToDelete = result[0].area;
+
+        connect.query(
+          "DELETE FROM audiencia WHERE id = ?",
+          [req.params.id],
+          (err, result) => {
+            if (err) {
+              return res.send(err);
+            }
+
+            // Restar 1 a la cantidad de empleados en el área correspondiente
+            connect.query(
+              "UPDATE Departamentos SET CantidadEmpleados = CantidadEmpleados - 1 WHERE NombreDepartamento = ?",
+              [areaToDelete],
+              (err, result) => {
+                if (err) {
+                  return res.send(err);
+                }
+
+                res.send("Eliminado con éxito");
+              }
+            );
+          }
+        );
       }
     );
   });
 };
+
 
 //CONTROLADORES DE ABANDONO
 
