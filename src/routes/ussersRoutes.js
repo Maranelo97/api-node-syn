@@ -7,7 +7,7 @@ routeUser.post('/login', loginUser);
 routeUser.get('/getUssers', getAllUsers);
 routeUser.post('/user/create', createUser);
 routeUser.put('/user/update/:id', update);
-routeUser.put('/user/changePassword', updatePass);
+routeUser.put('/user/changePassword/:id', updatePass);
 routeUser.delete('/deleteUser/:id', deleteUser);
 
 module.exports = routeUser;

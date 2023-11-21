@@ -101,12 +101,13 @@ exports.updatePass = (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.status(500).json({ error: 'Error interno del servidor' });
 
-        const { usuario, password, newPassword } = req.body;
+        const { newPassword } = req.body;
+        const userId = req.params.id; // Captura el ID desde los parámetros de la ruta
 
-
+        // Verifica si el usuario con el ID proporcionado existe
         conn.query(
-            'SELECT * FROM users WHERE usuario = ? AND password = ?',
-            [usuario, password],
+            'SELECT * FROM users WHERE id = ?',
+            [userId],
             (err, results) => {
                 if (err) {
                     console.error('Error al realizar la consulta:', err);
@@ -114,10 +115,9 @@ exports.updatePass = (req, res) => {
                 }
 
                 if (results.length > 0) {
-               
                     conn.query(
-                        'UPDATE users SET password = ? WHERE usuario = ?',
-                        [newPassword, usuario],
+                        'UPDATE users SET password = ? WHERE id = ?',
+                        [newPassword, userId],
                         (err, result) => {
                             if (err) {
                                 console.error('Error al actualizar la contraseña:', err);
@@ -128,12 +128,14 @@ exports.updatePass = (req, res) => {
                         }
                     );
                 } else {
-                    res.status(401).json({ error: 'Credenciales incorrectas' });
+                    res.status(404).json({ error: 'Usuario no encontrado' });
                 }
             }
         );
     });
 };
+
+
 
 exports.deleteUser = (req, res) => {
     req.getConnection((err, connect) => {
