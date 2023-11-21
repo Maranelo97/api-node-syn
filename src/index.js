@@ -999,7 +999,7 @@ app.post("/add", (req, res) => {
               } else {
                 // Comprobar si el departamento existe
                 connect.query(
-                  "SELECT * FROM Departamentos WHERE NombreDepartamento = ?",
+                  "SELECT * FROM departamentos WHERE NombreDepartamento = ?",
                   [data.area],
                   (err, results) => {
                     if (err) {
@@ -1010,7 +1010,7 @@ app.post("/add", (req, res) => {
                       if (results.length > 0) {
                         // El departamento existe, realizar la actualización
                         connect.query(
-                          "UPDATE Departamentos SET CantidadEmpleados = CantidadEmpleados + 1 WHERE NombreDepartamento = ?",
+                          "UPDATE departamentos SET CantidadEmpleados = CantidadEmpleados + 1 WHERE NombreDepartamento = ?",
                           [data.area],
                           (err, result) => {
                             if (err) {
@@ -1025,7 +1025,7 @@ app.post("/add", (req, res) => {
                       } else {
                         // El departamento no existe, crearlo y luego realizar la actualización
                         connect.query(
-                          "INSERT INTO Departamentos (NombreDepartamento, CantidadEmpleados) VALUES (?, 1)",
+                          "INSERT INTO departamentos (NombreDepartamento, CantidadEmpleados) VALUES (?, 1)",
                           [data.area],
                           (err, result) => {
                             if (err) {

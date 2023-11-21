@@ -678,7 +678,7 @@ exports.deleteAudience = (req, res) => {
 
             // Restar 1 a la cantidad de empleados en el área correspondiente
             connect.query(
-              "UPDATE Departamentos SET CantidadEmpleados = CantidadEmpleados - 1 WHERE NombreDepartamento = ?",
+              "UPDATE departamentos SET CantidadEmpleados = CantidadEmpleados - 1 WHERE NombreDepartamento = ?",
               [areaToDelete],
               (err, result) => {
                 if (err) {

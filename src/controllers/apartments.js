@@ -3,7 +3,7 @@ exports.getAllApartments = (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
 
-        conn.query('SELECT * FROM Departamentos', (err, results) => {
+        conn.query('SELECT * FROM departamentos', (err, results) => {
             if (err) return res.send(err);
             res.json(results);
         });
@@ -19,7 +19,7 @@ exports.createApartment = (req, res) => {
             CantidadEmpleados: 0
         };
 
-        conn.query('INSERT INTO Departamentos SET ?', [apartmentData], (err, result) => {
+        conn.query('INSERT INTO departamentos SET ?', [apartmentData], (err, result) => {
             if (err) return res.send(err);
 
             res.send('Departamento creado exitosamente');
@@ -35,7 +35,7 @@ exports.update = (req, res) => {
         const { NombreDepartamento } = req.body;
 
         const updateUserQuery = `
-            UPDATE Departamentos 
+            UPDATE departamentos 
             SET 
                 NombreDepartamento = ?
             WHERE AreaID = ?`;
@@ -64,7 +64,7 @@ exports.deleteDepartment = (req, res) => {
       if (err) return res.send(err);
   
       connect.query(
-        "DELETE FROM Departamentos WHERE AreaID = ?",
+        "DELETE FROM departamentos WHERE AreaID = ?",
         [req.params.id],
         (err, result) => {
           if (err) return res.send(err);
