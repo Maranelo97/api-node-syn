@@ -3,6 +3,7 @@ exports.createSegment = (req, res) => {
         if (err) return res.send(err);
 
         const segmentData = {
+            creador: req.body.creador,
             nombre: req.body.nombre,
             audienciaSegmento: req.body.audienciaSegmento,
             creationTime: new Date(req.body.creationTime),
