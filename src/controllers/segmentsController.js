@@ -29,7 +29,6 @@ exports.updateSegment = (req, res) => {
       const updatedData = {
           nombre: req.body.nombre,
           audienciaSegmento: audienciaSegmento,
-          creationTime: req.body.creationTime,
           detalles: JSON.stringify(detallesArray)  // Convertir el array a una cadena JSON
       };
 
