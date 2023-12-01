@@ -18,32 +18,36 @@ exports.createSegment = (req, res) => {
 };
 
 exports.updateSegment = (req, res) => {
-    req.getConnection((err, conn) => {
-        if (err) return res.status(500).json({ error: 'Error interno del servidor' });
+  req.getConnection((err, conn) => {
+      if (err) return res.status(500).json({ error: 'Error interno del servidor' });
 
-        const segmentID = req.params.id;
+      const segmentID = req.params.id;
 
-        const updatedData = {
-            nombre: req.body.nombre,
-            audienciaSegmento: req.body.audienciaSegmento,
-            creationTime: req.body.creationTime,
-            detalles: JSON.stringify(req.body.detalles)  // Convertir el array a una cadena JSON
-        };
+      const detallesArray = req.body.detalles;
+      const audienciaSegmento = detallesArray ? detallesArray.length : 0;
 
-        conn.query('UPDATE segmentos SET ? WHERE segmentID = ?', [updatedData, segmentID], (err, result) => {
-            if (err) {
-                console.error('Error al actualizar los datos:', err);
-                return res.status(500).json({ error: 'Error interno del servidor' });
-            }
+      const updatedData = {
+          nombre: req.body.nombre,
+          audienciaSegmento: audienciaSegmento,
+          creationTime: req.body.creationTime,
+          detalles: JSON.stringify(detallesArray)  // Convertir el array a una cadena JSON
+      };
 
-            if (result.affectedRows > 0) {
-                res.json({ message: 'Segmento actualizado exitosamente' });
-            } else {
-                res.status(404).json({ error: 'Segmento no encontrado' });
-            }
-        });
-    });
+      conn.query('UPDATE segmentos SET ? WHERE segmentID = ?', [updatedData, segmentID], (err, result) => {
+          if (err) {
+              console.error('Error al actualizar los datos:', err);
+              return res.status(500).json({ error: 'Error interno del servidor' });
+          }
+
+          if (result.affectedRows > 0) {
+              res.json({ message: 'Segmento actualizado exitosamente' });
+          } else {
+              res.status(404).json({ error: 'Segmento no encontrado' });
+          }
+      });
+  });
 };
+
 
 exports.deleteSegment = (req, res) => {
     req.getConnection((err, connect) => {
