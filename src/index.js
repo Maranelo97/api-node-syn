@@ -19,6 +19,7 @@ const routeGeo = require("./routes/geoRoutes");
 const routeUser = require('./routes/ussersRoutes');
 const apartmentRoutes = require('./routes/apartmentsRoutes');
 const segmentRoutes = require("./routes/segmentRoutes");
+const campaignRoutes = require("./routes/campaignRoutes");
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -82,6 +83,7 @@ app.use("/", routeActions);
 app.use("/", routeGeo);
 app.use('/', apartmentRoutes);
 app.use('/', segmentRoutes);
+app.use("/", campaignRoutes);
 
 //upload IMG
 
