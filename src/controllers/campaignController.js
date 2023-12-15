@@ -8,13 +8,15 @@ exports.createCampaign = (req, res) => {
             segmentos: JSON.stringify(req.body.segmentos),
             mensaje: req.body.mensaje,
             creador: req.body.creador,
-            createdAt: req.body.createdAt,
+            createdAt: new Date(req.body.createdAt),
             score: req.body.score,
             title: req.body.title,
-            sendAt: req.body.sendAt,
+            sendAt: new Date(req.body.sendAt),
             aperturas: req.body.aperturas,
             inscripciones: req.body.inscripciones,
-            sendBy: req.body.sendBy
+            sendBy: req.body.sendBy,
+            status: req.body.status,
+            destinationCount: req.body.destinationCount
         };
         conn.query('INSERT INTO campaigns SET ?', [campaignData], (err, result) => {
             if (err) return res.send(err);
@@ -31,19 +33,20 @@ exports.updateCampaign = (req, res) => {
         const id = req.params.id;
   
         const detallesArray = req.body.segmentos;
-  
+        const segmentCount = detallesArray ? detallesArray.length : 0;
+
         const updatedData = {
             nombre: req.body.nombre,
             segmentos: JSON.stringify(detallesArray),
             mensaje: req.body.mensaje,
             creador: req.body.creador,
-            createdAt: req.body.createdAt,
             score: req.body.score,
             title: req.body.title,
-            sendAt: req.body.sendAt,
             aperturas: req.body.aperturas,
             inscripciones: req.body.inscripciones,
-            sendBy: req.body.sendBy 
+            sendBy: req.body.sendBy,
+            status: req.body.status,
+            destinationCount: segmentCount
         };
   
         conn.query('UPDATE campaigns SET ? WHERE id = ?', [updatedData, id], (err, result) => {
