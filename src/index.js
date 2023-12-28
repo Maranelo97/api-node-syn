@@ -1107,6 +1107,43 @@ app.post("/send-help/:email", function (req, res) {
   });
 });
 
+
+const transporterCampaign = nodemailer.createTransport({
+  host: "smtp.office365.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.user,
+    pass: process.env.pass,
+  },
+});
+
+app.post("/send-campaign", function (req, res) {
+  const { message, name, lastname } = req.body; // Obtén correos electrónicos, nombre, apellido y mensaje del cuerpo de la solicitud
+
+
+  const emails= ["marianoveronsantos@gmail.com","licenciadasantosoliveira@gmail.com","marcelogmarquez@yahoo.com"]
+
+  // Configura las opciones del correo con los datos proporcionados
+  const mailOptions = {
+    from: process.env.user,
+    to: emails.join(','),// Convierte el array de correos electrónicos a una cadena separada por comas
+    subject: "Test Campaña",
+    text: `Nombre: ${name}\nApellido: ${lastname}\nMensaje: ${message}`,
+  };
+
+  // Envía el correo a la lista de destinatarios
+  transporterCampaign.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error al enviar el correo:", error);
+      res.status(500).json({ ok: false, message: "Error al enviar el correo" });
+    } else {
+      console.log("Correo enviado:", info.response);
+      res.status(200).json({ ok: true, message: "Correo enviado" });
+    }
+  });
+});
+
 server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
 });
