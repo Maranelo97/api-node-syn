@@ -1113,8 +1113,8 @@ const transporterCampaign = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.user,
-    pass: process.env.pass,
+    user: process.env.HELP_USER,
+    pass: process.env.HELP_PASS,
   },
 });
 
