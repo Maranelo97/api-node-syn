@@ -20,6 +20,7 @@ const routeUser = require('./routes/ussersRoutes');
 const apartmentRoutes = require('./routes/apartmentsRoutes');
 const segmentRoutes = require("./routes/segmentRoutes");
 const campaignRoutes = require("./routes/campaignRoutes");
+const templateRoutes = require("./routes/templatesRoutes")
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -56,7 +57,7 @@ const dbConfig = {
   database: process.env.DB_NAME || "mockdata",
 };
 
-// Multer configuration CSV
+
 
 //Multer configuration IMG-DNI
 const imageStorage = multer.diskStorage({
@@ -84,6 +85,7 @@ app.use("/", routeGeo);
 app.use('/', apartmentRoutes);
 app.use('/', segmentRoutes);
 app.use("/", campaignRoutes);
+app.use("/", templateRoutes)
 
 //upload IMG
 
