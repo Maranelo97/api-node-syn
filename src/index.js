@@ -16,11 +16,11 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const hbs = require("nodemailer-express-handlebars");
 const routeGeo = require("./routes/geoRoutes");
-const routeUser = require("./routes/ussersRoutes");
-const apartmentRoutes = require("./routes/apartmentsRoutes");
+const routeUser = require('./routes/ussersRoutes');
+const apartmentRoutes = require('./routes/apartmentsRoutes');
 const segmentRoutes = require("./routes/segmentRoutes");
 const campaignRoutes = require("./routes/campaignRoutes");
-const templateRoutes = require("./routes/templatesRoutes");
+const templateRoutes = require("./routes/templatesRoutes")
 const handleBarOptions = {
   viewEngine: {
     extName: ".html",
@@ -57,6 +57,8 @@ const dbConfig = {
   database: process.env.DB_NAME || "mockdata",
 };
 
+
+
 //Multer configuration IMG-DNI
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -76,32 +78,15 @@ app.use(cors());
 app.use(connect(mysql, dbConfig, "single"));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-//routes protector
-const allowOnlyFromSpecificOrigin = (req, res, next) => {
-  const allowedOrigins = ["http://localhost", "https://admin.pensionplan.com.ar/", "https://pensionplan.com.ar/"];
-  const origin = req.headers.origin;
-
-  if (allowedOrigins.includes(origin)) {
-    // Permite la solicitud si la origin está en la lista de permitidos
-    res.header("Access-Control-Allow-Origin", origin);
-    return next();
-  }
-
-  // Devuelve un error si la origin no está permitida
-  return res
-    .status(403)
-    .json({ error: "Acceso no permitido desde esta dirección." });
-};
-
 app.use("/", route);
-app.use("/", routeUser);
+app.use('/', routeUser)
 app.use("/", routeActions);
 app.use("/", routeGeo);
-app.use("/", apartmentRoutes);
-app.use("/", segmentRoutes);
+app.use('/', apartmentRoutes);
+app.use('/', segmentRoutes);
 app.use("/", campaignRoutes);
-app.use("/", templateRoutes);
-router.use(allowOnlyFromSpecificOrigin);
+app.use("/", templateRoutes)
+
 //upload IMG
 
 app.post("/upload-images", (req, res) => {
@@ -1090,6 +1075,7 @@ app.post("/add", (req, res) => {
   });
 });
 
+
 //email consulta
 const transporterConsult = nodemailer.createTransport({
   host: "smtp.office365.com",
@@ -1123,6 +1109,7 @@ app.post("/send-help/:email", function (req, res) {
   });
 });
 
+
 const transporterCampaign = nodemailer.createTransport({
   host: "smtp.office365.com",
   port: 587,
@@ -1136,16 +1123,17 @@ const transporterCampaign = nodemailer.createTransport({
 app.post("/send-campaign", function (req, res) {
   const { message, name, lastname } = req.body;
 
+
   // Filtra el array de correos electrónicos para que solo contenga el correo del usuario actual
   const emails = ["marianoveronsantos@gmail.com", "marcelogmarquez@yahoo.com"];
 
   // Configura las opciones del correo para cada destinatario
-  const mailPromises = emails.map((email) => {
+  const mailPromises = emails.map(email => {
     const filteredEmails = [email];
 
     const mailOptions = {
       from: process.env.user,
-      to: filteredEmails.join(","),
+      to: filteredEmails.join(','),
       subject: "Test Campaña",
       text: `Nombre: ${name}\nApellido: ${lastname}\nMensaje: ${message}`,
     };
@@ -1166,15 +1154,14 @@ app.post("/send-campaign", function (req, res) {
 
   // Espera a que todas las promesas se resuelvan
   Promise.all(mailPromises)
-    .then((results) => {
+    .then(results => {
       res.status(200).json({ ok: true, message: "Correos enviados", results });
     })
-    .catch((errors) => {
-      res
-        .status(500)
-        .json({ ok: false, message: "Error al enviar correos", errors });
+    .catch(errors => {
+      res.status(500).json({ ok: false, message: "Error al enviar correos", errors });
     });
 });
+
 
 server.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`);
