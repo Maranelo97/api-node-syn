@@ -24,6 +24,20 @@ const {
 const { getImports, deleteImport } = require("../controllers/imports");
 const { getHealth } = require("../controllers/health-controller");
 
+const allowOnlyFromSpecificOrigin = (req, res, next) => {
+  const allowedOrigins = ['http://localhost:3000', 'https://admin.pensionplan.com.ar', 'https://pensionplan.com.ar/'];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      return next();
+  }
+
+  return res.status(403).json({ error: 'Acceso no permitido desde esta dirección.' });
+};
+
+
+route.use(allowOnlyFromSpecificOrigin)
 route.get("/audience", getAudience);
 route.get("/audience/:dni", getByDni);
 route.get("/audiencia/:email", getByEmail);
