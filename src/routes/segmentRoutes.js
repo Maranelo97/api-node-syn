@@ -17,7 +17,7 @@ const allowOnlyFromSpecificOrigin = (req, res, next) => {
   };
   
   
-  route.use(allowOnlyFromSpecificOrigin)
+  segmentRoutes.use(allowOnlyFromSpecificOrigin)
 
 segmentRoutes.get("/getSegments", getAllSegments);
 segmentRoutes.post("/addSegment", createSegment);

@@ -15,7 +15,7 @@ const allowOnlyFromSpecificOrigin = (req, res, next) => {
   };
   
   
-  route.use(allowOnlyFromSpecificOrigin)
+  routeActions.use(allowOnlyFromSpecificOrigin)
 
 routeActions.post('/action', realizarAction);
 routeActions.get('/historialActions/:registroId', getHistorialActions);

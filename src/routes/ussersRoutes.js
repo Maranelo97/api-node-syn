@@ -16,7 +16,7 @@ const allowOnlyFromSpecificOrigin = (req, res, next) => {
   };
   
   
-  route.use(allowOnlyFromSpecificOrigin)
+routeUser.use(allowOnlyFromSpecificOrigin)
 routeUser.post('/login', loginUser);
 routeUser.get('/getUssers', getAllUsers);
 routeUser.post('/user/create', createUser);

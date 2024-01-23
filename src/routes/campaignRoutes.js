@@ -13,7 +13,7 @@ return res.status(403).json({ error: 'Acceso no permitido desde esta dirección.
 };
 
 
-route.use(allowOnlyFromSpecificOrigin)
+campaignRoutes.use(allowOnlyFromSpecificOrigin)
 
 campaignRoutes.get("/campaigns", getAllCampaigns);
 campaignRoutes.post("/createCampaign", createCampaign);

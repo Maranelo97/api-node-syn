@@ -16,7 +16,7 @@ const allowOnlyFromSpecificOrigin = (req, res, next) => {
   };
   
   
-  route.use(allowOnlyFromSpecificOrigin)
+  templateRouter.use(allowOnlyFromSpecificOrigin)
 
 templateRouter.get('/getAllTemplates', getAllTemplates);
 

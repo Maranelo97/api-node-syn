@@ -16,7 +16,7 @@ const allowOnlyFromSpecificOrigin = (req, res, next) => {
   };
   
   
-  route.use(allowOnlyFromSpecificOrigin)
+apartmentRoutes.use(allowOnlyFromSpecificOrigin)
 
 apartmentRoutes.get('/apartments', getAllApartments);
 apartmentRoutes.post("/apartments/create", createApartment);
