@@ -3,7 +3,7 @@ const routeGeo = express.Router();
 const { getByZip, addZip, getAll, deleteCode, updateGeo } = require("../controllers/geoRef");
 
 const allowOnlyFromSpecificOrigin = (req, res, next) => {
-const allowedOrigins = ['http://localhost:3000', 'https://admin.pensionplan.com.ar', 'https://pensionplan.com.ar'];
+const allowedOrigins = ['http://localhost:3000', 'https://admin.pensionplan.com.ar', 'https://pensionplan.com.ar','http://localhost:5173'];
 const origin = req.headers.origin; 
 if (allowedOrigins.includes(origin)) {
         res.header('Access-Control-Allow-Origin', origin);
