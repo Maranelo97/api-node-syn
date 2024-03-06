@@ -29,7 +29,7 @@ const allowOnlyFromSpecificOrigin = (req, res, next) => {
   const origin = req.headers.origin;
 
   // No aplicar el middleware para las solicitudes de salud
-  if (req.path === '/health') {
+  if (req.originalUrl.startsWith('/health')) {
     return next();
   }
 
@@ -40,6 +40,7 @@ const allowOnlyFromSpecificOrigin = (req, res, next) => {
 
   return res.status(403).json({ error: 'Acceso no permitido desde esta dirección.' });
 };
+
 
 
 route.use(allowOnlyFromSpecificOrigin)
